@@ -93,8 +93,12 @@ class User:
         return answer_num
 
     def get_collection_num(self):
-        
+        soup = self.soup
+        collection_num = int(soup.find("div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
+        return collection_num
+
     def get_followers(self):
+
     def get_followees(self):
     def get_answers(self):
     def get_asks(self):
