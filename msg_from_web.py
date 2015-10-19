@@ -57,6 +57,12 @@ class User:
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
         else:
             self.url = url
+        if self.soup==None:
+            soup=self.parser()
+
+    def parser(self):
+        r = requests.get(self.url)
+        self.soup = BeautifulSoup(r.content)
 
     def get_user_id(self):
         match = re.match(r"^(http://www.zhihu.com/peoole/)(.+)$",self.url)
@@ -73,23 +79,23 @@ class User:
         return followee_num
 
     def get_thanks_num(self):
-        soup=self.soup
-        thanks_num = int(soup.find("div",class_="zm-profile-header-user-thanks").strong.string)
+        soup = self.soup
+        thanks_num = int(soup.find("span", class_="zm-profile-header-user-thanks").strong.string)
         return thanks_num
 
     def get_vote_num(self):
         soup=self.soup
-        vote_num = int(soup.find("div", class_="zm-profile-header-user-agree").strong.string)
-        return vote_num
+        agree_num = int(soup.find("span", class_="zm-profile-header-user-agree").strong.string)
+        return agree_num
 
     def get_ask_num(self):
         soup = self.soup
-        ask_num = int(soup.find("div", class_="profile-navbar clearfix").find_all("a")[1].span.string)
+        ask_num = int(soup.find_all("span", class_="num")[0].string)
         return ask_num
 
     def get_answer_num(self):
         soup = self.soup
-        answer_num = int(soup.find("div", class_="profile-navbar clearfix").find_all("a")[2].span.string)
+        answer_num = int(soup.find_all("span", class_="num")[1].string)
         return answer_num
 
     def get_collection_num(self):
@@ -277,8 +283,8 @@ class Topics:
             self.url = url
         if name != None:
             self.name=name
-    def get_question_num:
-    def get_follower_num:
+    #def get_question_num:
+   # def get_follower_num:
 
-class Collections:
-class Article:
+#class Collections:
+#class Article:
