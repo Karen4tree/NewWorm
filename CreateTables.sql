@@ -103,3 +103,10 @@ create table Collection_Answers(
 	foreign key (answer_ID) references Answers(answer_ID),
 	primary key (collection_name, answer_ID)
 );
+
+create table Articles(
+	article_id char(8) primary key,
+	owner_id char(8),
+	comment_num int,
+	foreign key (owner_id) references Users(user_ID)
+);
