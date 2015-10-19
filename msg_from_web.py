@@ -98,11 +98,72 @@ class User:
         return collection_num
 
     def get_followers(self):
+        follower_page_url = self.url + '/followers'
+        r = requests.get(follower_page_url)
+        soup = BeautifulSoup(r.content)
+        followers = []
+        #需要滚动加载,然而我并不会
+        follower_tags = soup.find_all("a", class_="zm-item-link-avatar")
+        for follower_tag in follower_tags:
+            follower_url = "http://www.zhihu.com"+follower_tag["href"]
+            follower = User(follower_url)
+            followers.append(follower)
+        return followers
 
     def get_followees(self):
-    def get_answers(self):
+        followee_page_url = self.url + '/followees'
+        r = requests.get(followee_page_url)
+        soup = BeautifulSoup(r.content)
+        followees = []
+        #需要滚动加载,然而我并不会
+        followee_tags = soup.find_all("a", class_="zm-item-link-avatar")
+        for followee_tag in followee_tags:
+            followee_url = "http://www.zhihu.com"+followee_tag["href"]
+            followee = User(followee_url)
+            followees.append(followee)
+        return followees
+
     def get_asks(self):
+        asks = []
+        asks_num = self.get_ask_num()
+        if asks_num == 0:
+            return
+        else:
+            for i in xrange((asks_num - 1) / 20 + 1):
+                ask_url = self.url + "/asks?page=" + str(i + 1)
+                r = requests.get(ask_url)
+                soup = BeautifulSoup(r.content)
+                for question in soup.find_all("a", class_="question_link"):
+                    url = "http://www.zhihu.com" + question["href"]
+                    title = question.string.encode("utf-8")
+                    asked = Questions(url, title)
+                    asks.append(asked)
+    def get_answers(self):
+        answers = []
+        answers_num = self.get_answer_num()
+        if answers_num == 0:
+            return
+        else:
+            for i in xrange((answers_num-1)/20+1):
+                answer_url = self.url+"/answers?page="+str(i+1)
+                r = requests.get(answer_url)
+                soup = BeautifulSoup(r.content)
+                for answer_tag in soup.find_all("a", class_="question_link"):
+                    answer_url = 'http://www.zhihu.com'+ answer_tag["href"]
+                    answer = Answers(answer_url)
+                    answers.append(answer)
+        return answers
+
     def get_articles(self):
+        articles=[]
+        post_url = self.url + '/posts'
+        r = requests.get(post_url)
+        soup = BeautifulSoup(r.content)
+        for article_tag in soup.find_all("a",class_="post-link"):
+            article_url = article_tag["href"]
+            article = Article(article_url)
+            articles.append(article)
+        return articles
 
 ##########################################################
 ##
@@ -193,7 +254,7 @@ class Questions:
 
 ##########################################################
 ##
-##从Answer url只想页面中抓取信息
+##从Answer url指向页面中抓取信息
 ##
 ##########################################################
 class Answers:
@@ -220,3 +281,4 @@ class Topics:
     def get_follower_num:
 
 class Collections:
+class Article:
