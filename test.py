@@ -3,6 +3,7 @@ __author__ = 'ZombieGroup'
 from msg_from_web import User
 from msg_from_web import Questions
 from msg_from_web import Answers
+from msg_from_web import Topics
 
 def test_user(user_url):
     user = User(user_url)
@@ -61,11 +62,25 @@ def test_answer(answer_url):
     upvoters = answer.get_upvoters()
     for upvoter in upvoters:
         print upvoter.get_user_id()
+
+def topic_test(topic_url):
+    topic = Topics(topic_url)
+    topic_id = topic.get_topic_id()
+    print topic_id
+    topic_name = topic.get_topic_name()
+    print topic_name
+    question_num = topic.get_questions_num()
+    print question_num
+    follower_num = topic.get_followers_num()
+    print follower_num
+
 def main():
     #user_url = "http://www.zhihu.com/people/xiepanda"
     #test_user(user_url)
-    answer_url = "http://www.zhihu.com/question/36669529/answer/68811311"
-    test_answer(answer_url)
+    #answer_url = "http://www.zhihu.com/question/36669529/answer/68811311"
+    #test_answer(answer_url)
+    topic_url = "http://www.zhihu.com/topic/19564496"
+    topic_test(topic_url)
 
 if __name__ == '__main__':
     main()
