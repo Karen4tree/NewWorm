@@ -460,7 +460,7 @@ class Topics:
 
     def get_questions(self):
         url = self.url+"/questions?page="
-        url_head = "www.zhihu.com"
+        url_head = "http://www.zhihu.com"
         r = requests.get(url + '1')
         soup = BeautifulSoup(r.content)
         question_tags = []
