@@ -6,11 +6,15 @@ create table Users(
 	thanks_num int,
 	asks_num int,
 	answers_num int,
+	articles_num int,
 	collections_num int,
+	following_topics_num int,
+	following_columns int,
 	education varchar(50),
 	education_extra varchar(50),
 	location varchar(50),
 	business varchar(50),
+	position varchar(50),
 	employment varchar(50)
 );
 

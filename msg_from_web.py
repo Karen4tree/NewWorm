@@ -14,6 +14,7 @@ import os, sys, time, platform, random
 import re, json, cookielib
 # requirements
 import requests, termcolor, html2text
+
 try:
     from bs4 import BeautifulSoup
 except:
@@ -30,107 +31,143 @@ from auth import Logging
 requests = requests.Session()
 requests.cookies = cookielib.LWPCookieJar('cookies')
 try:
-    requests.cookies.load(ignore_discard=True)
+    requests.cookies.load(ignore_discard = True)
 except:
     Logging.error(u"你还没有登录知乎哦 ...")
     Logging.info(u"执行 `python auth.py` 即可以完成登录。")
     raise Exception("无权限(403)")
 
-
-if islogin() != True:
+if not islogin():
     Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
     raise Exception("无权限(403)")
 
-
 reload(sys)
 sys.setdefaultencoding('utf8')
+
+
 ##########################################################
 ##
 ##从User个人主页抓取信息
 ##
 ##########################################################
 class User:
-    url=None
-    soup=None
+    url = None
+    soup = None
+
     def __init__(self, url):
         if url[0:28] != "http://www.zhihu.com/people/":
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
         else:
             self.url = url
-        if self.soup==None:
-            soup=self.parser()
+        if self.soup is None:
+            self.parser()
 
     def parser(self):
         r = requests.get(self.url)
         self.soup = BeautifulSoup(r.content)
 
     def get_user_id(self):
-        match = re.match(r"^(http://www.zhihu.com/peoole/)(.+)$",self.url)
+        match = re.match(r"^(http://www.zhihu.com/peoole/)(.+)$", self.url)
         return match.group(2)
 
     def get_follower_num(self):
         soup = self.soup
-        followers_num = int(soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
+        followers_num = int(
+            soup.find("div", class_ = "zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
         return followers_num
 
     def get_followee_num(self):
         soup = self.soup
-        followee_num = int(soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[0].strong.string)
+        followee_num = int(
+            soup.find("div", class_ = "zm-profile-side-following zg-clear").find_all("a")[0].strong.string)
         return followee_num
 
     def get_thanks_num(self):
         soup = self.soup
-        thanks_num = int(soup.find("span", class_="zm-profile-header-user-thanks").strong.string)
+        thanks_num = int(soup.find("span", class_ = "zm-profile-header-user-thanks").strong.string)
         return thanks_num
 
     def get_vote_num(self):
-        soup=self.soup
-        agree_num = int(soup.find("span", class_="zm-profile-header-user-agree").strong.string)
+        soup = self.soup
+        agree_num = int(soup.find("span", class_ = "zm-profile-header-user-agree").strong.string)
         return agree_num
 
     def get_ask_num(self):
         soup = self.soup
-        ask_num = int(soup.find_all("span", class_="num")[0].string)
+        ask_num = int(soup.find_all("span", class_ = "num")[0].string)
         return ask_num
 
     def get_answer_num(self):
         soup = self.soup
-        answer_num = int(soup.find_all("span", class_="num")[1].string)
+        answer_num = int(soup.find_all("span", class_ = "num")[1].string)
         return answer_num
+
+    def get_articles_num(self):
+        soup = self.soup
+        articles_num = int(soup.find_all("span", class_ = "num")[2].string)
+        return articles_num
 
     def get_collection_num(self):
         soup = self.soup
-        collection_num = int(soup.find("div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
+        collection_num = int(soup.find("div", class_ = "profile-navbar clearfix").find_all("a")[3].span.string)
         return collection_num
 
-    def get_location(self):#所在地
+    def get_following_topics_num(self):
         soup = self.soup
-        location = soup.find("span",class_="location item").find("a").string
+        tag_strings = soup.find_all("div", class_ = "zm-profile-side-section-title")
+        tag_string = tag_strings[len(tag_strings) - 1].find("a").strong.string
+        substr = re.split("\s+", tag_string)
+        num = int(substr[0])
+        return num
+
+    def get_following_columns_num(self):
+        soup = self.soup
+        tag_strings = soup.find_all("div", class_ = "zm-profile-side-section-title")
+        tag_string = tag_strings[len(tag_strings) - 2].find("a").strong.string
+        substr = re.split("\s+", tag_string)
+        num = int(substr[0])
+        return num
+
+    def get_location(self):  # 所在地
+        soup = self.soup
+        location = None
+        if soup.find("span", class_ = "location item") is not None:
+            location = soup.find("span", class_ = "location item").string
         return location
 
-    def get_business(self):#行业
+    def get_business(self):  # 行业
         soup = self.soup
-        business_item = soup.find("span", class_="business item").find("a").string
+        business_item = None
+        if soup.find("span", class_ = "business item") is not None:
+            business_item = soup.find("span", class_ = "business item").string
         return business_item
 
-    def get_employment(self):#公司
+    def get_employment(self):  # 公司
         soup = self.soup
-        employment = soup.find("span", class_="employment item").string
+        employment = None
+        if soup.find("span", class_ = "employment item") is not None:
+            employment = soup.find("span", class_ = "employment item").string
         return employment
 
-    def get_position(self):#职位
+    def get_position(self):  # 职位
         soup = self.soup
-        position = soup.find("span", class_="position item").string
+        position = None
+        if soup.find("span", class_ = "position item") is not None:
+            position = soup.find("span", class_ = "position item").string
         return position
 
     def get_education(self):
         soup = self.soup
-        education = soup.find("span", class_="education item").find("a").string
+        education = None
+        if soup.find("span", class_ = "education item") is not None:
+            education = soup.find("span", class_ = "education item").string
         return education
 
     def get_education_extra(self):
         soup = self.soup
-        education_extra = soup.find("span", class_="education-extra item").find("a").string
+        education_extra = None
+        if soup.find("span", class_ = "education-extra item") is not None:
+            education_extra = soup.find("span", class_ = "education-extra item").string
         return education_extra
 
     def get_followers(self):
@@ -138,10 +175,10 @@ class User:
         r = requests.get(follower_page_url)
         soup = BeautifulSoup(r.content)
         followers = []
-        #需要滚动加载,然而我并不会
-        follower_tags = soup.find_all("a", class_="zm-item-link-avatar")
+        # 需要滚动加载,然而我并不会
+        follower_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
         for follower_tag in follower_tags:
-            follower_url = "http://www.zhihu.com"+follower_tag["href"]
+            follower_url = "http://www.zhihu.com" + follower_tag["href"]
             follower = User(follower_url)
             followers.append(follower)
         return followers
@@ -151,10 +188,10 @@ class User:
         r = requests.get(followee_page_url)
         soup = BeautifulSoup(r.content)
         followees = []
-        #需要滚动加载,然而我并不会
-        followee_tags = soup.find_all("a", class_="zm-item-link-avatar")
+        # 需要滚动加载,然而我并不会
+        followee_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
         for followee_tag in followee_tags:
-            followee_url = "http://www.zhihu.com"+followee_tag["href"]
+            followee_url = "http://www.zhihu.com" + followee_tag["href"]
             followee = User(followee_url)
             followees.append(followee)
         return followees
@@ -169,7 +206,7 @@ class User:
                 ask_url = self.url + "/asks?page=" + str(i + 1)
                 r = requests.get(ask_url)
                 soup = BeautifulSoup(r.content)
-                for question in soup.find_all("a", class_="question_link"):
+                for question in soup.find_all("a", class_ = "question_link"):
                     url = "http://www.zhihu.com" + question["href"]
                     title = question.string.encode("utf-8")
                     asked = Questions(url, title)
@@ -181,26 +218,27 @@ class User:
         if answers_num == 0:
             return
         else:
-            for i in xrange((answers_num-1)/20+1):
-                answer_url = self.url+"/answers?page="+str(i+1)
+            for i in xrange((answers_num - 1) / 20 + 1):
+                answer_url = self.url + "/answers?page=" + str(i + 1)
                 r = requests.get(answer_url)
                 soup = BeautifulSoup(r.content)
-                for answer_tag in soup.find_all("a", class_="question_link"):
-                    answer_url = 'http://www.zhihu.com'+ answer_tag["href"]
+                for answer_tag in soup.find_all("a", class_ = "question_link"):
+                    answer_url = 'http://www.zhihu.com' + answer_tag["href"]
                     answer = Answers(answer_url)
                     answers.append(answer)
         return answers
 
     def get_articles(self):
-        articles=[]
+        articles = []
         post_url = self.url + '/posts'
         r = requests.get(post_url)
         soup = BeautifulSoup(r.content)
-        for article_tag in soup.find_all("a",class_="post-link"):
+        for article_tag in soup.find_all("a", class_ = "post-link"):
             article_url = article_tag["href"]
             article = Article(article_url)
             articles.append(article)
         return articles
+
 
 ##########################################################
 ##
@@ -210,20 +248,21 @@ class User:
 class Questions:
     soup = None
     url = None
+
     def __init__(self, url, title=None, asker_id=None):
         if url[0:len(url) - 8] != "http://www.zhihu.com/question/":
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
         else:
             self.url = url
-        if title != None:
+        if title is not None:
             self.title = title
-        if self.soup == None:
+        if self.soup is None:
             self.parser()
-        if asker_id != None:
+        if asker_id is not None:
             self.asker_id = asker_id
 
     def get_question_id(self):
-        return self.url[len(self.url)-7:len(self.url)]
+        return self.url[len(self.url) - 7:len(self.url)]
 
     def parser(self):
         r = requests.get(self.url)
@@ -231,7 +270,7 @@ class Questions:
 
     def get_follower_num(self):
         soup = self.soup
-        followers_num = int(soup.find("div", class_="zg-gray-normal").a.strong.string)
+        followers_num = int(soup.find("div", class_ = "zg-gray-normal").a.strong.string)
         return followers_num
 
     def get_title(self):
@@ -239,39 +278,39 @@ class Questions:
             return self.title
         else:
             soup = self.soup
-            title = soup.find("h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
+            title = soup.find("h2", class_ = "zm-item-title").string.encode("utf-8").replace("\n", "")
             self.title = title
             return title
 
     def get_detail(self):
         soup = self.soup
-        detail = soup.find("div", id="zh-question-detail").div.get_text().encode("utf-8")
+        detail = soup.find("div", id = "zh-question-detail").div.get_text().encode("utf-8")
         return detail
 
     def get_answers_num(self):
         soup = self.soup
         answers_num = 0
-        if soup.find("h3", id="zh-question-answer-num") != None:
-            answers_num = int(soup.find("h3", id="zh-question-answer-num")["data-num"])
+        if soup.find("h3", id = "zh-question-answer-num") is not None:
+            answers_num = int(soup.find("h3", id = "zh-question-answer-num")["data-num"])
         return answers_num
 
     def get_topics(self):
-        soup=self.soup
-        topic_tags = soup.find_all("a",class_="zm_item_tag")
-        topics=[]
+        soup = self.soup
+        topic_tags = soup.find_all("a", class_ = "zm_item_tag")
+        topics = []
         for topic_tag in topic_tags:
             topic_name = topic_tag.contents[0].encode("utf-8").replace("\n", "")
-            topic_url = "http://www.zhihu.com/topic/"+topic_tag["href"]
-            topic = Topics(topic_url,topic_name)
+            topic_url = "http://www.zhihu.com/topic/" + topic_tag["href"]
+            topic = Topics(topic_url, topic_name)
             topics.append(topic)
         return topics
 
     def get_answers(self):
         soup = self.soup
         answers = []
-        answer_tags=soup.find_all("div", class_="zg-anchor-hidden")["name"]
+        answer_tags = soup.find_all("div", class_ = "zg-anchor-hidden")["name"]
         for answer_tag in answer_tags:
-            answer_url = answer_tag[len(answer_tag)-7:len(answer_tag)]
+            answer_url = answer_tag[len(answer_tag) - 7:len(answer_tag)]
             answer = Answers(answer_url)
             answers.append(answer)
         return answers
@@ -281,13 +320,14 @@ class Questions:
         r = requests.get(follower_page_url)
         soup = BeautifulSoup(r.content)
         followers = []
-        #需要滚动加载,然而我并不会
-        follower_tags = soup.find_all("a", class_="zm-item-link-avatar")
+        # 需要滚动加载,然而我并不会
+        follower_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
         for follower_tag in follower_tags:
-            follower_url = "http://www.zhihu.com"+follower_tag["href"]
+            follower_url = "http://www.zhihu.com" + follower_tag["href"]
             follower = User(follower_url)
             followers.append(follower)
         return followers
+
 
 ##########################################################
 ##
@@ -295,27 +335,57 @@ class Questions:
 ##
 ##########################################################
 class Answers:
-    url=None
-    soup=None
+    url = None
+    soup = None
+
     def __init__(self, url):
-        if url[0:len(url) - 8] != "http://www.zhihu.com/question/"+r"\d{8}"+"/answer/":
+        if url[0:len(url) - 8] != "http://www.zhihu.com/question/" + r"\d{8}" + "/answer/":
             raise ValueError("\"" + url + "\"" + " : it isn't a answer url.")
         else:
-            self.url=url
+            self.url = url
 
 
 class Topics:
     url = None
     soup = None
+
     def __init__(self, url, name=None):
         if url[0:len(url) - 8] != "http://www.zhihu.com/topic/":
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
         else:
             self.url = url
-        if name != None:
-            self.name=name
-    #def get_question_num:
-   # def get_follower_num:
+        if name is not None:
+            self.name = name
 
-#class Collections:
-#class Article:
+
+class Collections:
+    url = None
+    soup = None
+
+    def __init__(self, url, name=None):
+        if url[0:len(url) - 8] != "http://www.zhihu.com/collection/":
+            raise ValueError("\"" + url + "\"" + " : it isn't a collection url.")
+        else:
+            self.url = url
+        if name is not None:
+            self.name = name
+        if self.soup is None:
+            self.parser()
+
+    def parser(self):
+        r = requests.get(self.url)
+        self.soup = BeautifulSoup(r.content)
+
+
+class Article:
+    url = None
+    soup = None
+
+    def __init__(self, url):
+        self.url = url
+        if self.soup is None:
+            self.parser()
+
+    def parser(self):
+        r = requests.get(self.url)
+        self.soup = BeautifulSoup(r.content)

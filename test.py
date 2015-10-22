@@ -10,6 +10,8 @@ def test_user(user_url):
     ask_num = user.get_ask_num()
     print ask_num
     followee_num = user.get_followee_num()
+    article_num = user.get_articles_num()
+    print article_num
     print followee_num
     follower_num = user.get_follower_num()
     print follower_num
@@ -32,11 +34,15 @@ def test_user(user_url):
     education_extra = user.get_education_extra()
     print education_extra
 
+    following_topic_num = user.get_following_topics_num()
+    print following_topic_num
+    following_column_num = user.get_following_columns_num()
+    print following_column_num
 #    asks = user.get_asks()
 #    answers = user.get_answers()
 
 def main():
-    user_url = "http://www.zhihu.com/people/gioroulden"
+    user_url = "http://www.zhihu.com/people/xiepanda"
     test_user(user_url)
 
 if __name__ == '__main__':
