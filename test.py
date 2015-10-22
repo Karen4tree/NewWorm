@@ -73,6 +73,13 @@ def topic_test(topic_url):
     print question_num
     follower_num = topic.get_followers_num()
     print follower_num
+    questions = topic.get_questions()
+    i = 1
+    for question in questions:
+        print i
+        print question.get_question_id()
+        i+=1
+
 
 def main():
     #user_url = "http://www.zhihu.com/people/xiepanda"

@@ -455,9 +455,25 @@ class Topics:
         return followers_num
 
     def get_followers(self):
+        soup = self.soup
         #需要滚动加载
+
     def get_questions(self):
-        #不需要滚动加载
+        url = self.url+"/questions?page="
+        url_head = "www.zhihu.com"
+        r = requests.get(url + '1')
+        soup = BeautifulSoup(r.content)
+        question_tags = []
+        pages = soup.find("div", class_ = "zm-invite-pager").find_all("span")
+        total_pages = int(pages[len(pages) - 2].find("a").string)
+        for i in range(1,total_pages):
+            r = requests.get(url+'%d'%i)
+            soup = BeautifulSoup(r.content)
+            question_on_this_page =soup.find_all("a", class_ = "question_link")
+            for question_tag in question_on_this_page:
+                question_url = url_head + question_tag["href"]
+                yield Questions(question_url)
+
 
 
 class Collections:
@@ -491,3 +507,4 @@ class Article:
     def parser(self):
         r = requests.get(self.url)
         self.soup = BeautifulSoup(r.content)
+
