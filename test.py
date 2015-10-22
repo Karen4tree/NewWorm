@@ -19,6 +19,18 @@ def test_user(user_url):
     print thanks_num
     vote_num = user.get_vote_num()
     print vote_num
+    location = user.get_location()
+    print location
+    business = user.get_business()
+    print business
+    employment = user.get_employment()
+    print employment
+    position = user.get_position()
+    print position
+    education = user.get_education()
+    print education
+    education_extra = user.get_education_extra()
+    print education_extra
 
 #    asks = user.get_asks()
 #    answers = user.get_answers()

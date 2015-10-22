@@ -103,6 +103,36 @@ class User:
         collection_num = int(soup.find("div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
         return collection_num
 
+    def get_location(self):#所在地
+        soup = self.soup
+        location = soup.find("span",class_="location item").find("a").string
+        return location
+
+    def get_business(self):#行业
+        soup = self.soup
+        business_item = soup.find("span", class_="business item").find("a").string
+        return business_item
+
+    def get_employment(self):#公司
+        soup = self.soup
+        employment = soup.find("span", class_="employment item").string
+        return employment
+
+    def get_position(self):#职位
+        soup = self.soup
+        position = soup.find("span", class_="position item").string
+        return position
+
+    def get_education(self):
+        soup = self.soup
+        education = soup.find("span", class_="education item").find("a").string
+        return education
+
+    def get_education_extra(self):
+        soup = self.soup
+        education_extra = soup.find("span", class_="education-extra item").find("a").string
+        return education_extra
+
     def get_followers(self):
         follower_page_url = self.url + '/followers'
         r = requests.get(follower_page_url)
@@ -144,6 +174,7 @@ class User:
                     title = question.string.encode("utf-8")
                     asked = Questions(url, title)
                     asks.append(asked)
+
     def get_answers(self):
         answers = []
         answers_num = self.get_answer_num()
