@@ -2,6 +2,7 @@
 __author__ = 'ZombieGroup'
 from msg_from_web import User
 from msg_from_web import Questions
+from msg_from_web import Answers
 
 def test_user(user_url):
     user = User(user_url)
@@ -38,12 +39,33 @@ def test_user(user_url):
     print following_topic_num
     following_column_num = user.get_following_columns_num()
     print following_column_num
+    user_id = user.get_user_id()
+    print user_id
 #    asks = user.get_asks()
 #    answers = user.get_answers()
 
+def test_answer(answer_url):
+    answer = Answers(answer_url)
+    answer_id = answer.get_answer_id()
+    print answer_id
+    question_id = answer.get_question_id()
+    print question_id
+    author_id = answer.get_author_id()
+    print author_id
+    detail = answer.get_detail()
+    print detail
+    upvote_num = answer.get_upvote_num()
+    print upvote_num
+    visited_times = answer.get_visited_times()
+    print visited_times
+    upvoters = answer.get_upvoters()
+    for upvoter in upvoters:
+        print upvoter.get_user_id()
 def main():
-    user_url = "http://www.zhihu.com/people/xiepanda"
-    test_user(user_url)
+    #user_url = "http://www.zhihu.com/people/xiepanda"
+    #test_user(user_url)
+    answer_url = "http://www.zhihu.com/question/36669529/answer/68811311"
+    test_answer(answer_url)
 
 if __name__ == '__main__':
     main()
