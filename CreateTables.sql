@@ -55,7 +55,8 @@ create table Comment(
 );
 
 create table Collection(
-	name varchar(8) primary key,
+	collection_id char(8) primary key,
+	name varchar(50),
 	creator char(8),
 	foreign key (creator) references Users(user_ID)
 );

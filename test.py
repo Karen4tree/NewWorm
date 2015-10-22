@@ -4,6 +4,8 @@ from msg_from_web import User
 from msg_from_web import Questions
 from msg_from_web import Answers
 from msg_from_web import Topics
+from msg_from_web import Collections
+
 
 def test_user(user_url):
     user = User(user_url)
@@ -42,6 +44,8 @@ def test_user(user_url):
     print following_column_num
     user_id = user.get_user_id()
     print user_id
+
+
 #    asks = user.get_asks()
 #    answers = user.get_answers()
 
@@ -63,6 +67,7 @@ def test_answer(answer_url):
     for upvoter in upvoters:
         print upvoter.get_user_id()
 
+
 def topic_test(topic_url):
     topic = Topics(topic_url)
     topic_id = topic.get_topic_id()
@@ -74,20 +79,50 @@ def topic_test(topic_url):
     follower_num = topic.get_followers_num()
     print follower_num
     questions = topic.get_questions()
-    i = 1
     for question in questions:
-        print i
         print question.get_question_id()
-        i+=1
+    # followers = topic.get_followers()
+    # print followers
 
+def question_test(question_url):
+    question = Questions(question_url)
+    question_id = question.get_question_id()
+    print question_id
+    follower_num = question.get_follower_num()
+    print follower_num
+    title = question.get_title()
+    detail = question.get_detail()
+    print title
+    print detail
+    answer_num = question.get_answers_num()
+    print answer_num
+    topics = question.get_topics()
+    #for topic in topics:
+    #    print topic.get_topic_id()
+    #answers = question.get_answers()
+    #for answer in answers:
+    #    print answer.get_detail()
+    #followers = question.get_followers()
+    #for follower in followers:
+    #    print follower.get_user_id()
+
+def collection_test(collection_url):
+    collection = Collections(collection_url)
+    collection_id = collection.get_collection_id()
+    print collection_id
 
 def main():
-    #user_url = "http://www.zhihu.com/people/xiepanda"
-    #test_user(user_url)
-    #answer_url = "http://www.zhihu.com/question/36669529/answer/68811311"
+    user_url = "http://www.zhihu.com/people/xiepanda"
+    answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
+    topic_url = "http://www.zhihu.com/topic/19550376"
+    question_url = "http://www.zhihu.com/question/31918396"
+    collection_url = "http://www.zhihu.com/collection/74871516"
+    # test_user(user_url)
     #test_answer(answer_url)
-    topic_url = "http://www.zhihu.com/topic/19564496"
-    topic_test(topic_url)
+    #topic_test(topic_url)
+    question_test(question_url)
+    #collection_test(collection_url)
+
 
 if __name__ == '__main__':
     main()

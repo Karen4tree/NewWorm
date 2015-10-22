@@ -263,7 +263,7 @@ class Questions:
             self.asker_id = asker_id
 
     def get_question_id(self):
-        return self.url[len(self.url) - 7:len(self.url)]
+        return self.url[len(self.url) - 8:len(self.url)]
 
     def parser(self):
         r = requests.get(self.url)
@@ -297,24 +297,18 @@ class Questions:
 
     def get_topics(self):
         soup = self.soup
-        topic_tags = soup.find_all("a", class_ = "zm_item_tag")
-        topics = []
+        topic_tags = soup.find_all("a", class_ = "zm-item-tag")
         for topic_tag in topic_tags:
-            topic_name = topic_tag.contents[0].encode("utf-8").replace("\n", "")
-            topic_url = "http://www.zhihu.com/topic/" + topic_tag["href"]
-            topic = Topics(topic_url, topic_name)
-            topics.append(topic)
-        return topics
+            topic_name = topic_tag.string
+            topic_url = "http://www.zhihu.com" + topic_tag["href"]
+            yield Topics(topic_url,topic_name)
 
     def get_answers(self):
         soup = self.soup
-        answers = []
-        answer_tags = soup.find_all("div", class_ = "zg-anchor-hidden")["name"]
+        answer_tags = soup.find_all("div", class_ = "zm-item-answer")
         for answer_tag in answer_tags:
-            answer_url = answer_tag[len(answer_tag) - 7:len(answer_tag)]
-            answer = Answers(answer_url)
-            answers.append(answer)
-        return answers
+            answer_url = self.url+"/answer/"+answer_tag["data-atoken"]
+            yield Answers(answer_url)
 
     def get_followers(self):
         follower_page_url = self.url + '/followers'
@@ -370,7 +364,7 @@ class Answers:
 
     def get_detail(self):
         soup = self.soup
-        detail = soup.find("div", class_ = "zm-editable-content clearfix").string
+        detail = soup.find("div", class_ = "zm-editable-content clearfix")
         return detail
 
     def get_upvote_num(self):
@@ -451,40 +445,43 @@ class Topics:
 
     def get_followers_num(self):
         soup = self.soup
-        followers_num = soup.find("div", class_="zm-topic-side-followers-info").find("a").strong.string
+        followers_num = soup.find("div", class_ = "zm-topic-side-followers-info").find("a").strong.string
         return followers_num
 
     def get_followers(self):
         soup = self.soup
-        #需要滚动加载
+        # 需要滚动加载
 
     def get_questions(self):
-        url = self.url+"/questions?page="
+        url = self.url + "/questions?page="
         url_head = "http://www.zhihu.com"
         r = requests.get(url + '1')
         soup = BeautifulSoup(r.content)
-        question_tags = []
         pages = soup.find("div", class_ = "zm-invite-pager").find_all("span")
         total_pages = int(pages[len(pages) - 2].find("a").string)
-        for i in range(1,total_pages):
-            r = requests.get(url+'%d'%i)
+        for i in range(1, total_pages):
+            r = requests.get(url + '%d' % i)
             soup = BeautifulSoup(r.content)
-            question_on_this_page =soup.find_all("a", class_ = "question_link")
+            question_on_this_page = soup.find_all("a", class_ = "question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
                 yield Questions(question_url)
 
 
-
+##########################################################
+##
+##从Collection url指向页面中抓取信息
+##
+##########################################################
 class Collections:
     url = None
     soup = None
 
     def __init__(self, url, name=None):
-        if url[0:len(url) - 8] != "http://www.zhihu.com/collection/":
-            raise ValueError("\"" + url + "\"" + " : it isn't a collection url.")
-        else:
+        if re.match(r"http://www.zhihu.com/collection/\d{8}", url):
             self.url = url
+        else:
+            raise ValueError("\"" + url + "\"" + " : it isn't a collection url.")
         if name is not None:
             self.name = name
         if self.soup is None:
@@ -494,7 +491,15 @@ class Collections:
         r = requests.get(self.url)
         self.soup = BeautifulSoup(r.content)
 
+    def get_collection_id(self):
+        return self.url[len(self.url) - 8:len(self.url)]
 
+
+##########################################################
+##
+##从Article url指向页面中抓取信息
+##
+##########################################################
 class Article:
     url = None
     soup = None
@@ -507,4 +512,3 @@ class Article:
     def parser(self):
         r = requests.get(self.url)
         self.soup = BeautifulSoup(r.content)
-
