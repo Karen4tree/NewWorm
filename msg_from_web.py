@@ -455,9 +455,9 @@ class Topics:
         return followers_num
 
     def get_followers(self):
-        
+        #需要滚动加载
     def get_questions(self):
-
+        #不需要滚动加载
 
 
 class Collections:
