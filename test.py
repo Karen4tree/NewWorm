@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-from msg_from_web import User
-from msg_from_web import Questions
-from msg_from_web import Answers
-from msg_from_web import Topics
-from msg_from_web import Collections
-from msg_from_web import Article
+from User import User
+from Questions import Questions
+from Answers import Answers
+from Topics import Topics
+from Collections import Collections
+from Article import Article
 
 def test_user(user_url):
     user = User(user_url)
