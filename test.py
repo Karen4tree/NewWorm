@@ -44,10 +44,17 @@ def test_user(user_url):
     print following_column_num
     user_id = user.get_user_id()
     print user_id
+    asks = user.get_asks()
+    for question in asks:
+        print question.get_title()
+    answers = user.get_answers()
+    for answer in answers:
+        print answer.get_answer_id()
 
+    #articles = user.get_articles()
+    #for article in articles:
+    #    print article.get_title()
 
-#    asks = user.get_asks()
-#    answers = user.get_answers()
 
 def test_answer(answer_url):
     answer = Answers(answer_url)
@@ -110,18 +117,25 @@ def collection_test(collection_url):
     collection = Collections(collection_url)
     collection_id = collection.get_collection_id()
     print collection_id
+    collection_name = collection.get_collection_name()
+    print collection_name
+    creator = collection.get_creator()
+    print creator.get_user_id()
+    answers = collection.get_answers()
+    for answer in answers:
+        print answer.get_answer_id()
 
 def main():
     user_url = "http://www.zhihu.com/people/xiepanda"
     answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
     topic_url = "http://www.zhihu.com/topic/19550376"
     question_url = "http://www.zhihu.com/question/31918396"
-    collection_url = "http://www.zhihu.com/collection/74871516"
-    # test_user(user_url)
+    collection_url = "http://www.zhihu.com/collection/19689137"
+    #test_user(user_url)
     #test_answer(answer_url)
     #topic_test(topic_url)
-    question_test(question_url)
-    #collection_test(collection_url)
+    #question_test(question_url)
+    collection_test(collection_url)
 
 
 if __name__ == '__main__':

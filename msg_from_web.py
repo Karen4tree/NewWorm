@@ -198,7 +198,6 @@ class User:
         return followees
 
     def get_asks(self):
-        asks = []
         asks_num = self.get_ask_num()
         if asks_num == 0:
             return
@@ -210,11 +209,9 @@ class User:
                 for question in soup.find_all("a", class_ = "question_link"):
                     url = "http://www.zhihu.com" + question["href"]
                     title = question.string.encode("utf-8")
-                    asked = Questions(url, title)
-                    asks.append(asked)
+                    yield Questions(url, title)
 
     def get_answers(self):
-        answers = []
         answers_num = self.get_answer_num()
         if answers_num == 0:
             return
@@ -225,20 +222,15 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for answer_tag in soup.find_all("a", class_ = "question_link"):
                     answer_url = 'http://www.zhihu.com' + answer_tag["href"]
-                    answer = Answers(answer_url)
-                    answers.append(answer)
-        return answers
+                    yield Answers(answer_url)
 
     def get_articles(self):
-        articles = []
         post_url = self.url + '/posts'
         r = requests.get(post_url)
         soup = BeautifulSoup(r.content)
         for article_tag in soup.find_all("a", class_ = "post-link"):
             article_url = article_tag["href"]
-            article = Article(article_url)
-            articles.append(article)
-        return articles
+            yield Article(article_url)
 
 
 ##########################################################
@@ -493,6 +485,41 @@ class Collections:
 
     def get_collection_id(self):
         return self.url[len(self.url) - 8:len(self.url)]
+
+    def get_collection_name(self):
+        soup = self.soup
+        name = soup.find("h2", id="zh-fav-head-title").string
+        return name
+
+    def get_creator(self):
+        soup = self.soup
+        creator_tag = soup.find("div", class_="zg-section-title").find("div").find_all("a")[1]["href"]
+        creator_url = "http://www.zhihu.com" + creator_tag[0:len(creator_tag)-12]
+        creator = User(creator_url)
+        return creator
+
+    def get_answers(self):
+        soup = self.soup
+        if soup.find("div", class_="zm-invite-pager") is not None:
+            total_pages = soup.find("div", class_="zm-invite-pager").find_all("span")
+            total_pages = int(total_pages[len(total_pages)-2].string)
+            for i in range(1, total_pages):
+                url = self.url+"?page=%d" % i
+                r = requests.get(url)
+                soup = BeautifulSoup(r.content)
+                tags = soup.find("div", id="zh-list-answer-wrap").find_all("div", class_="zm-item")
+                for tag in tags:
+                    question_part = tag.find("h2").find("a")["href"]
+                    answer_part = tag.find("div",class_="zm-item-answer ")["data-atoken"]
+                    answer_url = "http://www.zhihu.com"+question_part+"/answer/"+answer_part
+                    yield Answers(answer_url)
+        else:
+            tags = soup.find("div", id="zh-list-answer-wrap").find_all("div", class_="zm-item")
+            for tag in tags:
+                question_part = tag.find("h2").find("a")["href"]
+                answer_part = tag.find("div",class_="zm-item-answer ")["data-atoken"]
+                answer_url = "http://www.zhihu.com"+question_part+"/answer/"+answer_part
+                yield Answers(answer_url)
 
 
 ##########################################################
