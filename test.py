@@ -5,7 +5,7 @@ from msg_from_web import Questions
 from msg_from_web import Answers
 from msg_from_web import Topics
 from msg_from_web import Collections
-
+from msg_from_web import Article
 
 def test_user(user_url):
     user = User(user_url)
@@ -125,17 +125,28 @@ def collection_test(collection_url):
     for answer in answers:
         print answer.get_answer_id()
 
+
+def article_test(article_url):
+    article = Article(article_url)
+    article_id = article.get_article_id()
+    print article_id
+    title = article.get_article_title()
+    print title
+
+
 def main():
     user_url = "http://www.zhihu.com/people/xiepanda"
     answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
     topic_url = "http://www.zhihu.com/topic/19550376"
     question_url = "http://www.zhihu.com/question/31918396"
     collection_url = "http://www.zhihu.com/collection/19689137"
+    article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
     #test_user(user_url)
     #test_answer(answer_url)
     #topic_test(topic_url)
     #question_test(question_url)
-    collection_test(collection_url)
+    #collection_test(collection_url)
+    article_test(article_url)
 
 
 if __name__ == '__main__':
