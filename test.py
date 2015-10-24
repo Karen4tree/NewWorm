@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
+from ScrollLoader import *
+#from msg_from_web import Questions
 from User import User
-from Questions import Questions
-from Answers import Answers
-from Topics import Topics
-from Collections import Collections
-from Article import Article
+
 
 def test_user(user_url):
     user = User(user_url)
@@ -37,7 +35,6 @@ def test_user(user_url):
     print education
     education_extra = user.get_education_extra()
     print education_extra
-
     following_topic_num = user.get_following_topics_num()
     print following_topic_num
     following_column_num = user.get_following_columns_num()
@@ -45,11 +42,17 @@ def test_user(user_url):
     user_id = user.get_user_id()
     print user_id
     asks = user.get_asks()
-    for question in asks:
-        print question.get_title()
-    answers = user.get_answers()
-    for answer in answers:
-        print answer.get_answer_id()
+    #print 'Questions of User'
+    #for question in asks:
+    #    print question.get_title()
+    #answers = user.get_answers()
+    #print 'Answers of User'
+    #for answer in answers:
+    #    print answer.get_answer_id()
+    print 'Followers of User'
+    followers = user.get_followers()
+    for follower in followers:
+        print follower.get_user_id()
 
     #articles = user.get_articles()
     #for article in articles:
@@ -104,14 +107,14 @@ def question_test(question_url):
     answer_num = question.get_answers_num()
     print answer_num
     topics = question.get_topics()
-    #for topic in topics:
-    #    print topic.get_topic_id()
+    for topic in topics:
+        print topic.get_topic_id()
     #answers = question.get_answers()
     #for answer in answers:
     #    print answer.get_detail()
-    #followers = question.get_followers()
-    #for follower in followers:
-    #    print follower.get_user_id()
+    followers = question.get_followers()
+    for follower in followers:
+        print follower.get_user_id()
 
 def collection_test(collection_url):
     collection = Collections(collection_url)
@@ -141,10 +144,10 @@ def main():
     question_url = "http://www.zhihu.com/question/31918396"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    #test_user(user_url)
+    test_user(user_url)
     #test_answer(answer_url)
     #topic_test(topic_url)
-    question_test(question_url)
+    #question_test(question_url)
     #collection_test(collection_url)
     #article_test(article_url)
 

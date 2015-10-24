@@ -2,36 +2,7 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-import os, sys, time, platform, random
-import re, json, cookielib
-# requirements
-import requests, termcolor, html2text
-
-try:
-    from bs4 import BeautifulSoup
-except:
-    import BeautifulSoup
-# module
-from auth import islogin
-from auth import Logging
-
-
-# 从auth.py中调用身份信息
-requests = requests.Session()
-requests.cookies = cookielib.LWPCookieJar('cookies')
-try:
-    requests.cookies.load(ignore_discard = True)
-except:
-    Logging.error(u"你还没有登录知乎哦 ...")
-    Logging.info(u"执行 `python auth.py` 即可以完成登录。")
-    raise Exception("无权限(403)")
-
-if not islogin():
-    Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
-    raise Exception("无权限(403)")
-
-reload(sys)
-sys.setdefaultencoding('utf8')
+from ScrollLoader import *
 
 
 # 从Topic url指向页面中抓取信息

@@ -6,16 +6,14 @@ import re, json, cookielib,sys
 # requirements
 import requests, termcolor, html2text
 
-try:
-    from bs4 import BeautifulSoup
-except:
-    import BeautifulSoup
+from bs4 import BeautifulSoup
+
 # module
 from auth import islogin
 from auth import Logging
+
+from Topics import Topics
 from Questions import Questions
-from Answers import Answers
-from Article import Article
 
 print 'get cookies'
 requests = requests.Session()

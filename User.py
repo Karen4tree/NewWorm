@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
+from Article import Article
+
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
 from ScrollLoader import *
+from Requests import *
+from Answers import Answers
+#from Questions import Questions
 
 def get_hash_id(soup):
-    return soup.find("button", class_="zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
+    return soup.find("button", class_ = "zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
+
 
 def get_xsrf(soup):
-    return soup.find("input", {"name":"_xsrf"})['value']
+    return soup.find("input", {"name": "_xsrf"})['value']
+
 
 # 从User个人主页抓取信息
 class User:
@@ -132,46 +139,40 @@ class User:
             education_extra = soup.find("span", class_ = "education-extra item").string
         return education_extra
 
-    def get_follower(self):
-
-
     def get_followers(self):
         follower_page_url = self.url + '/followers'
         r = requests.get(follower_page_url)
-        follower_html = r.content
         follower_url_list = []
         soup = BeautifulSoup(r.content)
         hash_id = get_hash_id(soup)
         _xsrf = get_xsrf(soup)
-        follower_links = soup.find_all("a", class_ = "zg-link")        
-        for link in follower_links:
-            follower_url_list.append(link['href'])
-        scroll_loader = ScrollLoader("post","http://www.zhihu.com/node/ProfileFollowersListV2",_xsrf,hash_id)
+        scroll_loader = ScrollLoader("post", "http://www.zhihu.com/node/ProfileFollowersListV2", _xsrf, hash_id)
         for response in scroll_loader.run():
             for each in response:
                 soup = BeautifulSoup(each)
-                follower_links = soup.find_all("a", class_ = "zg-link")   
+                follower_links = soup.find_all("a", class_ = "zg-link")
                 for link in follower_links:
                     follower_url_list.append(link['href'])
-        print follower_url_list.__len__()
-        follower_list = []
+        print follower_url_list.__len__()  # 单元测试后删除
         for url in follower_url_list:
-            follower = User(url)
-            follower_list.append(follower)
-        return follower_list
+            yield User(url)
 
     def get_followees(self):
         followee_page_url = self.url + '/followees'
         r = requests.get(followee_page_url)
         soup = BeautifulSoup(r.content)
-        followees = []
-        # 需要滚动加载,然而我并不会
-        followee_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
-        for followee_tag in followee_tags:
-            followee_url = "http://www.zhihu.com" + followee_tag["href"]
-            followee = User(followee_url)
-            followees.append(followee)
-        return followees
+        hash_id = get_hash_id(soup)
+        _xsrf = get_xsrf(soup)
+        followee_urls = []
+        scroll_loader = ScrollLoader("post", "http://www.zhihu.com/node/ProfileFolloweesListV2", _xsrf, hash_id)
+        for response in scroll_loader.run():
+            for each in response:
+                soup = BeautifulSoup(each)
+                followee_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
+                for followee_tag in followee_tags:
+                        followee_urls.append("http://www.zhihu.com" + followee_tag["href"])
+        for url in followee_urls:
+            yield User(url)
 
     def get_asks(self):
         asks_num = self.get_ask_num()
@@ -184,8 +185,7 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for question in soup.find_all("a", class_ = "question_link"):
                     url = "http://www.zhihu.com" + question["href"]
-                    title = question.string.encode("utf-8")
-                    yield Questions(url, title)
+                    yield Questions(url)
 
     def get_answers(self):
         answers_num = self.get_answer_num()
