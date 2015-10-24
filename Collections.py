@@ -14,8 +14,6 @@ except:
 # module
 from auth import islogin
 from auth import Logging
-from User import User
-from Answers import Answers
 
 # 从auth.py中调用身份信息
 requests = requests.Session()

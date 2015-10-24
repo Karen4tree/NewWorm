@@ -16,7 +16,6 @@ from auth import islogin
 from auth import Logging
 from Topics import Topics
 from Answers import Answers
-from User import User
 
 # 从auth.py中调用身份信息
 requests = requests.Session()

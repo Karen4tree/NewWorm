@@ -14,7 +14,6 @@ except:
 # module
 from auth import islogin
 from auth import Logging
-from Questions import Questions
 
 
 # 从auth.py中调用身份信息

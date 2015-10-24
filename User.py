@@ -2,44 +2,13 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-import os, sys, time, platform, random
-import re, json, cookielib
-# requirements
-import requests, termcolor, html2text
+from ScrollLoader import *
 
-try:
-    from bs4 import BeautifulSoup
-except:
-    import BeautifulSoup
-# module
-from auth import islogin
-from auth import Logging
-from Questions import Questions
-from Answers import Answers
-from Article import Article
+def get_hash_id(soup):
+    return soup.find("button", class_="zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
 
-
-##########################################################
-##
-##从auth.py中调用身份信息
-##
-##########################################################
-requests = requests.Session()
-requests.cookies = cookielib.LWPCookieJar('cookies')
-try:
-    requests.cookies.load(ignore_discard = True)
-except:
-    Logging.error(u"你还没有登录知乎哦 ...")
-    Logging.info(u"执行 `python auth.py` 即可以完成登录。")
-    raise Exception("无权限(403)")
-
-if not islogin():
-    Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
-    raise Exception("无权限(403)")
-
-reload(sys)
-sys.setdefaultencoding('utf8')
-
+def get_xsrf(soup):
+    return soup.find("input", {"name":"_xsrf"})['value']
 
 # 从User个人主页抓取信息
 class User:
@@ -163,18 +132,33 @@ class User:
             education_extra = soup.find("span", class_ = "education-extra item").string
         return education_extra
 
+    def get_follower(self):
+
+
     def get_followers(self):
         follower_page_url = self.url + '/followers'
         r = requests.get(follower_page_url)
+        follower_html = r.content
+        follower_url_list = []
         soup = BeautifulSoup(r.content)
-        followers = []
-        # 需要滚动加载,然而我并不会
-        follower_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
-        for follower_tag in follower_tags:
-            follower_url = "http://www.zhihu.com" + follower_tag["href"]
-            follower = User(follower_url)
-            followers.append(follower)
-        return followers
+        hash_id = get_hash_id(soup)
+        _xsrf = get_xsrf(soup)
+        follower_links = soup.find_all("a", class_ = "zg-link")        
+        for link in follower_links:
+            follower_url_list.append(link['href'])
+        scroll_loader = ScrollLoader("post","http://www.zhihu.com/node/ProfileFollowersListV2",_xsrf,hash_id)
+        for response in scroll_loader.run():
+            for each in response:
+                soup = BeautifulSoup(each)
+                follower_links = soup.find_all("a", class_ = "zg-link")   
+                for link in follower_links:
+                    follower_url_list.append(link['href'])
+        print follower_url_list.__len__()
+        follower_list = []
+        for url in follower_url_list:
+            follower = User(url)
+            follower_list.append(follower)
+        return follower_list
 
     def get_followees(self):
         followee_page_url = self.url + '/followees'

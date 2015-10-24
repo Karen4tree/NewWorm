@@ -15,9 +15,6 @@ except:
 from auth import islogin
 from auth import Logging
 
-from User import User
-
-
 # 从auth.py中调用身份信息
 requests = requests.Session()
 requests.cookies = cookielib.LWPCookieJar('cookies')
