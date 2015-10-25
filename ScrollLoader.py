@@ -13,7 +13,7 @@ class ScrollLoader:
     _xsrf = None
     hash_id = None
 
-    def __init__(self, http_method, url, add,_xsrf=None, hash_id=None):
+    def __init__(self, http_method, url, add, _xsrf=None, hash_id=None):
         self.offset = 0
         self.http_method = http_method
         self.url = url
@@ -25,16 +25,18 @@ class ScrollLoader:
         while True:
             self.offset += self.add
             if self.http_method == 'get':
-                r = requests.get(self.url+"&offset={0}".format(self.offset))
+                r = requests.get(self.url + "&offset={0}".format(self.offset))
                 if not json.loads(r.text):
                     break
                 else:
                     for each_article in json.loads(r.text):
                         yield each_article['url']
             if self.http_method == 'post':
-                params = """\"offset":{0},"order_by":"created","hash_id":"{1}\"""".format(self.offset, self.hash_id)
-                payload = {'method': 'next', 'params': "{" + params + "}", '_xsrf': self._xsrf}
-                r = requests.post(self.url, data = payload)
+                params = """\"offset":{0},"order_by":"created","hash_id":"{1}\"""".format(
+                    self.offset, self.hash_id)
+                payload = {'method': 'next',
+                           'params': "{" + params + "}", '_xsrf': self._xsrf}
+                r = requests.post(self.url, data=payload)
                 self.result = json.loads(r.text)['msg']
                 if not self.result:
                     break

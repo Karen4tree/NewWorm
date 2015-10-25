@@ -36,7 +36,8 @@ class Question:
 
     def get_follower_num(self):
         soup = self.soup
-        followers_num = int(soup.find("div", class_ = "zg-gray-normal").a.strong.string)
+        followers_num = int(
+            soup.find("div", class_="zg-gray-normal").a.strong.string)
         return followers_num
 
     def get_title(self):
@@ -44,25 +45,28 @@ class Question:
             return self.title
         else:
             soup = self.soup
-            title = soup.find("h2", class_ = "zm-item-title").string.encode("utf-8").replace("\n", "")
+            title = soup.find(
+                "h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
             self.title = title
             return title
 
     def get_detail(self):
         soup = self.soup
-        detail = soup.find("div", id = "zh-question-detail").div.get_text().encode("utf-8")
+        detail = soup.find(
+            "div", id="zh-question-detail").div.get_text().encode("utf-8")
         return detail
 
     def get_answers_num(self):
         soup = self.soup
         answers_num = 0
-        if soup.find("h3", id = "zh-question-answer-num") is not None:
-            answers_num = int(soup.find("h3", id = "zh-question-answer-num")["data-num"])
+        if soup.find("h3", id="zh-question-answer-num") is not None:
+            answers_num = int(
+                soup.find("h3", id="zh-question-answer-num")["data-num"])
         return answers_num
 
     def get_topics(self):
         soup = self.soup
-        topic_tags = soup.find_all("a", class_ = "zm-item-tag")
+        topic_tags = soup.find_all("a", class_="zm-item-tag")
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
@@ -70,7 +74,7 @@ class Question:
 
     def get_answers(self):
         soup = self.soup
-        answer_tags = soup.find_all("div", class_ = "zm-item-answer")
+        answer_tags = soup.find_all("div", class_="zm-item-answer")
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
             yield Answer(answer_url)
@@ -81,7 +85,7 @@ class Question:
         soup = BeautifulSoup(r.content)
         followers = []
         # 需要滚动加载,然而我并不会
-        follower_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
+        follower_tags = soup.find_all("a", class_="zm-item-link-avatar")
         for follower_tag in follower_tags:
             follower_url = "http://www.zhihu.com" + follower_tag["href"]
             follower = User(follower_url)

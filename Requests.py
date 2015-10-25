@@ -2,9 +2,14 @@
 __author__ = 'ZombieGroup'
 # Build-in / Stdimport os, sys, time, platform, random
 
-import re, json, cookielib,sys
+import re
+import json
+import cookielib
+import sys
 # requirements
-import requests, termcolor, html2text
+import requests
+import termcolor
+import html2text
 
 from bs4 import BeautifulSoup
 
@@ -16,7 +21,7 @@ print 'get cookies'
 requests = requests.Session()
 requests.cookies = cookielib.LWPCookieJar('cookies')
 try:
-    requests.cookies.load(ignore_discard = True)
+    requests.cookies.load(ignore_discard=True)
 except:
     Logging.error(u"你还没有登录知乎哦 ...")
     Logging.info(u"执行 `python auth.py` 即可以完成登录。")
@@ -30,6 +35,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 proxies = {
-  "http": "http://127.0.0.1:8080",
-  "https": "http://127.0.0.1:8080",
+    "http": "http://127.0.0.1:8080",
+    "https": "http://127.0.0.1:8080",
 }

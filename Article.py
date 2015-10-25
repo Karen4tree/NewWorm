@@ -5,6 +5,8 @@ __author__ = 'ZombieGroup'
 from Requests import *
 
 # 从Article url指向页面中抓取信息
+
+
 class Article:
     url = None
     soup = None

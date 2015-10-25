@@ -2,11 +2,18 @@
 #-*- coding:utf-8 -*-
 
 # Build-in / Std
-import os, sys, time, platform, random
-import re, json, cookielib
+import os
+import sys
+import time
+import platform
+import random
+import re
+import json
+import cookielib
 
 # requirements
-import requests, termcolor
+import requests
+import termcolor
 
 
 requests = requests.Session()
@@ -16,112 +23,135 @@ try:
 except:
     pass
 
+
 class Logging:
     flag = True
 
     @staticmethod
     def error(msg):
         if Logging.flag == True:
-            print "".join(  [ termcolor.colored("ERROR", "red"), ": ", termcolor.colored(msg, "white") ] )
+            print "".join([termcolor.colored("ERROR", "red"), ": ", termcolor.colored(msg, "white")])
+
     @staticmethod
     def warn(msg):
         if Logging.flag == True:
-            print "".join(  [ termcolor.colored("WARN", "yellow"), ": ", termcolor.colored(msg, "white") ] )
+            print "".join([termcolor.colored("WARN", "yellow"), ": ", termcolor.colored(msg, "white")])
+
     @staticmethod
     def info(msg):
         # attrs=['reverse', 'blink']
         if Logging.flag == True:
-            print "".join(  [ termcolor.colored("INFO", "magenta"), ": ", termcolor.colored(msg, "white") ] )
+            print "".join([termcolor.colored("INFO", "magenta"), ": ", termcolor.colored(msg, "white")])
+
     @staticmethod
     def debug(msg):
         if Logging.flag == True:
-            print "".join(  [ termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white") ] )
+            print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white")])
+
     @staticmethod
     def success(msg):
         if Logging.flag == True:
-            print "".join(  [ termcolor.colored("SUCCES", "green"), ": ", termcolor.colored(msg, "white") ] )
+            print "".join([termcolor.colored("SUCCES", "green"), ": ", termcolor.colored(msg, "white")])
 
 # Setting Logging
 Logging.flag = True
 
+
 class LoginPasswordError(Exception):
+
     def __init__(self, message):
-        if type(message) != type("") or message == "": self.message = u"帐号密码错误"
-        else: self.message = message
+        if type(message) != type("") or message == "":
+            self.message = u"帐号密码错误"
+        else:
+            self.message = message
         Logging.error(self.message)
+
 
 class NetworkError(Exception):
+
     def __init__(self, message):
-        if type(message) != type("") or message == "": self.message = u"网络异常"
-        else: self.message = message
+        if type(message) != type("") or message == "":
+            self.message = u"网络异常"
+        else:
+            self.message = message
         Logging.error(self.message)
+
+
 class AccountError(Exception):
+
     def __init__(self, message):
-        if type(message) != type("") or message == "": self.message = u"帐号类型错误"
-        else: self.message = message
+        if type(message) != type("") or message == "":
+            self.message = u"帐号类型错误"
+        else:
+            self.message = message
         Logging.error(self.message)
-
-
-
 
 
 def download_captcha():
     url = "http://www.zhihu.com/captcha.gif"
-    r = requests.get(url, params={"r": random.random()} )
+    r = requests.get(url, params={"r": random.random()})
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
     image_name = u"verify." + r.headers['content-type'].split("/")[1]
-    open( image_name, "wb").write(r.content)
+    open(image_name, "wb").write(r.content)
     """
         System platform: https://docs.python.org/2/library/platform.html
     """
     Logging.info(u"正在调用外部程序渲染验证码 ... ")
     if platform.system() == "Linux":
-        Logging.info(u"Command: xdg-open %s &" % image_name )
-        os.system("xdg-open %s &" % image_name )
+        Logging.info(u"Command: xdg-open %s &" % image_name)
+        os.system("xdg-open %s &" % image_name)
     elif platform.system() == "Darwin":
-        Logging.info(u"Command: open %s &" % image_name )
-        os.system("open %s &" % image_name )
+        Logging.info(u"Command: open %s &" % image_name)
+        os.system("open %s &" % image_name)
     elif platform.system() == "SunOS":
-        os.system("open %s &" % image_name )
+        os.system("open %s &" % image_name)
     elif platform.system() == "FreeBSD":
-        os.system("open %s &" % image_name )
+        os.system("open %s &" % image_name)
     elif platform.system() == "Unix":
-        os.system("open %s &" % image_name )
+        os.system("open %s &" % image_name)
     elif platform.system() == "OpenBSD":
-        os.system("open %s &" % image_name )
+        os.system("open %s &" % image_name)
     elif platform.system() == "NetBSD":
-        os.system("open %s &" % image_name )
+        os.system("open %s &" % image_name)
     elif platform.system() == "Windows":
-        os.system("open %s &" % image_name )
+        os.system("open %s &" % image_name)
     else:
-        Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" % os.path.join(os.getcwd(), image_name) )
+        Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" %
+                     os.path.join(os.getcwd(), image_name))
 
-    captcha_code = raw_input( termcolor.colored("请输入验证码: ", "cyan") )
+    captcha_code = raw_input(termcolor.colored("请输入验证码: ", "cyan"))
     return captcha_code
+
 
 def search_xsrf():
     url = "http://www.zhihu.com/"
     r = requests.get(url)
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
-    results = re.compile(r"\<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
+    results = re.compile(
+        r"\<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
     if len(results) < 1:
-        Logging.info(u"提取XSRF 代码失败" )
+        Logging.info(u"提取XSRF 代码失败")
         return None
     return results[0]
 
+
 def build_form(account, password):
     account_type = "email"
-    if re.match(r"^\d{11}$", account): account_type = "phone"
-    elif re.match(r"^\S+\@\S+\.\S+$", account): account_type = "email"
-    else: raise AccountError(u"帐号类型错误")
+    if re.match(r"^\d{11}$", account):
+        account_type = "phone"
+    elif re.match(r"^\S+\@\S+\.\S+$", account):
+        account_type = "email"
+    else:
+        raise AccountError(u"帐号类型错误")
 
-    form = {account_type: account, "password": password, "remember_me": True }
+    form = {account_type: account, "password": password, "remember_me": True}
 
     form['_xsrf'] = search_xsrf()
     form['captcha'] = download_captcha()
     return form
+
 
 def upload_form(form):
     url = "http://www.zhihu.com/login/email"
@@ -133,7 +163,7 @@ def upload_form(form):
         'Referer': "http://www.zhihu.com/",
         'X-Requested-With': "XMLHttpRequest"
     }
- 
+
     r = requests.post(url, data=form, headers=headers)
     if int(r.status_code) != 200:
         raise NetworkError(u"表单上传失败!")
@@ -141,17 +171,17 @@ def upload_form(form):
     if r.headers['content-type'].lower() == "application/json":
         result = r.json()
         if result["r"] == 0:
-            Logging.success(u"登录成功！" )
+            Logging.success(u"登录成功！")
             return {"result": True}
         elif result["r"] == 1:
-            Logging.success(u"登录失败！" )
-            return {"error": {"code": int(result['errcode']), "message": result['msg'], "data": result['data'] } }
+            Logging.success(u"登录失败！")
+            return {"error": {"code": int(result['errcode']), "message": result['msg'], "data": result['data']}}
         else:
-            Logging.warn(u"表单上传出现未知错误: \n \t %s )" % ( str(result) ) )
-            return {"error": {"code": -1, "message": u"unknow error"} }
+            Logging.warn(u"表单上传出现未知错误: \n \t %s )" % (str(result)))
+            return {"error": {"code": -1, "message": u"unknow error"}}
     else:
-        Logging.warn(u"无法解析服务器的响应内容: \n \t %s " % r.text )
-        return {"error": {"code": -2, "message": u"parse error"} }
+        Logging.warn(u"无法解析服务器的响应内容: \n \t %s " % r.text)
+        return {"error": {"code": -2, "message": u"parse error"}}
 
 
 def islogin():
@@ -170,7 +200,7 @@ def islogin():
 
 
 def read_account_from_config_file(config_file="config.ini"):
-    # NOTE: The ConfigParser module has been renamed to configparser in Python 3. 
+    # NOTE: The ConfigParser module has been renamed to configparser in Python 3.
     #       The 2to3 tool will automatically adapt imports when converting your sources to Python 3.
     #       https://docs.python.org/2/library/configparser.html
     from ConfigParser import ConfigParser
@@ -184,13 +214,12 @@ def read_account_from_config_file(config_file="config.ini"):
         if email == "" or password == "":
             Logging.warn(u"帐号信息无效")
             return (None, None)
-        else: return (email, password)
+        else:
+            return (email, password)
     else:
         Logging.error(u"配置文件加载失败！")
         return (None, None)
 
-    
-    
 
 def login(account=None, password=None):
     if islogin() == True:
@@ -200,9 +229,8 @@ def login(account=None, password=None):
     if account == None:
         (account, password) = read_account_from_config_file()
     if account == None:
-        account  = raw_input("请输入登录帐号: ")
+        account = raw_input("请输入登录帐号: ")
         password = raw_input("请输入登录密码: ")
-
 
     form_data = build_form(account, password)
     """
@@ -215,14 +243,14 @@ def login(account=None, password=None):
     if "error" in result:
         if result["error"]['code'] == 1991829:
             # 验证码错误
-            Logging.error(u"验证码输入错误，请准备重新输入。" )
+            Logging.error(u"验证码输入错误，请准备重新输入。")
             return login()
         else:
-            Logging.warn(u"unknow error." )
+            Logging.warn(u"unknow error.")
             return False
     elif "result" in result and result['result'] == True:
         # 登录成功
-        Logging.success(u"登录成功！" )
+        Logging.success(u"登录成功！")
         requests.cookies.save()
         return True
 

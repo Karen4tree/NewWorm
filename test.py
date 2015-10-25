@@ -9,6 +9,7 @@ from Topic import Topic
 from Collection import Collection
 from Article import Article
 
+
 def test_user(user_url):
     Logging.info(u"test_user:")
     user = User(user_url)
@@ -50,17 +51,17 @@ def test_user(user_url):
 
     Logging.info(u"Questions of User")
     for question in asks:
-       print question.get_title()
+        print question.get_title()
     answers = user.get_answers()
 
     Logging.info(u"Answers of User")
     for answer in answers:
-       print answer.get_answer_id()
+        print answer.get_answer_id()
 
     Logging.info(u"Followers of User")
     for follower in user.get_followers():
         print follower.get_user_id()
-    
+
     Logging.info(u"Followee of User")
     for followee in user.get_followees():
         print followee.get_user_id()
@@ -109,6 +110,7 @@ def topic_test(topic_url):
     # followers = topic.get_followers()
     # print followers
 
+
 def question_test(question_url):
     Logging.info(u"question_test:")
     question = Question(question_url)
@@ -126,11 +128,12 @@ def question_test(question_url):
     for topic in topics:
         print topic.get_topic_id()
     #answers = question.get_answers()
-    #for answer in answers:
+    # for answer in answers:
     #    print answer.get_detail()
     followers = question.get_followers()
     for follower in followers:
         print follower.get_user_id()
+
 
 def collection_test(collection_url):
     Logging.info(u"collection_test:")
