@@ -3,15 +3,15 @@ __author__ = 'ZombieGroup'
 # Build-in / Std
 
 
-from ScrollLoader import *
+from ScrollLoader import ScrollLoader
 from Requests import *
 
-from Answers import Answers
+from Answer import Answer
 from User import User
 
 
 # 从Question url指向页面中抓取信息
-class Questions:
+class Question:
     soup = None
     url = None
 
@@ -73,7 +73,7 @@ class Questions:
         answer_tags = soup.find_all("div", class_ = "zm-item-answer")
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
-            yield Answers(answer_url)
+            yield Answer(answer_url)
 
     def get_followers(self):
         follower_page_url = self.url + '/followers'

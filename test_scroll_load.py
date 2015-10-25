@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 from User import User
-from Questions import Questions
-from Answers import Answers
-from Topics import Topics
-from Collections import Collections
+from Question import Question
+from Answer import Answer
+from Topic import Topic
+from Collection import Collection
 from Article import Article
 from ScrollLoader import ScrollLoader
 

@@ -6,7 +6,7 @@ from ScrollLoader import *
 
 
 # 从Topic url指向页面中抓取信息
-class Topics:
+class Topic:
     url = None
     soup = None
 
@@ -67,4 +67,4 @@ class Topics:
             question_on_this_page = soup.find_all("a", class_ = "question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
-                yield Questions(question_url)
+                yield Question(question_url)

@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from Article import Article
-
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-from ScrollLoader import *
+from ScrollLoader import ScrollLoader
 from Requests import *
-from Answers import Answers
-#from Questions import Questions
+from Answer import Answer
 
 def get_hash_id(soup):
     return soup.find("button", class_ = "zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
@@ -142,36 +139,33 @@ class User:
     def get_followers(self):
         follower_page_url = self.url + '/followers'
         r = requests.get(follower_page_url)
-        follower_url_list = []
-        soup = BeautifulSoup(r.content)
+        text = r.text
+        soup = BeautifulSoup(text)
         hash_id = get_hash_id(soup)
         _xsrf = get_xsrf(soup)
-        scroll_loader = ScrollLoader("post", "http://www.zhihu.com/node/ProfileFollowersListV2", _xsrf, hash_id)
+        scroll_loader = ScrollLoader("post", "http://www.zhihu.com/node/ProfileFollowersListV2",20, _xsrf, hash_id)
         for response in scroll_loader.run():
             for each in response:
-                soup = BeautifulSoup(each)
-                follower_links = soup.find_all("a", class_ = "zg-link")
-                for link in follower_links:
-                    follower_url_list.append(link['href'])
-        print follower_url_list.__len__()  # 单元测试后删除
+                text +=each
+        follower_url_list = re.findall(r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
+        print "follower num",follower_url_list.__len__()  # 单元测试后删除
         for url in follower_url_list:
             yield User(url)
 
     def get_followees(self):
         followee_page_url = self.url + '/followees'
         r = requests.get(followee_page_url)
-        soup = BeautifulSoup(r.content)
+        text = r.text
+        soup = BeautifulSoup(text)
         hash_id = get_hash_id(soup)
         _xsrf = get_xsrf(soup)
-        followee_urls = []
-        scroll_loader = ScrollLoader("post", "http://www.zhihu.com/node/ProfileFolloweesListV2", _xsrf, hash_id)
+        scroll_loader = ScrollLoader("post", "http://www.zhihu.com/node/ProfileFolloweesListV2",20, _xsrf, hash_id)
         for response in scroll_loader.run():
             for each in response:
-                soup = BeautifulSoup(each)
-                followee_tags = soup.find_all("a", class_ = "zm-item-link-avatar")
-                for followee_tag in followee_tags:
-                        followee_urls.append("http://www.zhihu.com" + followee_tag["href"])
-        for url in followee_urls:
+                text +=each
+        followee_url_list = re.findall(r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
+        print "followee num",followee_url_list.__len__()  # 单元测试后删除
+        for url in followee_url_list:
             yield User(url)
 
     def get_asks(self):
@@ -185,7 +179,8 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for question in soup.find_all("a", class_ = "question_link"):
                     url = "http://www.zhihu.com" + question["href"]
-                    yield Questions(url)
+                    from Question import Question
+                    yield Question(url)
 
     def get_answers(self):
         answers_num = self.get_answer_num()
@@ -198,12 +193,12 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for answer_tag in soup.find_all("a", class_ = "question_link"):
                     answer_url = 'http://www.zhihu.com' + answer_tag["href"]
-                    yield Answers(answer_url)
+                    yield Answer(answer_url)
 
-    def get_articles(self):
+    def get_columns(self):
         post_url = self.url + '/posts'
         r = requests.get(post_url)
         soup = BeautifulSoup(r.content)
-        for article_tag in soup.find_all("a", class_ = "post-link"):
-            article_url = article_tag["href"]
-            yield Article(article_url)
+        for each_column in soup.find_all("a","avatar-link"):
+            from Column import Column
+            yield Column(each_column['href'])

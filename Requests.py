@@ -12,9 +12,6 @@ from bs4 import BeautifulSoup
 from auth import islogin
 from auth import Logging
 
-from Topics import Topics
-from Questions import Questions
-
 print 'get cookies'
 requests = requests.Session()
 requests.cookies = cookielib.LWPCookieJar('cookies')

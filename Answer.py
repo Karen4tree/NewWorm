@@ -34,7 +34,7 @@ sys.setdefaultencoding('utf8')
 
 
 # 从Answer url指向页面中抓取信息
-class Answers:
+class Answer:
     url = None
     soup = None
 

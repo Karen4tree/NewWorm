@@ -4,11 +4,11 @@ __author__ = 'ZombieGroup'
 
 from Requests import *
 from User import User
-from Answers import Answers
+from Answer import Answer
 
 
 # 从Collection url指向页面中抓取信息
-class Collections:
+class Collection:
     url = None
     soup = None
 
@@ -55,11 +55,11 @@ class Collections:
                     question_part = tag.find("h2").find("a")["href"]
                     answer_part = tag.find("div", class_ = "zm-item-answer ")["data-atoken"]
                     answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
-                    yield Answers(answer_url)
+                    yield Answer(answer_url)
         else:
             tags = soup.find("div", id = "zh-list-answer-wrap").find_all("div", class_ = "zm-item")
             for tag in tags:
                 question_part = tag.find("h2").find("a")["href"]
                 answer_part = tag.find("div", class_ = "zm-item-answer ")["data-atoken"]
                 answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
-                yield Answers(answer_url)
+                yield Answer(answer_url)

@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-from ScrollLoader import *
-#from msg_from_web import Questions
-from User import User
 
+from auth import Logging
+from User import User
+from Question import Question
+from Answer import Answer
+from Topic import Topic
+from Collection import Collection
+from Article import Article
 
 def test_user(user_url):
+    Logging.info(u"test_user:")
     user = User(user_url)
     answer_num = user.get_answer_num()
     print answer_num
@@ -42,25 +47,34 @@ def test_user(user_url):
     user_id = user.get_user_id()
     print user_id
     asks = user.get_asks()
-    #print 'Questions of User'
-    #for question in asks:
-    #    print question.get_title()
-    #answers = user.get_answers()
-    #print 'Answers of User'
-    #for answer in answers:
-    #    print answer.get_answer_id()
-    print 'Followers of User'
-    followers = user.get_followers()
-    for follower in followers:
-        print follower.get_user_id()
 
-    #articles = user.get_articles()
-    #for article in articles:
-    #    print article.get_title()
+    Logging.info(u"Questions of User")
+    for question in asks:
+       print question.get_title()
+    answers = user.get_answers()
+
+    Logging.info(u"Answers of User")
+    for answer in answers:
+       print answer.get_answer_id()
+
+    Logging.info(u"Followers of User")
+    for follower in user.get_followers():
+        print follower.get_user_id()
+    
+    Logging.info(u"Followee of User")
+    for followee in user.get_followees():
+        print followee.get_user_id()
+
+    Logging.info(u"Columns and Articles of User")
+    for column in user.get_columns():
+        print column.url
+        for article in column.get_article():
+            print article
 
 
 def test_answer(answer_url):
-    answer = Answers(answer_url)
+    Logging.info(u"test_answer:")
+    answer = Answer(answer_url)
     answer_id = answer.get_answer_id()
     print answer_id
     question_id = answer.get_question_id()
@@ -79,7 +93,8 @@ def test_answer(answer_url):
 
 
 def topic_test(topic_url):
-    topic = Topics(topic_url)
+    Logging.info(u"topic_test:")
+    topic = Topic(topic_url)
     topic_id = topic.get_topic_id()
     print topic_id
     topic_name = topic.get_topic_name()
@@ -95,7 +110,8 @@ def topic_test(topic_url):
     # print followers
 
 def question_test(question_url):
-    question = Questions(question_url)
+    Logging.info(u"question_test:")
+    question = Question(question_url)
     question_id = question.get_question_id()
     print question_id
     follower_num = question.get_follower_num()
@@ -117,7 +133,8 @@ def question_test(question_url):
         print follower.get_user_id()
 
 def collection_test(collection_url):
-    collection = Collections(collection_url)
+    Logging.info(u"collection_test:")
+    collection = Collection(collection_url)
     collection_id = collection.get_collection_id()
     print collection_id
     collection_name = collection.get_collection_name()
@@ -130,6 +147,7 @@ def collection_test(collection_url):
 
 
 def article_test(article_url):
+    Logging.info(u"article_test:")
     article = Article(article_url)
     article_id = article.get_article_id()
     print article_id
@@ -138,18 +156,18 @@ def article_test(article_url):
 
 
 def main():
-    user_url = "http://www.zhihu.com/people/xiepanda"
+    user_url = "http://www.zhihu.com/people/Fooying"
     answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
     topic_url = "http://www.zhihu.com/topic/19550376"
     question_url = "http://www.zhihu.com/question/31918396"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
     test_user(user_url)
-    #test_answer(answer_url)
-    #topic_test(topic_url)
-    #question_test(question_url)
-    #collection_test(collection_url)
-    #article_test(article_url)
+    # test_answer(answer_url)
+    # topic_test(topic_url)
+    # question_test(question_url)
+    # collection_test(collection_url)
+    # article_test(article_url)
 
 
 if __name__ == '__main__':
