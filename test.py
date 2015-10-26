@@ -105,10 +105,8 @@ def topic_test(topic_url):
     follower_num = topic.get_followers_num()
     print follower_num
     questions = topic.get_questions()
-    for question in questions:
-        print question.get_question_id()
-    # followers = topic.get_followers()
-    # print followers
+#    for question in questions:
+#        print question.get_question_id()
 
 
 def question_test(question_url):
@@ -165,9 +163,9 @@ def main():
     question_url = "http://www.zhihu.com/question/31918396"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    test_user(user_url)
+    # test_user(user_url)
     # test_answer(answer_url)
-    # topic_test(topic_url)
+    topic_test(topic_url)
     # question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)

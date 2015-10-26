@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-# Build-in / Std
 
-from ScrollLoader import *
 
+from Requests import *
 
 # 从Topic url指向页面中抓取信息
+
+
 class Topic:
     url = None
     soup = None
@@ -52,10 +53,6 @@ class Topic:
             "div", class_="zm-topic-side-followers-info").find("a").strong.string
         return followers_num
 
-    def get_followers(self):
-        soup = self.soup
-        # 需要滚动加载
-
     def get_questions(self):
         url = self.url + "/questions?page="
         url_head = "http://www.zhihu.com"
@@ -63,6 +60,7 @@ class Topic:
         soup = BeautifulSoup(r.content)
         pages = soup.find("div", class_="zm-invite-pager").find_all("span")
         total_pages = int(pages[len(pages) - 2].find("a").string)
+        from Question import Question
         for i in range(1, total_pages):
             r = requests.get(url + '%d' % i)
             soup = BeautifulSoup(r.content)

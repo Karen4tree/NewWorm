@@ -67,10 +67,11 @@ class Question:
     def get_topics(self):
         soup = self.soup
         topic_tags = soup.find_all("a", class_="zm-item-tag")
+        from Topic import Topic
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
-            yield Topics(topic_url, topic_name)
+            yield Topic(topic_url, topic_name)
 
     def get_answers(self):
         soup = self.soup
