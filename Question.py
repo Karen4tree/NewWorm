@@ -85,7 +85,7 @@ class Question:
         r = requests.get(follower_page_url)
         soup = BeautifulSoup(r.content)
         followers = []
-        # 需要滚动加载,然而我并不会
+        # TODO: 滚动加载
         follower_tags = soup.find_all("a", class_="zm-item-link-avatar")
         for follower_tag in follower_tags:
             follower_url = "http://www.zhihu.com" + follower_tag["href"]

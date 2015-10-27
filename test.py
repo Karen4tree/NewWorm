@@ -41,22 +41,22 @@ def test_user(user_url):
     print education
     education_extra = user.get_education_extra()
     print education_extra
-    following_topic_num = user.get_following_topics_num()
+    following_topic_num = user.get_following_topic_num()
     print following_topic_num
-    following_column_num = user.get_following_columns_num()
+    following_column_num = user.get_following_column_num()
     print following_column_num
-    user_id = user.get_user_id()
-    print user_id
-    asks = user.get_asks()
+    #user_id = user.get_user_id()
+    #print user_id
+    #asks = user.get_asks()
 
-    Logging.info(u"Questions of User")
-    for question in asks:
-        print question.get_title()
-    answers = user.get_answers()
+    #Logging.info(u"Questions of User")
+    #for question in asks:
+    #    print question.get_title()
+    #answers = user.get_answers()
 
-    Logging.info(u"Answers of User")
-    for answer in answers:
-        print answer.get_answer_id()
+    #Logging.info(u"Answers of User")
+    #for answer in answers:
+    #    print answer.get_answer_id()
 
     Logging.info(u"Followers of User")
     for follower in user.get_followers():
@@ -163,10 +163,10 @@ def main():
     question_url = "http://www.zhihu.com/question/31918396"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    # test_user(user_url)
+    test_user(user_url)
     # test_answer(answer_url)
-    topic_test(topic_url)
-    # question_test(question_url)
+    #topic_test(topic_url)
+    #question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 

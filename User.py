@@ -82,7 +82,7 @@ class User:
             "div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
         return collection_num
 
-    def get_following_topics_num(self):
+    def get_following_topic_num(self):
         soup = self.soup
         tag_strings = soup.find_all(
             "div", class_="zm-profile-side-section-title")
@@ -91,7 +91,7 @@ class User:
         num = int(substr[0])
         return num
 
-    def get_following_columns_num(self):
+    def get_following_column_num(self):
         soup = self.soup
         tag_strings = soup.find_all(
             "div", class_="zm-profile-side-section-title")
@@ -210,6 +210,13 @@ class User:
         post_url = self.url + '/posts'
         r = requests.get(post_url)
         soup = BeautifulSoup(r.content)
+        # TODO:滚动加载
         for each_column in soup.find_all("a", "avatar-link"):
             from Column import Column
             yield Column(each_column['href'])
+
+    def get_followeing_topics(self):
+        url = self.url + '/topics'
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content)
+        # TODO: 滚动加载
