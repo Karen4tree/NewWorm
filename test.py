@@ -31,33 +31,39 @@ def test_user(user_url):
     print vote_num
     location = user.get_location()
     print location
+    print type(location)
     business = user.get_business()
     print business
+    print type(business)
     employment = user.get_employment()
     print employment
+    print type(employment)
     position = user.get_position()
     print position
+    print type(position)
     education = user.get_education()
     print education
+    print type(education)
     education_extra = user.get_education_extra()
     print education_extra
+    print type(education_extra)
     following_topic_num = user.get_following_topic_num()
     print following_topic_num
     following_column_num = user.get_following_column_num()
     print following_column_num
     #user_id = user.get_user_id()
-    #print user_id
+    # print user_id
     #asks = user.get_asks()
 
     #Logging.info(u"Questions of User")
-    #for question in asks:
+    # for question in asks:
     #    print question.get_title()
     #answers = user.get_answers()
 
     #Logging.info(u"Answers of User")
-    #for answer in answers:
+    # for answer in answers:
     #    print answer.get_answer_id()
-
+'''
     Logging.info(u"Followers of User")
     for follower in user.get_followers():
         print follower.get_user_id()
@@ -70,7 +76,7 @@ def test_user(user_url):
     for column in user.get_columns():
         print column.url
         for article in column.get_article():
-            print article
+            print article'''
 
 
 def test_answer(answer_url):
@@ -165,8 +171,8 @@ def main():
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
     test_user(user_url)
     # test_answer(answer_url)
-    #topic_test(topic_url)
-    #question_test(question_url)
+    # topic_test(topic_url)
+    # question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 

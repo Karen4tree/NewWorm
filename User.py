@@ -104,43 +104,47 @@ class User:
         soup = self.soup
         location = None
         if soup.find("span", class_="location item") is not None:
-            location = soup.find("span", class_="location item").string
-        return location
+            location = unicode(
+                soup.find("span", class_="location item").string)
 
     def get_business(self):  # 行业
         soup = self.soup
         business_item = None
         if soup.find("span", class_="business item") is not None:
-            business_item = soup.find("span", class_="business item").string
+            business_item = unicode(
+                soup.find("span", class_="business item").string)
         return business_item
 
     def get_employment(self):  # 公司
         soup = self.soup
         employment = None
         if soup.find("span", class_="employment item") is not None:
-            employment = soup.find("span", class_="employment item").string
+            employment = unicode(
+                soup.find("span", class_="employment item").string)
         return employment
 
     def get_position(self):  # 职位
         soup = self.soup
         position = None
         if soup.find("span", class_="position item") is not None:
-            position = soup.find("span", class_="position item").string
+            position = unicode(
+                soup.find("span", class_="position item").string)
         return position
 
     def get_education(self):
         soup = self.soup
         education = None
         if soup.find("span", class_="education item") is not None:
-            education = soup.find("span", class_="education item").string
+            education = unicode(
+                soup.find("span", class_="education item").string)
         return education
 
     def get_education_extra(self):
         soup = self.soup
         education_extra = None
         if soup.find("span", class_="education-extra item") is not None:
-            education_extra = soup.find(
-                "span", class_="education-extra item").string
+            education_extra = unicode(
+                soup.find("span", class_="education-extra item").string)
         return education_extra
 
     def get_followers(self):
@@ -157,7 +161,6 @@ class User:
                 text += each
         follower_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
-        print "follower num", follower_url_list.__len__()  # 单元测试后删除
         for url in follower_url_list:
             yield User(url)
 
@@ -175,7 +178,6 @@ class User:
                 text += each
         followee_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
-        print "followee num", followee_url_list.__len__()  # 单元测试后删除
         for url in followee_url_list:
             yield User(url)
 

@@ -1,5 +1,5 @@
 create table Users(
-	user_ID char(8) primary key,
+	user_ID varchar(50) primary key,
 	followers_num int,
 	followees_num int,
 	agrees_num int,
@@ -20,7 +20,7 @@ create table Users(
 
 create table Questions(
 	question_ID char(8) primary key,
-	asker_ID char(8),
+	asker_ID varchar(50),
 	detail text,
 	title varchar(20),
 	answers_num int,
@@ -38,7 +38,7 @@ create table Topic(
 create table Answers(
 	answer_ID char(8) primary key,
 	question_ID char(8),
-	author_ID char(8),
+	author_ID varchar(50),
 	detail text,
 	upvote int,
 	visit_times int,
@@ -47,7 +47,7 @@ create table Answers(
 );
 
 create table Comment(
-	author_ID char(8),
+	author_ID varchar(50),
 	answer_ID char(8),
 	primary key (author_ID, answer_ID),
 	foreign key (author_ID) references Users(user_ID),
@@ -57,28 +57,28 @@ create table Comment(
 create table Collection(
 	collection_id char(8) primary key,
 	name varchar(50),
-	creator char(8),
+	creator varchar(50),
 	foreign key (creator) references Users(user_ID)
 );
 
 create table Follow_Question(
 	question_ID char(8),
-	follower_ID char(8),
+	follower_ID varchar(50),
 	foreign key (question_ID) references Questions(question_ID),
 	foreign key (follower_ID) references Users(user_ID),
 	primary key (question_ID, follower_ID)
 );
 
 create table Follow_User(
-	follower_ID char(8),
-	followee_ID char(8),
+	follower_ID varchar(50),
+	followee_ID varchar(50),
 	foreign key (follower_ID) references Users(user_ID),
 	foreign key (followee_ID) references Users(user_ID),
 	primary key (followee_ID, follower_ID)
 );
 
 create table Follow_Topic(
-	follower_id char(8),
+	follower_id varchar(50),
 	topic_id char(8),
 	foreign key (follower_id) references Users(user_ID),
 	foreign key (topic_id) references Topic(topic_id),
@@ -94,7 +94,7 @@ create table Question_Topics(
 );
 
 create table Vote_Answer(
-	voter_id char(8),
+	voter_id varchar(50),
 	answer_id char(8),
 	foreign key (voter_id) references Users(user_ID),
 	foreign key (answer_id) references Answers(answer_id),
@@ -111,7 +111,7 @@ create table Collection_Answers(
 
 create table Articles(
 	article_id char(8) primary key,
-	owner_id char(8),
+	owner_id varchar(50),
 	comment_num int,
 	foreign key (owner_id) references Users(user_ID)
 );
