@@ -56,13 +56,13 @@ class Question:
             "div", id="zh-question-detail").div.get_text().encode("utf-8")
         return detail
 
-    def get_answers_num(self):
+    def get_answer_num(self):
         soup = self.soup
-        answers_num = 0
+        answer_num = 0
         if soup.find("h3", id="zh-question-answer-num") is not None:
-            answers_num = int(
+            answer_num = int(
                 soup.find("h3", id="zh-question-answer-num")["data-num"])
-        return answers_num
+        return answer_num
 
     def get_topics(self):
         soup = self.soup
