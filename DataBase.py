@@ -67,8 +67,8 @@ class DataBase:
                 self.put_question_in_db(question)
             cursor.execute('update questions set asker_ID=%s where question_ID=%s',
                            (user.get_user_id(), question_id))
+            connect.commit()
 
-        connect.commit()
 
     def put_user_answer_in_db(self, user):
         connect = self.connect
@@ -82,8 +82,7 @@ class DataBase:
                     'select author_ID from answers where answer_ID=%s' % answer_id) is not user.get_user_id():
                 cursor.execute(
                     'update answers set author_ID=%s where answer_ID=%s', (user.get_user_id(), answer_id))
-
-        connect.commit()
+            connect.commit()
 
     def put_question_in_db(self, question):
         connect = self.connect
