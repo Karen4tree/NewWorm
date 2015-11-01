@@ -53,8 +53,8 @@ class DataBase:
             follower_id = follower.get_user_id()
             tmp = (user_id, follower_id)
             self.put_user_in_db(follower)
-            if cursor.execute("select * from follow_user where follower_ID=%s and followee_ID=%s", tmp) == 0:
-                cursor.execute('insert into follow_user values (%s, %s)', tmp)
+            if cursor.execute("select * from Follow_User where follower_ID=%s and followee_ID=%s", tmp) == 0:
+                cursor.execute('insert into Follow_User values (%s, %s)', tmp)
             connect.commit()
 
     def put_user_ask_in_db(self, user):
@@ -63,9 +63,9 @@ class DataBase:
 
         for question in user.get_asks():
             question_id = question.get_question_id()
-            if cursor.execute('select * from questions where question_ID=%s' % question_id) == 0:
+            if cursor.execute('select * from Questions where question_ID=%s' % question_id) == 0:
                 self.put_question_in_db(question)
-            cursor.execute('update questions set asker_ID=%s where question_ID=%s',
+            cursor.execute('update Questions set asker_ID=%s where question_ID=%s',
                            (user.get_user_id(), question_id))
             connect.commit()
 
@@ -76,12 +76,12 @@ class DataBase:
 
         for answer in user.get_answers():
             answer_id = answer.get_answer_id()
-            if cursor.execute('select * from answers where answer_ID=%s' % answer_id) == 0:
+            if cursor.execute('select * from Answers where answer_ID=%s' % answer_id) == 0:
                 self.put_answer_in_db(answer)
             elif cursor.fetchone(
-                    'select author_ID from answers where answer_ID=%s' % answer_id) is not user.get_user_id():
+                    'select author_ID from Answers where answer_ID=%s' % answer_id) is not user.get_user_id():
                 cursor.execute(
-                    'update answers set author_ID=%s where answer_ID=%s', (user.get_user_id(), answer_id))
+                    'update Answers set author_ID=%s where answer_ID=%s', (user.get_user_id(), answer_id))
             connect.commit()
 
     def put_question_in_db(self, question):
@@ -99,9 +99,9 @@ class DataBase:
         values = (question_id, asker_id, detail,
                   title, answer_num, follower_num)
 
-        if cursor.execute('select * from questions where question_ID=%s' % question_id) == 0:
+        if cursor.execute('select * from Questions where question_ID=%s' % question_id) == 0:
             cursor.execute(
-                'insert into questions values (%s,%s,%s,%s,%s,%s)', values)
+                'insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
 
         connect.commit()
 
@@ -120,9 +120,9 @@ class DataBase:
         values = (answer_id, question_id, author_id,
                   detail, upvote_num, visited_times)
 
-        if cursor.execute('select * from answers where answer_ID=%s' % answer_id) is None:
+        if cursor.execute('select * from Answers where answer_ID=%s' % answer_id) is None:
             cursor.execute(
-                'insert into answers values(%s,%s,%s,%s,%s,%s)', values)
+                'insert into Answers values(%s,%s,%s,%s,%s,%s)', values)
 
         connect.commit()
 
@@ -130,7 +130,7 @@ class DataBase:
         connect = self.connect
         cursor = connect.cursor()
 
-        cursor.execute('update users set %s=%s where user_id=%s',
+        cursor.execute('update Users set %s=%s where user_id=%s',
                        (field, detail, user_id))
 
         connect.commit()
