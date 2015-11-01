@@ -119,6 +119,18 @@ class DataBase:
 
         connect.commit()
 
+    def put_topic_in_db(self, topic):
+        connect = self.connect
+        cursor = connect.cursor()
+
+        topic_id = topic.get_topic_id()
+        topic_name = topic.get_topic_name()
+        question_num = topic.get_question_num()
+        follower_num = topic.get_follower_num()
+
+        values = ()
+        connect.commit()
+
     def alter_user_in_db(self, field, detail, user_id):
         connect = self.connect
         cursor = connect.cursor()
