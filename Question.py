@@ -81,14 +81,16 @@ class Question:
             yield Answer(answer_url)
 
     def get_followers(self):
-        follower_page_url = self.url + '/followers'
-        r = requests.get(follower_page_url)
+        url = self.url + '/followers'
+        r = requests.get(url)
         soup = BeautifulSoup(r.content)
-        followers = []
-        # TODO: 滚动加载
-        follower_tags = soup.find_all("a", class_="zm-item-link-avatar")
-        for follower_tag in follower_tags:
-            follower_url = "http://www.zhihu.com" + follower_tag["href"]
-            follower = User(follower_url)
-            followers.append(follower)
-        return followers
+        _xsrf = get_xsrf(soup)
+        text = r.text
+        scroll_loader = ScrollLoader("post", url, 20, _xsrf=_xsrf, start=0)
+        for response in scroll_loader.run():
+            for each in response:
+                    text += each
+        user_list = re.findall(r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
+        from User import User
+        for url in user_list:
+            yield User("http://www.zhihu.com"+url)

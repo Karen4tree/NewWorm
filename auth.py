@@ -44,9 +44,9 @@ class Logging:
             print "".join([termcolor.colored("INFO", "magenta"), ": ", termcolor.colored(msg, "white")])
 
     @staticmethod
-    def debug(msg):
+    def debug(msg,value):
         if Logging.flag == True:
-            print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white")])
+            print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white"),"  " ,termcolor.colored(value, "white")])
 
     @staticmethod
     def success(msg):

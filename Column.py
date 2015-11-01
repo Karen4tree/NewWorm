@@ -29,9 +29,9 @@ class Column:
         m = re.search(r"http://zhuanlan.zhihu.com/(.*)", self.url)
         return m.group(1)
 
-    def get_article(self):
+    def get_articles(self):
         column_name = self.get_column_name()
         scroll_loader = ScrollLoader(
             "get", "http://zhuanlan.zhihu.com/api/columns/" + column_name + "/posts?limit=10", 10)
         for response in scroll_loader.run():
-            yield Article("http://zhuanlan.zhihu.com/" + response)
+            yield Article("http://zhuanlan.zhihu.com" + response)
