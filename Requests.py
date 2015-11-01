@@ -38,3 +38,9 @@ proxies = {
     "http": "http://127.0.0.1:8080",
     "https": "http://127.0.0.1:8080",
 }
+
+def get_hash_id(soup):
+    return soup.find("button", class_="zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
+
+def get_xsrf(soup):
+    return soup.find("input", {"name": "_xsrf"})['value']

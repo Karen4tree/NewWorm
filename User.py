@@ -6,27 +6,13 @@ from ScrollLoader import ScrollLoader
 from Requests import *
 from Answer import Answer
 
-
-def get_hash_id(soup):
-    return soup.find("button", class_="zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
-
-
-def get_xsrf(soup):
-    return soup.find("input", {"name": "_xsrf"})['value']
-
-
 # 从User个人主页抓取信息
 class User:
-    url = None
-    soup = None
-
     def __init__(self, url):
         if url[0:28] != "http://www.zhihu.com/people/":
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
-        else:
-            self.url = url
-        if self.soup is None:
-            self.parser()
+        self.url = url
+        self.parser()
 
     def parser(self):
         r = requests.get(self.url)
@@ -222,7 +208,6 @@ class User:
         soup = BeautifulSoup(r.content)
         _xsrf = get_xsrf(soup)
         text = r.text
-        print type(text)
         scroll_loader = ScrollLoader("post", url, 20, _xsrf=_xsrf, start=0)
         for response in scroll_loader.run():
             for each in response:

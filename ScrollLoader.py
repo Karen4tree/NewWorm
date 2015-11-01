@@ -50,10 +50,8 @@ class ScrollLoader:
 
             # user_url/topics
             if self.http_method == 'post' and self.start!=None:
-                Logging.info("user_url/topics")
                 payload = {'start': self.start,
                            'offset':self.offset, '_xsrf': self._xsrf}
-                print payload
                 r = requests.post(self.url, data=payload)
                 self.result = json.loads(r.text)['msg']
                 if self.result[0]==0:
