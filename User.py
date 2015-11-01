@@ -210,11 +210,6 @@ class User:
         url = self.url + '/topics'
         r = requests.get(url)
         soup = BeautifulSoup(r.content)
-<<<<<<< HEAD
-        # TODO: 滚动加载
-
-    # TODO:缺一个get_following_columns()函数
-=======
         _xsrf = get_xsrf(soup)
         text = r.text
         scroll_loader = ScrollLoader("post", url, 20, _xsrf=_xsrf, start=0)
@@ -225,4 +220,3 @@ class User:
         from Topic import Topic
         for url in topic_list:
             yield Topic("http://www.zhihu.com"+url)
->>>>>>> 4063346f96a8af522313f2a9174ce80e4d95449a
