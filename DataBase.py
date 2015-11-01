@@ -54,6 +54,27 @@ class DataBase:
                 cursor.execute('insert into Follow_User values (%s, %s)', tmp)
             connect.commit()
 
+    def put_follow_topic_in_db(self, user):
+        connect = self.connect
+        cursor = connect.cursor()
+
+        user_id = user.get_user_id()
+        topics = user.get_followeing_topics()
+        for topic in topics:
+            self.put_topic_in_db(topic)
+            tmp = (user_id, topic.get_topic_id())
+            if cursor.execute("select * from Follow_Topic where follower_id=%s and topic_id=%s", tmp):
+                cursor.execute('insert into FOllow_Topic values (%s,%s)',tmp)
+        connect.commit()
+
+    def put_follow_column_in_db(self,user):
+        connect = self.connect
+        cursor = connect.cursor()
+
+        user_id = user.get_user_id()
+        for column in user.getfollowing_column():
+            self.put_column_in_db(column)
+
     def put_user_ask_in_db(self, user):
         connect = self.connect
         cursor = connect.cursor()
@@ -128,8 +149,15 @@ class DataBase:
         question_num = topic.get_question_num()
         follower_num = topic.get_follower_num()
 
-        values = ()
+        values = (topic_id,topic_name,question_num,follower_num)
+
+        if cursor.execute('select * from Topic where topic_id=%s' %topic_id) == 0:
+            cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
+
         connect.commit()
+
+    def put_column_in_db(self, column):
+
 
     def alter_user_in_db(self, field, detail, user_id):
         connect = self.connect

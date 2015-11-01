@@ -111,7 +111,13 @@ create table Collection_Answers(
 
 create table Articles(
 	article_id char(8) primary key,
-	owner_id varchar(255),
+	column_name varchar(255),
 	comment_num int,
+	foreign key (column_name) references Columns(column_name)
+);
+
+create table Columns(
+	column_name varchar(255) primary key,
+	owner_id varchar(255),
 	foreign key (owner_id) references Users(user_ID)
 );

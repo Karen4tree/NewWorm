@@ -226,3 +226,5 @@ class User:
         r = requests.get(url)
         soup = BeautifulSoup(r.content)
         # TODO: 滚动加载
+
+    # TODO:缺一个get_following_columns()函数
