@@ -9,7 +9,7 @@ from Answer import Answer
 # 从User个人主页抓取信息
 class User:
     def __init__(self, url):
-        if url[0:28] != "http://www.zhihu.com/people/":
+        if not re.match("http://www.zhihu.com/people/.+",url):
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
         self.url = url
         self.parser()
@@ -79,11 +79,14 @@ class User:
 
     def get_following_column_num(self):
         soup = self.soup
+        num = 0
         tag_strings = soup.find_all(
             "div", class_="zm-profile-side-section-title")
-        tag_string = tag_strings[len(tag_strings) - 2].find("a").strong.string
-        substr = re.split("\s+", tag_string)
-        num = int(substr[0])
+
+        if tag_strings[len(tag_strings) - 2].find("a"):
+            tag_string = tag_strings[len(tag_strings) - 2].find("a").strong.string
+            substr = re.split("\s+", tag_string)
+            num = int(substr[0])
         return num
 
     def get_location(self):  # 所在地
@@ -92,6 +95,7 @@ class User:
         if soup.find("span", class_="location item") is not None:
             location = unicode(
                 soup.find("span", class_="location item").string)
+        return location
 
     def get_business(self):  # 行业
         soup = self.soup

@@ -34,7 +34,7 @@ class Topic:
         topic_name = soup.find("h1", class_="zm-editable-content").string
         return topic_name
 
-    def get_questions_num(self):
+    def get_question_num(self):
         r = requests.get(self.url + "/questions")
         soup1 = BeautifulSoup(r.content)
         pages = soup1.find("div", class_="zm-invite-pager").find_all("span")
@@ -47,7 +47,7 @@ class Topic:
         question_num = tmp + len(question_on_last_page)
         return question_num
 
-    def get_followers_num(self):
+    def get_follower_num(self):
         soup = self.soup
         followers_num = soup.find(
             "div", class_="zm-topic-side-followers-info").find("a").strong.string
