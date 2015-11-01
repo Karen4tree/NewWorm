@@ -13,7 +13,7 @@ class Topic:
 
     def __init__(self, url, name=None):
         if url[0:len(url) - 8] != "http://www.zhihu.com/topic/":
-            raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
+            raise ValueError("\"" + url + "\"" + " : it isn't a topic url.")
         else:
             self.url = url
         if name is not None:

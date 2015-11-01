@@ -212,7 +212,6 @@ class User:
         post_url = self.url + '/posts'
         r = requests.get(post_url)
         soup = BeautifulSoup(r.content)
-        # TODO:滚动加载
         for each_column in soup.find_all("a", "avatar-link"):
             from Column import Column
             yield Column(each_column['href'])
@@ -221,4 +220,14 @@ class User:
         url = self.url + '/topics'
         r = requests.get(url)
         soup = BeautifulSoup(r.content)
-        # TODO: 滚动加载
+        _xsrf = get_xsrf(soup)
+        text = r.text
+        print type(text)
+        scroll_loader = ScrollLoader("post", url, 20, _xsrf=_xsrf, start=0)
+        for response in scroll_loader.run():
+            for each in response:
+                    text += each
+        topic_list = re.findall(r'<a\x20class=\"zm-list-avatar-link\"\x20href=\"([^>]*)\">', text)
+        from Topic import Topic
+        for url in topic_list:
+            yield Topic("http://www.zhihu.com"+url)

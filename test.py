@@ -51,6 +51,9 @@ def test_user(user_url):
     print following_topic_num
     following_column_num = user.get_following_column_num()
     print following_column_num
+    Logging.info(u"followeing_topics:")
+    for followeing_topics in user.get_followeing_topics():
+        print followeing_topics
     #user_id = user.get_user_id()
     # print user_id
     #asks = user.get_asks()
