@@ -7,9 +7,12 @@ from Requests import *
 from Answer import Answer
 
 # 从User个人主页抓取信息
+
+
 class User:
+
     def __init__(self, url):
-        if not re.match("http://www.zhihu.com/people/.+",url):
+        if not re.match("http://www.zhihu.com/people/.+", url):
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
         self.url = url
         self.parser()
@@ -25,8 +28,10 @@ class User:
 
     def get_follower_num(self):
         soup = self.soup
-        followers_num = int(
-            soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
+        followers_num = 0
+        if soup.find("div", class_="zm-profile-side-following zg-clear") is not None:
+            followers_num = int(
+                soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
         return followers_num
 
     def get_followee_num(self):
@@ -84,7 +89,8 @@ class User:
             "div", class_="zm-profile-side-section-title")
 
         if tag_strings[len(tag_strings) - 2].find("a"):
-            tag_string = tag_strings[len(tag_strings) - 2].find("a").strong.string
+            tag_string = tag_strings[
+                len(tag_strings) - 2].find("a").strong.string
             substr = re.split("\s+", tag_string)
             num = int(substr[0])
         return num
@@ -215,8 +221,11 @@ class User:
         scroll_loader = ScrollLoader("post", url, 20, _xsrf=_xsrf, start=0)
         for response in scroll_loader.run():
             for each in response:
-                    text += each
-        topic_list = re.findall(r'<a\x20class=\"zm-list-avatar-link\"\x20href=\"([^>]*)\">', text)
+                text += each
+        topic_list = re.findall(
+            r'<a\x20class=\"zm-list-avatar-link\"\x20href=\"([^>]*)\">', text)
         from Topic import Topic
         for url in topic_list:
-            yield Topic("http://www.zhihu.com"+url)
+            yield Topic("http://www.zhihu.com" + url)
+
+    # TODO: 缺少一个get_following_column()函数

@@ -13,7 +13,7 @@ class ScrollLoader:
     _xsrf = None
     hash_id = None
 
-    def __init__(self, http_method, url, add, _xsrf=None, hash_id=None,start=None):
+    def __init__(self, http_method, url, add, _xsrf=None, hash_id=None, start=None):
         self.offset = 0
         self.http_method = http_method
         self.url = url
@@ -21,7 +21,6 @@ class ScrollLoader:
         self._xsrf = _xsrf
         self.hash_id = hash_id
         self.start = start
-
 
     def run(self):
         while True:
@@ -34,9 +33,9 @@ class ScrollLoader:
                 else:
                     for each_article in json.loads(r.text):
                         yield each_article['url']
-            
+
             # http://www.zhihu.com/node/ProfileFollowersListV2
-            if self.http_method == 'post' and self.start==None:
+            if self.http_method == 'post' and self.start == None:
                 params = """\"offset":{0},"order_by":"created","hash_id":"{1}\"""".format(
                     self.offset, self.hash_id)
                 payload = {'method': 'next',
@@ -49,12 +48,12 @@ class ScrollLoader:
                     yield self.result
 
             # user_url/topics
-            if self.http_method == 'post' and self.start!=None:
+            if self.http_method == 'post' and self.start != None:
                 payload = {'start': self.start,
-                           'offset':self.offset, '_xsrf': self._xsrf}
+                           'offset': self.offset, '_xsrf': self._xsrf}
                 r = requests.post(self.url, data=payload)
                 self.result = json.loads(r.text)['msg']
-                if self.result[0]==0:
+                if self.result[0] == 0:
                     break
                 else:
                     yield self.result[1:]

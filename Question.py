@@ -89,8 +89,9 @@ class Question:
         scroll_loader = ScrollLoader("post", url, 20, _xsrf=_xsrf, start=0)
         for response in scroll_loader.run():
             for each in response:
-                    text += each
-        user_list = re.findall(r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
+                text += each
+        user_list = re.findall(
+            r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
         from User import User
         for url in user_list:
-            yield User("http://www.zhihu.com"+url)
+            yield User("http://www.zhihu.com" + url)
