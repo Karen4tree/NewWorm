@@ -176,5 +176,31 @@ class DataBase:
     def put_column_in_db(self, column):
         connect = self.connect
         cursor = connect.cursor()
-        # TODO: 获取column放进数据库
-        connect.close()
+        # TODO: 完善Column.py
+        column_name = column.get_column_name()
+        column_id = column.get_column_id()
+        follower_num = column.getfollower_num()
+        values = (column_id,column_name,follower_num)
+
+        if cursor.execute("select * from Columns where column_name=%s"%column_name) == 0:
+            cursor.execute("insert into Columns values (%s,%s,%s)",values)
+
+        connect.commit()
+
+    def put_article_in_db(self, article):
+        connect = self.connect
+        cursor = connect.cursor()
+
+        article_id = article.get_article_id()
+        article_title = article.title
+        comments_num = article.commentsCount
+        author = article.get_author()
+        author_id = author.get_user_id()
+        detail = article.content
+
+        values = ()
+
+        cursor.execute()
+
+        connect.commit()
+

@@ -112,6 +112,7 @@ create table Collection_Answers(
 create table Columns(
 	column_name varchar(255) primary key,
 	owner_id varchar(255),
+	follower_num int,
 	foreign key (owner_id) references Users(user_id)
 );
 
