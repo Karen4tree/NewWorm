@@ -39,11 +39,13 @@ class DataBase:
             user_id, follower_num, followee_num, vote_num, thanks_num, ask_num, answer_num, article_num, collection_num,
             following_topic_num, following_column_num, education, education_extra, location, business, position,
             employment)
-        if cursor.execute('select * from Users where user_id="%s"' % user_id) == 0:
+        try:
             cursor.execute(
                 'insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
-        cursor.close()
-        connect.commit()
+        except:
+            pass
+        finally:
+            connect.commit()
 
     def put_follow_user_in_db(self, user):
         connect = self.connect
@@ -55,9 +57,12 @@ class DataBase:
             follower_id = follower.get_user_id()
             tmp = (user_id, follower_id)
             self.put_user_in_db(follower)
-            if cursor.execute("select * from Follow_User where follower_id=%s and followee_id=%s", tmp) == 0:
+            try:
                 cursor.execute('insert into Follow_User values (%s, %s)', tmp)
-            connect.commit()
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_follow_topic_in_db(self, user):
         connect = self.connect
@@ -68,9 +73,12 @@ class DataBase:
         for topic in topics:
             self.put_topic_in_db(topic)
             tmp = (user_id, topic.get_topic_id())
-            if cursor.execute("select * from Follow_Topic where follower_id=%s and topic_id=%s", tmp):
+            try:
                 cursor.execute('insert into Follow_Topic values (%s,%s)', tmp)
-        connect.commit()
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_follow_column_in_db(self, user):
         connect = self.connect
@@ -81,9 +89,12 @@ class DataBase:
             self.put_column_in_db(column)
             # TODO:先写完put_column_in_db
             tmp = (user_id, column.get_column_name())
-            if cursor.execute('select * from Follow_Column where follower_id=%s and column_name=%s', tmp) == 0:
+            try:
                 cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
-            connect.commit()
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_follow_question_in_db(self, question):
         connect = self.connect
@@ -94,10 +105,13 @@ class DataBase:
             self.put_user_in_db(user)
             user_id = user.get_user_id()
             values = (question_id, user_id)
-            if cursor.execute('select * from Follow_Question where question_id=%s and follower_id=%s') == 0:
+            try:
                 cursor.execute(
                     'insert into Follow_Question values (%s,%s)', values)
-            connect.commit()
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_user_ask_in_db(self, user):
         connect = self.connect
@@ -105,11 +119,14 @@ class DataBase:
 
         for question in user.get_asks():
             question_id = question.get_question_id()
-            if cursor.execute('select * from Questions where question_id=%s' % question_id) == 0:
+            try:
                 self.put_question_in_db(question)
-            cursor.execute('update Questions set asker_id=%s where question_id=%s',
-                           (user.get_user_id(), question_id))
-            connect.commit()
+                cursor.execute('update Questions set asker_id=%s where question_id=%s',
+                               (user.get_user_id(), question_id))
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_user_answer_in_db(self, user):
         connect = self.connect
@@ -117,13 +134,14 @@ class DataBase:
 
         for answer in user.get_answers():
             answer_id = answer.get_answer_id()
-            if cursor.execute('select * from Answers where answer_id=%s' % answer_id) == 0:
-                self.put_answer_in_db(answer)
-            elif cursor.fetchone(
-                    'select author_id from Answers where answer_id=%s' % answer_id) is not user.get_user_id():
+            self.put_answer_in_db(answer)
+            try:
                 cursor.execute(
                     'update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
-            connect.commit()
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_question_in_db(self, question):
         connect = self.connect
@@ -135,16 +153,16 @@ class DataBase:
         title = question.get_title()
         answer_num = question.get_answer_num()
         follower_num = question.get_follower_num()
-        print answer_num
-        print follower_num
         values = (question_id, asker_id, detail,
                   title, answer_num, follower_num)
 
-        if cursor.execute('select * from Questions where question_id=%s' % question_id) == 0:
+        try:
             cursor.execute(
                 'insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
-
-        connect.commit()
+        except:
+            pass
+        finally:
+            connect.commit()
 
     def put_answer_in_db(self, answer):
         connect = self.connect
@@ -162,15 +180,17 @@ class DataBase:
 
         from User import User
         from Question import Question
-        if cursor.execute('select * from Answers where answer_id=%s' % answer_id) == 0:
-            self.put_user_in_db(
-                User("http://www.zhihu.com/people/%s" % author_id))
-            self.put_question_in_db(
-                Question("http://www.zhihu.com/question/%s" % question_id))
+        self.put_user_in_db(
+            User("http://www.zhihu.com/people/%s" % author_id))
+        self.put_question_in_db(
+            Question("http://www.zhihu.com/question/%s" % question_id))
+        try:
             cursor.execute(
                 'insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
-
-        connect.commit()
+        except:
+            pass
+        finally:
+            connect.commit()
 
     def put_topic_in_db(self, topic):
         connect = self.connect
@@ -183,10 +203,12 @@ class DataBase:
 
         values = (topic_id, topic_name, question_num, follower_num)
 
-        if cursor.execute('select * from Topic where topic_id=%s' % topic_id) == 0:
+        try:
             cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
-
-        connect.commit()
+        except:
+            pass
+        finally:
+            connect.commit()
 
     def put_question_topic_in_db(self, topic):
         connect = self.connect
@@ -196,11 +218,13 @@ class DataBase:
             self.put_question_in_db(question)
             question_id = question.get_question_id()
             values = (question_id, topic_id)
-            if cursor.execute('select * from Question_Topics where question_id=%s and topic_id=%s', values) == 0:
+            try:
                 cursor.execute(
                     'insert into Question_Topics values (%s,%s)', values)
-
-            connect.commit()
+            except:
+                pass
+            finally:
+                connect.commit()
 
     def put_column_in_db(self, column):
         connect = self.connect
@@ -211,10 +235,12 @@ class DataBase:
         follower_num = column.getfollower_num()
         values = (column_id, column_name, follower_num)
 
-        if cursor.execute("select * from Columns where column_name=%s" % column_name) == 0:
+        try:
             cursor.execute("insert into Columns values (%s,%s,%s)", values)
-
-        connect.commit()
+        except:
+            pass
+        finally:
+            connect.commit()
 
     def put_article_in_db(self, article):
         connect = self.connect
@@ -223,11 +249,31 @@ class DataBase:
         article_id = article.get_article_id()
         article_title = article.title
         comments_num = article.commentsCount
-        author = article.get_author()
-        author_id = author.get_user_id()
+        column_name = article.column
         detail = article.content
         # TODO: Article.py 完善
-        values = ()
+        values = (article_id, column_name, comments_num, detail)
+        try:
+            cursor.execute('insert into Articles values (%s,%s,%s,%s)', values)
+        except:
+            pass
+        finally:
+            connect.commit()
 
-        cursor.execute()
-        connect.commit()
+    def put_vote_in_db(self, answer):
+        connect = self.connect
+        cursor = connect.cursor()
+
+        answer_id = answer.get_answer_id()
+        for user in answer.get_upvoters():
+            user_id = user.get_user_id()
+            values = (user_id, answer_id)
+            self.put_user_in_db(user)
+
+            try:
+                cursor.execute(
+                    'insert into Vote_Answer values (%s,%s)', values)
+            except:
+                pass
+            finally:
+                connect.commit()

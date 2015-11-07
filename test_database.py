@@ -17,12 +17,12 @@ def main():
     database.put_user_in_db(user_msg)
     database.put_follow_user_in_db(user_msg)
 
-    for user in user_msg.get_followers():
-        database.put_follow_user_in_db(user)
+    # for user in user_msg.get_followers():
+    #   database.put_follow_user_in_db(user)
 
-    database.put_user_answer_in_db(user_msg)
-    database.put_user_ask_in_db(user_msg)
+    # database.put_user_answer_in_db(user_msg)
+    # database.put_user_ask_in_db(user_msg)
 
-    database.put_question_in_db(question_msg)
+    # database.put_question_in_db(question_msg)
 if __name__ == '__main__':
     main()
