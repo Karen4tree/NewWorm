@@ -2,7 +2,6 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-
 from ScrollLoader import ScrollLoader
 from Requests import *
 
@@ -12,20 +11,12 @@ from User import User
 
 # 从Question url指向页面中抓取信息
 class Question:
-    soup = None
-    url = None
-
-    def __init__(self, url, title=None, asker_id=None):
+    def __init__(self, url):
         if url[0:len(url) - 8] != "http://www.zhihu.com/question/":
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
         else:
             self.url = url
-        if title is not None:
-            self.title = title
-        if self.soup is None:
-            self.parser()
-        if asker_id is not None:
-            self.asker_id = asker_id
+        self.parser()
 
     def get_question_id(self):
         return self.url[len(self.url) - 8:len(self.url)]
@@ -95,3 +86,19 @@ class Question:
         from User import User
         for url in user_list:
             yield User("http://www.zhihu.com" + url)
+
+    def get_data_resourceid(self):
+        soup = self.soup
+        return soup.find("div", class_="zm-item-rich-text js-collapse-body")['data-resourceid']
+
+    def get_comments(self):
+        url = "http://www.zhihu.com/node/QuestionCommentBoxV2?params={"+"\"question_id\":{0}".format(self.get_data_resourceid())+"}"
+        print url
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content)
+        for comment_div in soup.find_all("div", class_="zm-item-comment"):
+            author_url = comment_div.find("a",class_="zg-link")['href']
+            content = comment_div.find("div",class_="zm-comment-content").next_element
+            date = comment_div.find("span",class_="date").next_element
+            like_num = comment_div.find("span",class_="like-num ").next_element
+            yield Comment(author_url,self.url, None, content,date,like_num)# Comment(author_url,question_url,answer_url,content,date,like_num)

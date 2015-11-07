@@ -74,3 +74,5 @@ class Answer:
                     voter_url = "http://www.zhihu.com" + \
                         str(voter_info.a["href"])
                     yield User(voter_url)
+
+    # ToDo: def get_comments()
