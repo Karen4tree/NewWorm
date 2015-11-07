@@ -19,17 +19,18 @@ class ReadData:
         cursor = connect.cursor()
 
         cursor.execute(
-            'select follower_id from Follow_Question where question_id in (select question_id from Question where '
+            'select follower_id from Follow_Question where question_id in (select question_id from Questions where '
             'asker_id="%s")' % user_id)
-        return cursor.fetchall()
+        result = cursor.fetchall()
+        return result
 
     def followers_of_user(self, user_id):
         connect = self.connect
         cursor = connect.cursor()
 
-        cursor.execute('select follower_id from Follow_User where followee_id="%s"' % user_id)
-
-        return cursor.fetchall()
+        cursor.execute('select followee_id from Follow_User where follower_id="%s"' % user_id)
+        result = cursor.fetchall()
+        return result
 
     def voters_of_user_answer(self, user_id):
         connect = self.connect
@@ -39,4 +40,12 @@ class ReadData:
             'select voter_id from Vote_Answer where answer_id in (select answer_id from Answers where '
             'author_id="%s")' % user_id)
 
-        return cursor.fetchall()
+        result =  cursor.fetchall()
+        return result
+
+    def random_users(self):
+        connect = self.connect
+        cursor = connect.cursor()
+        cursor.execute('SELECT user_id FROM Users ORDER BY RAND() LIMIT 80')
+        result = cursor.fetchall()
+        return result
