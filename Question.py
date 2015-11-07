@@ -11,6 +11,7 @@ from User import User
 
 # 从Question url指向页面中抓取信息
 class Question:
+
     def __init__(self, url):
         if url[0:len(url) - 8] != "http://www.zhihu.com/question/":
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
@@ -92,13 +93,17 @@ class Question:
         return soup.find("div", class_="zm-item-rich-text js-collapse-body")['data-resourceid']
 
     def get_comments(self):
-        url = "http://www.zhihu.com/node/QuestionCommentBoxV2?params={"+"\"question_id\":{0}".format(self.get_data_resourceid())+"}"
+        url = "http://www.zhihu.com/node/QuestionCommentBoxV2?params={" + "\"question_id\":{0}".format(
+            self.get_data_resourceid()) + "}"
         print url
         r = requests.get(url)
         soup = BeautifulSoup(r.content)
         for comment_div in soup.find_all("div", class_="zm-item-comment"):
-            author_url = comment_div.find("a",class_="zg-link")['href']
-            content = comment_div.find("div",class_="zm-comment-content").next_element
-            date = comment_div.find("span",class_="date").next_element
-            like_num = comment_div.find("span",class_="like-num ").next_element
-            yield Comment(author_url,self.url, None, content,date,like_num)# Comment(author_url,question_url,answer_url,content,date,like_num)
+            author_url = comment_div.find("a", class_="zg-link")['href']
+            content = comment_div.find(
+                "div", class_="zm-comment-content").next_element
+            date = comment_div.find("span", class_="date").next_element
+            like_num = comment_div.find(
+                "span", class_="like-num ").next_element
+            # Comment(author_url,question_url,answer_url,content,date,like_num)
+            yield Comment(author_url, self.url, None, content, date, like_num)

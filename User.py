@@ -25,7 +25,6 @@ class User:
         except:
             self.parser()
 
-
     def get_user_id(self):
         tmp = re.match(r'^(http://www.zhihu.com/people/)(.+)$', self.url)
         user_id = tmp.group(2)
