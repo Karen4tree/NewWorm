@@ -34,10 +34,15 @@ class Answer:
     def get_author_id(self):
         soup = self.soup
         author_tag = soup.find("h3", class_="zm-item-answer-author-wrap")
-        author_url = author_tag.find("a")["href"]
-        tmp = re.match(r'^(/people/)(.+)$', author_url)
-        author_id = tmp.group(2)
-        return author_id
+        author_id = 'None'
+        try:
+            author_url = author_tag.find("a")["href"]
+            tmp = re.match(r'^(/people/)(.+)$', author_url)
+            author_id = tmp.group(2)
+        except:
+            pass
+        finally:
+            return author_id
 
     def get_detail(self):
         soup = self.soup
