@@ -18,8 +18,13 @@ class User:
         self.parser()
 
     def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
+        print self.url
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
+
 
     def get_user_id(self):
         tmp = re.match(r'^(http://www.zhihu.com/people/)(.+)$', self.url)

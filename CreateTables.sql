@@ -119,7 +119,9 @@ create table Columns(
 create table Articles(
 	article_id char(8) primary key,
 	column_name varchar(255),
+	article_title varchar(255),
 	comment_num int,
+	detail text,
 	foreign key (column_name) references Columns(column_name)
 );
 
