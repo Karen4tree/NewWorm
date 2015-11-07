@@ -16,10 +16,8 @@ def wow(inituser):
     queue.put(inituser)
     while not queue.empty():
         user = queue.get()
-
         for follower in user.get_followers():
             queue.put(follower)
-
         db.put_user_in_db(user)
         db.put_follow_user_in_db(user)
         db.put_user_ask_in_db(user)
