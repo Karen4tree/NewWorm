@@ -33,7 +33,7 @@ class Column:
     def get_articles(self):
         column_name = self.get_column_name()
         scroll_loader = ScrollLoader("get", "http://zhuanlan.zhihu.com/api/columns/" + column_name + "/posts?limit=10",
-            10)
+                                     10)
         for response in scroll_loader.run():
             yield Article("http://zhuanlan.zhihu.com" + response)
     # TODO: get follower num

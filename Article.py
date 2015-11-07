@@ -43,5 +43,5 @@ class Article:
         r = requests.get(self.comment_url)
         # TODO: 滚动加载
 
- #TODO: get_article_id()
+# TODO: get_article_id()
 # TODO: get_author()

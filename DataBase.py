@@ -3,6 +3,7 @@ _author__ = 'ZombieGroup'
 
 import MySQLdb
 
+
 # TODO: 把所有大小写和数据库统一
 
 
@@ -32,8 +33,7 @@ class DataBase:
         answer_num = user.get_answer_num()
         article_num = user.get_articles_num()
         collection_num = user.get_collection_num()
-        following_topic_num = user.get_following_topic_num()
-        following_column_num = user.get_following_column_num()
+        following_topic_num, following_column_num = user.get_following_topic_colum_num()
 
         value = (
             user_id, follower_num, followee_num, vote_num, thanks_num, ask_num, answer_num, article_num, collection_num,
@@ -69,7 +69,7 @@ class DataBase:
             self.put_topic_in_db(topic)
             tmp = (user_id, topic.get_topic_id())
             if cursor.execute("select * from Follow_Topic where follower_id=%s and topic_id=%s", tmp):
-                cursor.execute('insert into FOllow_Topic values (%s,%s)', tmp)
+                cursor.execute('insert into Follow_Topic values (%s,%s)', tmp)
         connect.commit()
 
     def put_follow_column_in_db(self, user):
@@ -81,7 +81,22 @@ class DataBase:
             self.put_column_in_db(column)
             # TODO:先写完put_column_in_db
             tmp = (user_id, column.get_column_name())
-            cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
+            if cursor.execute('select * from Follow_Column where follower_id=%s and column_name=%s', tmp) == 0:
+                cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
+            connect.commit()
+
+    def put_follow_question_in_db(self, question):
+        connect = self.connect
+        cursor = connect.cursor()
+
+        question_id = question.get_question_id()
+        for user in question.get_followers():
+            self.put_user_in_db(user)
+            user_id = user.get_user_id()
+            values = (question_id, user_id)
+            if cursor.execute('select * from Follow_Question where question_id=%s and follower_id=%s') == 0:
+                cursor.execute(
+                    'insert into Follow_Question values (%s,%s)', values)
             connect.commit()
 
     def put_user_ask_in_db(self, user):
@@ -173,6 +188,20 @@ class DataBase:
 
         connect.commit()
 
+    def put_question_topic_in_db(self, topic):
+        connect = self.connect
+        cursor = connect.cursor()
+        topic_id = topic.get_topic_id()
+        for question in topic.get_questions():
+            self.put_question_in_db(question)
+            question_id = question.get_question_id()
+            values = (question_id, topic_id)
+            if cursor.execute('select * from Question_Topics where question_id=%s and topic_id=%s', values) == 0:
+                cursor.execute(
+                    'insert into Question_Topics values (%s,%s)', values)
+
+            connect.commit()
+
     def put_column_in_db(self, column):
         connect = self.connect
         cursor = connect.cursor()
@@ -180,10 +209,10 @@ class DataBase:
         column_name = column.get_column_name()
         column_id = column.get_column_id()
         follower_num = column.getfollower_num()
-        values = (column_id,column_name,follower_num)
+        values = (column_id, column_name, follower_num)
 
-        if cursor.execute("select * from Columns where column_name=%s"%column_name) == 0:
-            cursor.execute("insert into Columns values (%s,%s,%s)",values)
+        if cursor.execute("select * from Columns where column_name=%s" % column_name) == 0:
+            cursor.execute("insert into Columns values (%s,%s,%s)", values)
 
         connect.commit()
 
@@ -197,10 +226,8 @@ class DataBase:
         author = article.get_author()
         author_id = author.get_user_id()
         detail = article.content
-
+        # TODO: Article.py 完善
         values = ()
 
         cursor.execute()
-
         connect.commit()
-

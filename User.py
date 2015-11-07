@@ -73,27 +73,21 @@ class User:
             "div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
         return collection_num
 
-    def get_following_topic_num(self):
+    def get_following_topic_colum_num(self):
         soup = self.soup
+        topic_num = 0
+        column_num = 0
         tag_strings = soup.find_all(
             "div", class_="zm-profile-side-section-title")
-        tag_string = tag_strings[len(tag_strings) - 1].find("a").strong.string
-        substr = re.split("\s+", tag_string)
-        num = int(substr[0])
-        return num
-
-    def get_following_column_num(self):
-        soup = self.soup
-        num = 0
-        tag_strings = soup.find_all(
-            "div", class_="zm-profile-side-section-title")
-
-        if tag_strings[len(tag_strings) - 2].find("a"):
-            tag_string = tag_strings[
-                len(tag_strings) - 2].find("a").strong.string
-            substr = re.split("\s+", tag_string)
+        for tag_string in tag_strings:
+            string = tag_string.find("a").strong.string
+            substr = re.split("\s+", string)
             num = int(substr[0])
-        return num
+            if substr[1] is '个话题':
+                topic_num = num
+            elif substr[1] is '个专栏':
+                column_num = num
+        return topic_num, column_num
 
     def get_location(self):  # 所在地
         soup = self.soup
