@@ -3,7 +3,7 @@ _author__ = 'ZombieGroup'
 
 import MySQLdb
 
-
+# TODO: 改成类方法
 class ReadData:
     def __init__(self, user=None, host=None, password=None, dbname=None):
         self.connect = MySQLdb.connect(host, user, password, dbname, port = 3306, charset = 'utf8')

@@ -6,7 +6,7 @@ import MySQLdb
 
 # TODO: 把所有大小写和数据库统一
 
-
+# TODO: 改成类方法
 class DataBase:
 
     def __init__(self, user=None, host=None, password=None, dbname=None):
