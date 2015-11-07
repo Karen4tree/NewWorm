@@ -33,113 +33,172 @@ class User:
     def get_follower_num(self):
         soup = self.soup
         followers_num = 0
-        if soup.find("div", class_="zm-profile-side-following zg-clear") is not None:
-            followers_num = int(
-                soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
-        return followers_num
+        try:
+            followers_num = int(soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
+        except:
+            pass
+        finally:
+            return followers_num
 
     def get_followee_num(self):
         soup = self.soup
-        followee_num = int(
+        followee_num = 0
+        try:
+            followee_num = int(
             soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[0].strong.string)
-        return followee_num
+        except:
+            pass
+        finally:
+            return followee_num
 
     def get_thanks_num(self):
         soup = self.soup
-        thanks_num = int(
+        thanks_num = 0
+        try:
+            thanks_num = int(
             soup.find("span", class_="zm-profile-header-user-thanks").strong.string)
-        return thanks_num
+        except:
+            pass
+        finally:
+            return thanks_num
 
     def get_vote_num(self):
         soup = self.soup
-        agree_num = int(
+        agree_num = 0
+        try:
+            agree_num = int(
             soup.find("span", class_="zm-profile-header-user-agree").strong.string)
-        return agree_num
+        except:
+            pass
+        finally:
+            return agree_num
 
     def get_ask_num(self):
         soup = self.soup
-        ask_num = int(soup.find_all("span", class_="num")[0].string)
-        return ask_num
+        ask_num = 0
+        try:
+            ask_num = int(soup.find_all("span", class_="num")[0].string)
+        except:
+            pass
+        finally:
+            return ask_num
 
     def get_answer_num(self):
         soup = self.soup
-        answer_num = int(soup.find_all("span", class_="num")[1].string)
-        return answer_num
+        answer_num = 0
+        try:
+            answer_num = int(soup.find_all("span", class_="num")[1].string)
+        except:
+            pass
+        finally:
+            return answer_num
 
     def get_articles_num(self):
         soup = self.soup
-        articles_num = int(soup.find_all("span", class_="num")[2].string)
-        return articles_num
+        articles_num = 0
+        try:
+            articles_num = int(soup.find_all("span", class_="num")[2].string)
+        except:
+            pass
+        finally:
+            return articles_num
 
     def get_collection_num(self):
         soup = self.soup
-        collection_num = int(soup.find(
+        collection_num = 0
+        try:
+            collection_num = int(soup.find(
             "div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
-        return collection_num
+        except:
+            pass
+        finally:
+            return collection_num
 
     def get_following_topic_colum_num(self):
         soup = self.soup
         topic_num = 0
         column_num = 0
-        tag_strings = soup.find_all(
-            "div", class_="zm-profile-side-section-title")
-        for tag_string in tag_strings:
-            string = tag_string.find("a").strong.string
-            substr = re.split("\s+", string)
-            num = int(substr[0])
-            if substr[1] is '个话题':
-                topic_num = num
-            elif substr[1] is '个专栏':
-                column_num = num
-        return topic_num, column_num
+        try:
+            tag_strings = soup.find_all(
+                "div", class_="zm-profile-side-section-title")
+            for tag_string in tag_strings:
+                string = tag_string.find("a").strong.string
+                substr = re.split("\s+", string)
+                num = int(substr[0])
+                if substr[1] is '个话题':
+                    topic_num = num
+                elif substr[1] is '个专栏':
+                    column_num = num
+        except:
+            pass
+        finally:
+            return topic_num, column_num
 
     def get_location(self):  # 所在地
         soup = self.soup
         location = None
-        if soup.find("span", class_="location item") is not None:
+        try:
             location = unicode(
                 soup.find("span", class_="location item").string)
-        return location
+        except:
+            pass
+        finally:
+            return location
 
     def get_business(self):  # 行业
         soup = self.soup
         business_item = None
-        if soup.find("span", class_="business item") is not None:
+        try:
             business_item = unicode(
                 soup.find("span", class_="business item").string)
-        return business_item
+        except:
+            pass
+        finally:
+            return business_item
 
     def get_employment(self):  # 公司
         soup = self.soup
         employment = None
-        if soup.find("span", class_="employment item") is not None:
+        try:
             employment = unicode(
                 soup.find("span", class_="employment item").string)
-        return employment
+        except:
+            pass
+        finally:
+            return employment
 
     def get_position(self):  # 职位
         soup = self.soup
         position = None
-        if soup.find("span", class_="position item") is not None:
+        try:
             position = unicode(
                 soup.find("span", class_="position item").string)
-        return position
+        except:
+            pass
+        finally:
+            return position
 
     def get_education(self):
         soup = self.soup
         education = None
-        if soup.find("span", class_="education item") is not None:
+        try:
             education = unicode(
                 soup.find("span", class_="education item").string)
-        return education
+        except:
+            pass
+        finally:
+            return education
 
     def get_education_extra(self):
         soup = self.soup
         education_extra = None
-        if soup.find("span", class_="education-extra item") is not None:
+        try:
             education_extra = unicode(
                 soup.find("span", class_="education-extra item").string)
-        return education_extra
+        except:
+            pass
+        finally:
+            return education_extra
 
     def get_followers(self):
         follower_page_url = self.url + '/followers'
