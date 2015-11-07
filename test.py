@@ -13,6 +13,10 @@ from Article import Article
 def test_user(user_url):
     Logging.info(u"test_user:")
     user = User(user_url)
+    print user.url
+    for follower in user.get_followers():
+        print follower.url
+
     # answer_num = user.get_answer_num()
     # print answer_num
     # ask_num = user.get_ask_num()
@@ -174,19 +178,21 @@ def article_test(article_url):
 
 
 def main():
-    user_url = "http://www.zhihu.com/people/Fooying"
+    user_url = "http://www.zhihu.com/people/li-ji-87-69-14"
     answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
     topic_url = "http://www.zhihu.com/topic/19550376"
     question_url = "http://www.zhihu.com/question/23623967"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    # test_user(user_url)
+    test_user(user_url)
     # test_answer(answer_url)
     # topic_test(topic_url)
-    question_test(question_url)
+    #question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 
 
 if __name__ == '__main__':
     main()
+    #from Requests import *
+    #print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
