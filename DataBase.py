@@ -155,13 +155,13 @@ class DataBase:
         follower_num = question.get_follower_num()
         values = (question_id, asker_id, detail,
                   title, answer_num, follower_num)
-
         try:
             cursor.execute(
                 'insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
         except:
             pass
         finally:
+            self.put_follow_question_in_db(question)
             connect.commit()
 
     def put_answer_in_db(self, answer):
