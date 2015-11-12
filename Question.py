@@ -19,12 +19,16 @@ class Question:
             self.url = url
         self.parser()
 
+    def parser(self):
+        print self.url
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
+            
     def get_question_id(self):
         return self.url[len(self.url) - 8:len(self.url)]
-
-    def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
 
     def get_follower_num(self):
         soup = self.soup
