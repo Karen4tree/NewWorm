@@ -12,6 +12,7 @@ dbname = 'zhihu'
 db = DataBase(user, host, password, dbname)
 queue = Queue()
 
+
 def run(queue):
     while not queue.empty():
         user = queue.get()
@@ -24,6 +25,7 @@ def run(queue):
             db.put_vote_in_db(answer)
 
         get_info(user)
+
 
 def get_info(user):
     db.put_user_in_db(user)
