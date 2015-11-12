@@ -28,9 +28,14 @@ class Question:
 
     def get_follower_num(self):
         soup = self.soup
-        followers_num = int(
+        followers_num = 0
+        try:
+            followers_num = int(
             soup.find("div", class_="zg-gray-normal").a.strong.string)
-        return followers_num
+        except:
+            pass
+        finally:
+            return followers_num
 
     def get_title(self):
         if hasattr(self, "title"):
@@ -51,10 +56,13 @@ class Question:
     def get_answer_num(self):
         soup = self.soup
         answer_num = 0
-        if soup.find("h3", id="zh-question-answer-num") is not None:
+        try:
             answer_num = int(
                 soup.find("h3", id="zh-question-answer-num")["data-num"])
-        return answer_num
+        except:
+            pass
+        finally:
+            return answer_num
 
     def get_topics(self):
         soup = self.soup

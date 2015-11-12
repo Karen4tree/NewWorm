@@ -51,15 +51,25 @@ class Answer:
 
     def get_upvote_num(self):
         soup = self.soup
-        upvote = soup.find("span", class_="count").string
-        return upvote
+        upvote = 0
+        try:
+            upvote = soup.find("span", class_="count").string
+        except:
+            pass
+        finally:
+            return upvote
 
     def get_visited_times(self):
         soup = self.soup
-        visited_times = soup.find("div", class_="zm-side-section zh-answer-status")\
+        visited_times = 0
+        try:
+            visited_times = soup.find("div", class_="zm-side-section zh-answer-status")\
             .find("div", class_="zm-side-section-inner")\
             .find_all('p')[1].strong.string
-        return visited_times
+        except:
+            pass
+        finally:
+            return visited_times
 
     def get_upvoters(self):  # 匿名用户先忽略了
         soup = self.soup
