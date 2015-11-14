@@ -14,6 +14,7 @@ class DataBase:
             host, user, password, dbname, port=3306, charset='utf8')
 
     def put_user_in_db(self, user):
+
         connect = self.connect
         cursor = connect.cursor()
 
@@ -42,7 +43,7 @@ class DataBase:
         try:
             cursor.execute(
                 'insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
-        except:
+        except MySQLdb.Error, e:
             pass
         finally:
             connect.commit()
@@ -59,7 +60,7 @@ class DataBase:
             self.put_user_in_db(follower)
             try:
                 cursor.execute('insert into Follow_User values (%s, %s)', tmp)
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -75,7 +76,7 @@ class DataBase:
             tmp = (user_id, topic.get_topic_id())
             try:
                 cursor.execute('insert into Follow_Topic values (%s,%s)', tmp)
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -91,7 +92,7 @@ class DataBase:
             tmp = (user_id, column.get_column_name())
             try:
                 cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -108,7 +109,7 @@ class DataBase:
             try:
                 cursor.execute(
                     'insert into Follow_Question values (%s,%s)', values)
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -123,7 +124,7 @@ class DataBase:
                 self.put_question_in_db(question)
                 cursor.execute('update Questions set asker_id=%s where question_id=%s',
                                (user.get_user_id(), question_id))
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -138,7 +139,7 @@ class DataBase:
             try:
                 cursor.execute(
                     'update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -158,7 +159,7 @@ class DataBase:
         try:
             cursor.execute(
                 'insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
-        except:
+        except MySQLdb.Error, e:
             pass
         finally:
             self.put_follow_question_in_db(question)
@@ -187,7 +188,7 @@ class DataBase:
         try:
             cursor.execute(
                 'insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
-        except:
+        except MySQLdb.Error, e:
             pass
         finally:
             connect.commit()
@@ -205,7 +206,7 @@ class DataBase:
 
         try:
             cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
-        except:
+        except MySQLdb.Error, e:
             pass
         finally:
             connect.commit()
@@ -221,7 +222,7 @@ class DataBase:
             try:
                 cursor.execute(
                     'insert into Question_Topics values (%s,%s)', values)
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()
@@ -237,7 +238,7 @@ class DataBase:
 
         try:
             cursor.execute("insert into Columns values (%s,%s,%s)", values)
-        except:
+        except MySQLdb.Error, e:
             pass
         finally:
             connect.commit()
@@ -255,7 +256,7 @@ class DataBase:
         values = (article_id, column_name, comments_num, detail)
         try:
             cursor.execute('insert into Articles values (%s,%s,%s,%s)', values)
-        except:
+        except MySQLdb.Error, e:
             pass
         finally:
             connect.commit()
@@ -273,7 +274,7 @@ class DataBase:
             try:
                 cursor.execute(
                     'insert into Vote_Answer values (%s,%s)', values)
-            except:
+            except MySQLdb.Error, e:
                 pass
             finally:
                 connect.commit()

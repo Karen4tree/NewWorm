@@ -47,8 +47,13 @@ class Answer:
 
     def get_detail(self):
         soup = self.soup
-        detail = soup.find("div", class_="zm-editable-content clearfix")
-        return detail
+        detail = None
+        try:
+            detail = soup.find("div", class_="zm-editable-content clearfix")
+        except:
+            pass
+        finally:
+            return detail
 
     def get_upvote_num(self):
         soup = self.soup

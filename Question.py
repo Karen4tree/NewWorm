@@ -26,7 +26,7 @@ class Question:
             self.soup = BeautifulSoup(r.content)
         except:
             self.parser()
-            
+
     def get_question_id(self):
         return self.url[len(self.url) - 8:len(self.url)]
 
