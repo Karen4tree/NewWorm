@@ -14,7 +14,8 @@ class User:
     def __init__(self, url):
         if not re.match("http://www.zhihu.com/people/.+", url):
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
-        self.url = url
+        else:
+            self.url = url
         self.parser()
 
     def parser(self):

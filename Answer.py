@@ -6,20 +6,21 @@ from Requests import *
 
 # 从Answer url指向页面中抓取信息
 class Answer:
-    url = None
-    soup = None
 
     def __init__(self, url):
         if re.match(r"http://www.zhihu.com/question/\d{8}/answer/\d{8}", url):
             self.url = url
         else:
             raise ValueError("\"" + url + "\"" + " : it isn't a answer url.")
-        if self.soup is None:
-            self.parser()
+        self.parser()
 
     def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
+        print self.url
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
 
     def get_answer_id(self):
         id = self.url[len(self.url) - 8:len(self.url)]
@@ -46,8 +47,13 @@ class Answer:
 
     def get_detail(self):
         soup = self.soup
-        detail = soup.find("div", class_="zm-editable-content clearfix")
-        return detail
+        detail = None
+        try:
+            detail = soup.find("div", class_="zm-editable-content clearfix")
+        except:
+            pass
+        finally:
+            return detail
 
     def get_upvote_num(self):
         soup = self.soup

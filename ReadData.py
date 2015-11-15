@@ -40,7 +40,7 @@ class ReadData:
             'select voter_id from Vote_Answer where answer_id in (select answer_id from Answers where '
             'author_id="%s")' % user_id)
 
-        result =  cursor.fetchall()
+        result = cursor.fetchall()
         return result
 
     def random_users(self):
