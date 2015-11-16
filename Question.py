@@ -53,8 +53,9 @@ class Question:
 
     def get_detail(self):
         soup = self.soup
-        detail = soup.find(
-            "div", id="zh-question-detail").div.get_text().encode("utf-8")
+        detail = str(soup.find(
+            "div", id="zh-question-detail").div)
+        detail = html2text.html2text(detail)
         return detail
 
     def get_answer_num(self):
@@ -118,4 +119,5 @@ class Question:
             like_num = comment_div.find(
                 "span", class_="like-num ").next_element
             # Comment(author_url,question_url,answer_url,content,date,like_num)
+            from Comment import Comment
             yield Comment(author_url, self.url, None, content, date, like_num)
