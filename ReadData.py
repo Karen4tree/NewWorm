@@ -49,3 +49,10 @@ class ReadData:
         cursor.execute('SELECT user_id FROM Users ORDER BY RAND() LIMIT 80')
         result = cursor.fetchall()
         return result
+
+    def read_unreached_users(self, num):
+        connect = self.connect
+        cursor = connect.cursor()
+        cursor.execute('select user_id from Users where reached_flag is False limit %s'%num)
+        result = cursor.fetchall()
+        return result
