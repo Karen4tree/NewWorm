@@ -37,7 +37,7 @@ create table Topic(
 
 create table Answers(
 	answer_id char(8) primary key,
-	question_id char(8),
+	question_id char(8) primary key,
 	author_id varchar(255),
 	detail text,
 	upvote int,

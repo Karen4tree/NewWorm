@@ -15,12 +15,8 @@ class Answer:
         self.parser()
 
     def parser(self):
-        print self.url
-        try:
             r = requests.get(self.url)
             self.soup = BeautifulSoup(r.content)
-        except:
-            self.parser()
 
     def get_answer_id(self):
         id = self.url[len(self.url) - 8:len(self.url)]
