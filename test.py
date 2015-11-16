@@ -107,9 +107,9 @@ def test_answer(answer_url):
     print upvote_num
     visited_times = answer.get_visited_times()
     print visited_times
-    upvoters = answer.get_upvoters()
-    for upvoter in upvoters:
-        print upvoter.get_user_id()
+    #upvoters = answer.get_upvoters()
+    #for upvoter in upvoters:
+        #print upvoter.get_user_id()
 
 
 def topic_test(topic_url):
@@ -190,11 +190,10 @@ def main():
     question_url = "http://www.zhihu.com/question/23623967"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    # test_user(user_url)
-    test_topic(topic_url)
+    test_user(user_url)
     # test_answer(answer_url)
     # topic_test(topic_url)
-    # question_test(question_url)
+    question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 
