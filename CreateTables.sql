@@ -36,12 +36,13 @@ create table Topic(
 );
 
 create table Answers(
-	answer_id char(8) primary key,
-	question_id char(8) primary key,
+	answer_id char(8),
+	question_id char(8),
 	author_id varchar(255),
 	detail text,
 	upvote int,
 	visit_times int,
+	PRIMARY KEY (answer_id,question_id),
 	foreign key (question_id) references Questions(question_id),
 	foreign key (author_id) references Users(user_id)
 );
