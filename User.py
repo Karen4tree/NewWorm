@@ -19,7 +19,6 @@ class User:
         self.parser()
 
     def parser(self):
-        print self.url
         try:
             r = requests.get(self.url)
             self.soup = BeautifulSoup(r.content)

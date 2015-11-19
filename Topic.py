@@ -61,13 +61,12 @@ class Topic:
         pages = soup.find("div", class_="zm-invite-pager").find_all("span")
         total_pages = int(pages[len(pages) - 2].find("a").string)
         from Question import Question
-        from gevent.queue import Queue
-        result = Queue()
         for i in range(1, total_pages+1):
             r = requests.get(url + '%d' % i)
             soup = BeautifulSoup(r.content)
             question_on_this_page = soup.find_all("a", class_="question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
-                result.put_nowait(Question(question_url))
-        return result
+                print 'put one in the queue'
+                question_queue.put(Question(question_url))
+        return question_queue

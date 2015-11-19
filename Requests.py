@@ -12,7 +12,10 @@ import logging.config
 import requests
 import termcolor
 import html2text
+import gevent
 
+from gevent import monkey
+from gevent.queue import Queue
 from bs4 import BeautifulSoup
 
 # module
@@ -27,10 +30,11 @@ except ImportError:
     # Python 2
     import httplib as http_client
 
-
-
-# You must initialize logging, otherwise you'll not see debug output.
-
+question_queue = Queue(maxsize = 5)
+user_queue=Queue(maxsize = 20)
+topic_queue = Queue(maxsize = 20)
+article_queue = Queue(maxsize = 20)
+answer_queue = Queue(maxsize = 20)
 
 class Requests:
     def __init__(self):
