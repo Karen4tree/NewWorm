@@ -27,5 +27,9 @@ if __name__ == '__main__':
     p = mp.Pool(THREADS)
     topic = Topic("http://www.zhihu.com/topic/19554927")# 网络安全
     db.put_topic_in_db(topic)
-    questions = topic.get_questions() # list
-    p.map(spider,questions)
+    go = topic.get_questions()
+    N = 20
+    while True:
+        g2 = p.map(f, itertools.islice(go, N))
+        if not g2:
+            break
