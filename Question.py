@@ -52,10 +52,13 @@ class Question:
 
     def get_detail(self):
         soup = self.soup
-        detail = str(soup.find(
+        try:
+            detail = str(soup.find(
             "div", id="zh-question-detail").div)
-        detail = html2text.html2text(detail)
-        return detail
+            detail = html2text.html2text(detail)
+            return detail
+        except:
+            return None
 
     def get_answer_num(self):
         soup = self.soup
@@ -75,6 +78,7 @@ class Question:
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
+            topic_queue.put(Topic(topic_url, topic_name))
             yield Topic(topic_url, topic_name)
 
     def get_answers(self):
@@ -82,6 +86,7 @@ class Question:
         answer_tags = soup.find_all("div", class_="zm-item-answer")
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
+            answer_queue.put(Answer(answer_url))
             yield Answer(answer_url)
 
     def get_followers(self):
@@ -98,6 +103,7 @@ class Question:
             r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
         from User import User
         for url in user_list:
+            user_queue.put(User("http://www.zhihu.com" + url))
             yield User("http://www.zhihu.com" + url)
 
     def get_data_resourceid(self):

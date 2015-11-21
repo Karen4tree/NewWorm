@@ -215,7 +215,9 @@ class User:
         follower_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
         for url in follower_url_list:
+            user_queue.put(User(url))
             yield User(url)
+
 
     def get_followees(self):
         followee_page_url = self.url + '/followees'
@@ -232,6 +234,7 @@ class User:
         followee_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
         for url in followee_url_list:
+            user_queue.put(User(url))
             yield User(url)
 
     def get_asks(self):
@@ -246,6 +249,7 @@ class User:
                 for question in soup.find_all("a", class_="question_link"):
                     url = "http://www.zhihu.com" + question["href"]
                     from Question import Question
+                    question_queue.put(Question(url))
                     yield Question(url)
 
     def get_answers(self):
@@ -259,6 +263,7 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for answer_tag in soup.find_all("a", class_="question_link"):
                     answer_url = 'http://www.zhihu.com' + answer_tag["href"]
+                    answer_queue.put(Answer(answer_url))
                     yield Answer(answer_url)
 
     def get_columns(self):
@@ -267,6 +272,7 @@ class User:
         soup = BeautifulSoup(r.content)
         for each_column in soup.find_all("a", "avatar-link"):
             from Column import Column
+            column_queue.put(Column(each_column['href']))
             yield Column(each_column['href'])
 
     def get_followeing_topics(self):
@@ -283,6 +289,7 @@ class User:
             r'<a\x20class=\"zm-list-avatar-link\"\x20href=\"([^>]*)\">', text)
         from Topic import Topic
         for url in topic_list:
+            topic_queue.put(Topic("http://www.zhihu.com" + url))
             yield Topic("http://www.zhihu.com" + url)
 
     # TODO: 缺少一个get_following_column()函数

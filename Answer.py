@@ -91,6 +91,7 @@ class Answer:
             for voter_info in voters_info:
                 if voter_info.find('a'):
                     voter_url = "http://www.zhihu.com" + str(voter_info.a["href"])
+                    user_queue.put(User(voter_url))
                     yield User(voter_url)
 
                     # ToDo: def get_comments()

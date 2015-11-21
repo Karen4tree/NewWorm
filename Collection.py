@@ -61,6 +61,7 @@ class Collection:
                     answer_part = tag.find(
                         "div", class_="zm-item-answer ")["data-atoken"]
                     answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
+                    answer_queue.put(Answer(answer_url))
                     yield Answer(answer_url)
         else:
             tags = soup.find(
@@ -70,4 +71,5 @@ class Collection:
                 answer_part = tag.find(
                     "div", class_="zm-item-answer ")["data-atoken"]
                 answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
+                answer_queue.put(Answer(answer_url))
                 yield Answer(answer_url)

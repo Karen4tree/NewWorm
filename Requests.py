@@ -13,15 +13,13 @@ import requests
 import termcolor
 import html2text
 import gevent
-
 from gevent import monkey
-from gevent.queue import Queue
+from gevent.queue import Queue,Empty
 from bs4 import BeautifulSoup
 
 # module
 from auth import islogin
 from auth import Logging
-
 
 # debug requests
 try:
@@ -30,11 +28,13 @@ except ImportError:
     # Python 2
     import httplib as http_client
 
-question_queue = Queue(maxsize = 5)
+#Global Queues
+question_queue = Queue(maxsize = 20)
 user_queue=Queue(maxsize = 20)
 topic_queue = Queue(maxsize = 20)
 article_queue = Queue(maxsize = 20)
 answer_queue = Queue(maxsize = 20)
+column_queue= Queue(maxsize = 20)
 
 class Requests:
     def __init__(self):

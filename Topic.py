@@ -69,4 +69,4 @@ class Topic:
                 question_url = url_head + question_tag["href"]
                 print 'put one in the queue'
                 question_queue.put(Question(question_url))
-        return question_queue
+               # yield Question(question_url)

@@ -6,7 +6,7 @@ from Topic import Topic
 from Question import Question
 from DataBase import DataBase
 from ReadData import ReadData
-
+from gevent.pool import Group
 
 user = 'root'
 host = 'localhost'
@@ -18,19 +18,20 @@ readdata = ReadData(user, host, password, dbname)
 topic = Topic("http://www.zhihu.com/topic/19554927")
 
 def slave(name):
-    while not question_queue.empty():
-        question = question_queue.get()
-        print 'slave %s get one question from the queue'%name
-        database.put_question_in_db(question)
-        gevent.sleep(0)
+    try:
+        while True:
+            question = question_queue.get(timeout=1)
+            print 'slave %s get one question from the queue'%name
+            database.put_question_in_db(question)
+            gevent.sleep(0)
+    except Empty:
+        print 'slave %s is dead'%name
 
 def master():
     topic.get_questions()
 
+group = Group()
+gevent.spawn(master)
+group.map(slave,xrange(100))
 
-gevent.joinall([
-    gevent.spawn(master),
-    gevent.spawn(slave,'Fooying'),
-    gevent.spawn(slave,'ZhuFengDa'),
-    gevent.spawn(slave,'WangZhaoYi'),
-])
+group.join()
