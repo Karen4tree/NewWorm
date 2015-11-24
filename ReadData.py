@@ -4,9 +4,13 @@ _author__ = 'ZombieGroup'
 import MySQLdb
 
 # TODO: 改成类方法
+
+
 class ReadData:
+
     def __init__(self, user=None, host=None, password=None, dbname=None):
-        self.connect = MySQLdb.connect(host, user, password, dbname, port = 3306, charset = 'utf8')
+        self.connect = MySQLdb.connect(
+            host, user, password, dbname, port=3306, charset='utf8')
 
     def read_from_user(self, user_id):
         connect = self.connect
@@ -28,7 +32,8 @@ class ReadData:
         connect = self.connect
         cursor = connect.cursor()
 
-        cursor.execute('select followee_id from Follow_User where follower_id="%s"' % user_id)
+        cursor.execute(
+            'select followee_id from Follow_User where follower_id="%s"' % user_id)
         result = cursor.fetchall()
         return result
 
@@ -53,6 +58,7 @@ class ReadData:
     def read_unreached_users(self, num):
         connect = self.connect
         cursor = connect.cursor()
-        cursor.execute('select user_id from Users where reached_flag is False limit %s'%num)
+        cursor.execute(
+            'select user_id from Users where reached_flag is False limit %s' % num)
         result = cursor.fetchall()
         return result

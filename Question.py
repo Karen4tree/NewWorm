@@ -34,7 +34,7 @@ class Question:
         followers_num = 0
         try:
             followers_num = int(
-            soup.find("div", class_="zg-gray-normal").a.strong.string)
+                soup.find("div", class_="zg-gray-normal").a.strong.string)
         except:
             pass
         finally:
@@ -54,7 +54,7 @@ class Question:
         soup = self.soup
         try:
             detail = str(soup.find(
-            "div", id="zh-question-detail").div)
+                "div", id="zh-question-detail").div)
             detail = html2text.html2text(detail)
             return detail
         except:
@@ -87,7 +87,7 @@ class Question:
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
             answer_queue.put(Answer(answer_url))
-            yield Answer(answer_url)
+            # yield Answer(answer_url)
 
     def get_followers(self):
         url = self.url + '/followers'

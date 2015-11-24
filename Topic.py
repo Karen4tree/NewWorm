@@ -37,15 +37,19 @@ class Topic:
     def get_question_num(self):
         r = requests.get(self.url + "/questions")
         soup1 = BeautifulSoup(r.content)
-        pages = soup1.find("div", class_="zm-invite-pager").find_all("span")
-        total_pages = pages[len(pages) - 2].find("a").string
-        tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
-        r = requests.get(self.url + "/questions?page=" + total_pages)
-        soup2 = BeautifulSoup(r.content)
-        question_on_last_page = soup2.find_all(
-            "div", class_="feed-item feed-item-hook question-item")
-        question_num = tmp + len(question_on_last_page)
-        return question_num
+        try:
+            pages = soup1.find(
+                "div", class_="zm-invite-pager").find_all("span")
+            total_pages = pages[len(pages) - 2].find("a").string
+            tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
+            r = requests.get(self.url + "/questions?page=" + total_pages)
+            soup2 = BeautifulSoup(r.content)
+            question_on_last_page = soup2.find_all(
+                "div", class_="feed-item feed-item-hook question-item")
+            question_num = tmp + len(question_on_last_page)
+            return question_num
+        except:
+            return 1
 
     def get_follower_num(self):
         soup = self.soup
@@ -61,7 +65,7 @@ class Topic:
         pages = soup.find("div", class_="zm-invite-pager").find_all("span")
         total_pages = int(pages[len(pages) - 2].find("a").string)
         from Question import Question
-        for i in range(1, total_pages+1):
+        for i in range(1, total_pages + 1):
             r = requests.get(url + '%d' % i)
             soup = BeautifulSoup(r.content)
             question_on_this_page = soup.find_all("a", class_="question_link")
