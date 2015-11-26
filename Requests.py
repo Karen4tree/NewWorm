@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 # Build-in / Stdimport os, sys, time, platform, random
-
 import re
 import json
 import cookielib
@@ -16,10 +15,10 @@ import gevent
 from gevent import monkey
 from gevent.queue import Queue, Empty
 from bs4 import BeautifulSoup
-
 # module
 from auth import islogin
 from auth import Logging
+from BloomFliter import BloomFilter
 
 # debug requests
 try:
@@ -28,13 +27,23 @@ except ImportError:
     # Python 2
     import httplib as http_client
 
-# Global Queues
-question_queue = Queue(maxsize=20)
-user_queue = Queue(maxsize=20)
-topic_queue = Queue(maxsize=20)
-article_queue = Queue(maxsize=20)
-answer_queue = Queue(maxsize=20)
-column_queue = Queue(maxsize=20)
+# Global Var
+ERROR_RATE = 0.005
+ELEMENT_NUM = 99999999
+
+question_queue = Queue(maxsize=100)
+user_queue = Queue(maxsize=100)
+topic_queue = Queue(maxsize=100)
+article_queue = Queue(maxsize=100)
+answer_queue = Queue(maxsize=100)
+column_queue = Queue(maxsize=100)
+
+question_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
+user_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
+topic_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
+article_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
+answer_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
+column_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
 
 
 class Requests:

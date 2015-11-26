@@ -13,6 +13,9 @@ class DataBase:
         self.connect = MySQLdb.connect(
             host, user, password, dbname, port=3306, charset='utf8')
 
+    def close_database_connection(self):
+        self.connect.close()
+
     def put_user_in_db(self, user):
 
         connect = self.connect
