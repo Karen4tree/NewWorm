@@ -216,8 +216,10 @@ class User:
         follower_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
         for url in follower_url_list:
-            user_queue.put(User(url))
-            yield User(url)
+            if not user_bloom.is_element_exist(User(url)):
+                user_bloom.insert_element(User(url))
+                user_queue.put(User(url))
+                # yield User(url)
 
     def get_followees(self):
         followee_page_url = self.url + '/followees'
@@ -234,8 +236,10 @@ class User:
         followee_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
         for url in followee_url_list:
-            user_queue.put(User(url))
-            yield User(url)
+            if not user_bloom.is_element_exist(User(url)):
+                user_bloom.insert_element(User(url))
+                user_queue.put(User(url))
+                # yield User(url)
 
     def get_asks(self):
         asks_num = self.get_ask_num()
@@ -249,8 +253,10 @@ class User:
                 for question in soup.find_all("a", class_="question_link"):
                     url = "http://www.zhihu.com" + question["href"]
                     from Question import Question
-                    question_queue.put(Question(url))
-                    yield Question(url)
+                    if not question_bloom.is_element_exist(Question(url)):
+                        question_bloom.insert_element(Question(url))
+                        question_queue.put(Question(url))
+                        # yield Question(url)
 
     def get_answers(self):
         answers_num = self.get_answer_num()
@@ -263,8 +269,10 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for answer_tag in soup.find_all("a", class_="question_link"):
                     answer_url = 'http://www.zhihu.com' + answer_tag["href"]
-                    answer_queue.put(Answer(answer_url))
-                    yield Answer(answer_url)
+                    if not answer_bloom.is_element_exist(Answer(answer_url)):
+                        answer_bloom.insert_element(Answer(answer_url))
+                        answer_queue.put(Answer(answer_url))
+                        # yield Answer(answer_url)
 
     def get_columns(self):
         post_url = self.url + '/posts'
@@ -272,8 +280,10 @@ class User:
         soup = BeautifulSoup(r.content)
         for each_column in soup.find_all("a", "avatar-link"):
             from Column import Column
-            column_queue.put(Column(each_column['href']))
-            yield Column(each_column['href'])
+            if not column_bloom.is_element_exist(Column(each_column['href'])):
+                column_bloom.insert_element(Column(each_column['href']))
+                column_queue.put(Column(each_column['href']))
+                # yield Column(each_column['href'])
 
     def get_followeing_topics(self):
         url = self.url + '/topics'
@@ -289,7 +299,9 @@ class User:
             r'<a\x20class=\"zm-list-avatar-link\"\x20href=\"([^>]*)\">', text)
         from Topic import Topic
         for url in topic_list:
-            topic_queue.put(Topic("http://www.zhihu.com" + url))
-            yield Topic("http://www.zhihu.com" + url)
+            if not topic_bloom.is_element_exist(Topic("http://www.zhihu.com" + url)):
+                topic_bloom.insert_element(Topic("http://www.zhihu.com" + url))
+                topic_queue.put(Topic("http://www.zhihu.com" + url))
+                # yield Topic("http://www.zhihu.com" + url)
 
     # TODO: 缺少一个get_following_column()函数

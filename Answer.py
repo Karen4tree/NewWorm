@@ -90,15 +90,15 @@ class Answer:
                          "params": "{\"answer_id\":\"%d\"}" % int(data_aid)})
         soup = BeautifulSoup(r.content)
         voters_info = soup.find_all("span")[1:-1]
-        if len(voters_info) == 0:
-            return
-        else:
+        if len(voters_info) != 0:
             from User import User
             for voter_info in voters_info:
                 if voter_info.find('a'):
                     voter_url = "http://www.zhihu.com" + \
                         str(voter_info.a["href"])
-                    user_queue.put(User(voter_url))
+                    if not user_bloom.is_element_exist(User(voter_url)):
+                        user_bloom.insert_element(User(voter_url))
+                        user_queue.put(User(voter_url))
                     # yield User(voter_url)
 
                     # ToDo: def get_comments()

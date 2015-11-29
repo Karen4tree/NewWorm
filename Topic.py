@@ -71,6 +71,8 @@ class Topic:
             question_on_this_page = soup.find_all("a", class_="question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
-                print 'put one in the queue'
-                question_queue.put(Question(question_url))
-               # yield Question(question_url)
+                if not question_bloom.is_element_exist(Question(question_url)):
+                    print 'put one in the queue'
+                    question_bloom.insert_element(Question(question_url))
+                    question_queue.put(Question(question_url))
+                    # yield Question(question_url)

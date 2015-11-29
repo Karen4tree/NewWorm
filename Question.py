@@ -78,16 +78,20 @@ class Question:
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
-            topic_queue.put(Topic(topic_url, topic_name))
-            yield Topic(topic_url, topic_name)
+            if topic_bloom.is_element_exist(Topic(topic_url, topic_name)):
+                topic_bloom.insert_element(Topic(topic_url, topic_name))
+                topic_queue.put(Topic(topic_url, topic_name))
+                # yield Topic(topic_url, topic_name)
 
     def get_answers(self):
         soup = self.soup
         answer_tags = soup.find_all("div", class_="zm-item-answer")
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
-            answer_queue.put(Answer(answer_url))
-            # yield Answer(answer_url)
+            if not answer_bloom.is_element_exist(Answer(answer_url)):
+                answer_bloom.insert_element(Answer(answer_url))
+                answer_queue.put(Answer(answer_url))
+                # yield Answer(answer_url)
 
     def get_followers(self):
         url = self.url + '/followers'
@@ -103,8 +107,10 @@ class Question:
             r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
         from User import User
         for url in user_list:
-            user_queue.put(User("http://www.zhihu.com" + url))
-            yield User("http://www.zhihu.com" + url)
+            if not user_bloom.is_element_exist(User("http://www.zhihu.com" + url)):
+                user_bloom.insert_element(User("http://www.zhihu.com" + url))
+                user_queue.put(User("http://www.zhihu.com" + url))
+                # yield User("http://www.zhihu.com" + url)
 
     def get_data_resourceid(self):
         soup = self.soup
