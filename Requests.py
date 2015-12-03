@@ -30,7 +30,7 @@ except ImportError:
 # Global Var
 ERROR_RATE = 0.005
 ELEMENT_NUM = 99999999
-QUEUE_SIZE = 20
+QUEUE_SIZE = 100
 
 question_queue = Queue(maxsize=QUEUE_SIZE)
 user_queue = Queue(maxsize=QUEUE_SIZE)

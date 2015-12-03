@@ -21,33 +21,40 @@ topic = Topic("http://www.zhihu.com/topic/19554927")
 def question_slave(name):
     try:
         while True:
-            question = question_queue.get_nowait()
+            question = question_queue.get()
             print 'slave %s get one question from the queue' % name
             database.put_question_in_db(question)
+            question.get_followers()
             question.get_answers()
     except Empty:
         print 'slave %s is dead' % name
+        gevent.sleep(0)
 
 
 def answer_slave(name):
     try:
         while True:
-            answer = answer_queue.get_nowait()
+            answer = answer_queue.get()
             print 'slave %s get one answer from the queue' % name
             database.put_answer_in_db(answer)
             answer.get_upvoters()
     except Empty:
         print 'slave %s is dead' % name
+        gevent.sleep(0)
 
 
 def user_slave(name):
     try:
         while True:
-            user = user_queue.get_nowait()
+            user = user_queue.get()
             print 'slave %s get one user from the queue' % name
             database.put_user_in_db(user)
+            user.get_followers()
+            user.get_answers()
+            user.get_asks()
     except Empty:
         print 'slave %s is dead' % name
+        gevent.sleep(0)
 
 
 def master(name):

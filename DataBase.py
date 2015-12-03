@@ -165,7 +165,6 @@ class DataBase:
         except MySQLdb.Error, e:
             pass
         finally:
-            self.put_follow_question_in_db(question)
             connect.commit()
 
     def put_answer_in_db(self, answer):
