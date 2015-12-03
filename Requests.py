@@ -30,13 +30,14 @@ except ImportError:
 # Global Var
 ERROR_RATE = 0.005
 ELEMENT_NUM = 99999999
+QUEUE_SIZE = 20
 
-question_queue = Queue(maxsize=100)
-user_queue = Queue(maxsize=100)
-topic_queue = Queue(maxsize=100)
-article_queue = Queue(maxsize=100)
-answer_queue = Queue(maxsize=100)
-column_queue = Queue(maxsize=100)
+question_queue = Queue(maxsize=QUEUE_SIZE)
+user_queue = Queue(maxsize=QUEUE_SIZE)
+topic_queue = Queue(maxsize=QUEUE_SIZE)
+article_queue = Queue(maxsize=QUEUE_SIZE)
+answer_queue = Queue(maxsize=QUEUE_SIZE)
+column_queue = Queue(maxsize=QUEUE_SIZE)
 
 question_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
 user_bloom = BloomFilter(ERROR_RATE, ELEMENT_NUM)
