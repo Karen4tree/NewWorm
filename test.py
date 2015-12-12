@@ -108,8 +108,8 @@ def test_answer(answer_url):
     visited_times = answer.get_visited_times()
     print visited_times
     #upvoters = answer.get_upvoters()
-    #for upvoter in upvoters:
-        #print upvoter.get_user_id()
+    # for upvoter in upvoters:
+    # print upvoter.get_user_id()
 
 
 def topic_test(topic_url):
@@ -175,6 +175,7 @@ def article_test(article_url):
     print article_id
     title = article.get_article_title()
     print title
+
 
 def test_topic(topic_url):
     Logging.info(u"topic_test:")

@@ -35,7 +35,8 @@ class User:
         soup = self.soup
         followers_num = 0
         try:
-            followers_num = int(soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
+            followers_num = int(soup.find(
+                "div", class_="zm-profile-side-following zg-clear").find_all("a")[1].strong.string)
         except:
             pass
         finally:
@@ -46,7 +47,7 @@ class User:
         followee_num = 0
         try:
             followee_num = int(
-            soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[0].strong.string)
+                soup.find("div", class_="zm-profile-side-following zg-clear").find_all("a")[0].strong.string)
         except:
             pass
         finally:
@@ -57,7 +58,7 @@ class User:
         thanks_num = 0
         try:
             thanks_num = int(
-            soup.find("span", class_="zm-profile-header-user-thanks").strong.string)
+                soup.find("span", class_="zm-profile-header-user-thanks").strong.string)
         except:
             pass
         finally:
@@ -68,7 +69,7 @@ class User:
         agree_num = 0
         try:
             agree_num = int(
-            soup.find("span", class_="zm-profile-header-user-agree").strong.string)
+                soup.find("span", class_="zm-profile-header-user-agree").strong.string)
         except:
             pass
         finally:
@@ -109,7 +110,7 @@ class User:
         collection_num = 0
         try:
             collection_num = int(soup.find(
-            "div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
+                "div", class_="profile-navbar clearfix").find_all("a")[3].span.string)
         except:
             pass
         finally:

@@ -14,6 +14,7 @@ password = ''
 dbname = 'zhihu'
 db = DataBase(user, host, password, dbname)
 
+
 def spider(question):
     print question.get_question_id()
     db.put_question_in_db(question)
@@ -25,7 +26,7 @@ def spider(question):
 if __name__ == '__main__':
     THREADS = 8
     p = mp.Pool(THREADS)
-    topic = Topic("http://www.zhihu.com/topic/19554927")# 网络安全
+    topic = Topic("http://www.zhihu.com/topic/19554927")  # 网络安全
     db.put_topic_in_db(topic)
     go = topic.get_questions()
     N = 20

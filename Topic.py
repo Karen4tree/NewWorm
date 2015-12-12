@@ -62,7 +62,7 @@ class Topic:
         total_pages = int(pages[len(pages) - 2].find("a").string)
         from Question import Question
         result = []
-        for i in range(1, total_pages+1):
+        for i in range(1, total_pages + 1):
             r = requests.get(url + '%d' % i)
             soup = BeautifulSoup(r.content)
             question_on_this_page = soup.find_all("a", class_="question_link")

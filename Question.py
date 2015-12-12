@@ -34,7 +34,7 @@ class Question:
         followers_num = 0
         try:
             followers_num = int(
-            soup.find("div", class_="zg-gray-normal").a.strong.string)
+                soup.find("div", class_="zg-gray-normal").a.strong.string)
         except:
             pass
         finally:

@@ -19,4 +19,4 @@ class Comment:
         self.answer_id = answer_id
         self.content = content
         self.vote_num = vote_num
-#TODO: 大坑要填
+# TODO: 大坑要填
