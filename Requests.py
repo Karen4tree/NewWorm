@@ -8,19 +8,18 @@ import cookielib
 import sys
 import logging
 import logging.config
-# requirements
+
 import requests
 import termcolor
 import html2text
-
 from bs4 import BeautifulSoup
 
-# module
 from auth import islogin
 from auth import Logging
 
-
+from BloomFliter import BloomFilter
 # debug requests
+# You must initialize logging, otherwise you'll not see debug output.
 try:
     import http.client
 except ImportError:
@@ -28,7 +27,17 @@ except ImportError:
     import httplib as http_client
 
 
-# You must initialize logging, otherwise you'll not see debug output.
+# Bloom Fliters
+ERROR_RATE = 0.05
+ITEM_NUM = 10000
+
+userBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+questionBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+answerBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+topicBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+articleBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+collumnBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+commentBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 
 
 class Requests:
