@@ -170,14 +170,18 @@ class DataBase:
             upvote_num = answer.get_upvote_num()
             visited_times = answer.get_visited_times()
 
-            values = (answer_id, question_id, author_id, detail, upvote_num, visited_times)
+            values = (answer_id, question_id, author_id,
+                      detail, upvote_num, visited_times)
 
             from User import User
             from Question import Question
-            self.put_user_in_db(User("http://www.zhihu.com/people/%s" % author_id))
-            self.put_question_in_db(Question("http://www.zhihu.com/question/%s" % question_id))
+            self.put_user_in_db(
+                User("http://www.zhihu.com/people/%s" % author_id))
+            self.put_question_in_db(
+                Question("http://www.zhihu.com/question/%s" % question_id))
             try:
-                cursor.execute('insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
+                cursor.execute(
+                    'insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
             except MySQLdb.Error, e:
                 pass
             finally:
@@ -196,7 +200,8 @@ class DataBase:
             values = (topic_id, topic_name, question_num, follower_num)
 
             try:
-                cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
+                cursor.execute(
+                    'insert into Topic values (%s,%s,%s,%s)', values)
             except MySQLdb.Error, e:
                 pass
             finally:
