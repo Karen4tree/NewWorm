@@ -78,6 +78,7 @@ class Question:
     def get_answers(self):
         soup = self.soup
         answer_tags = soup.find_all("div", class_="zm-item-answer")
+        from Answer import Answer
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
             yield Answer(answer_url)

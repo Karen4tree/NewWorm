@@ -3,7 +3,7 @@ _author__ = 'ZombieGroup'
 
 import MySQLdb
 
-from Requests import *
+from zhihu_api import *
 
 
 # TODO: 把所有大小写和数据库统一

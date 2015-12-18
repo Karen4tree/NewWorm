@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
-from __init__ import *
-
+__author__ = 'ZombieGroup'
+import cookielib
+import sys
+import requests
+from auth import islogin
+from auth import Logging
+import httplib as http_client
 
 class Requests:
 

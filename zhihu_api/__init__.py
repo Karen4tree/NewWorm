@@ -16,26 +16,15 @@ from bs4 import BeautifulSoup
 
 from auth import islogin
 from auth import Logging
+from BloomFliter import BloomFilter
+from Requests import Requests
 
-from BloomFliter import BloomFilter
-from Requests import Requests
-from User import User
-from Answer import Answer
-from Article import Article
-from BloomFliter import BloomFilter
-from Collection import Collection
-from Column import Column
-from Comment import Comment
-from Question import Question
-from Requests import Requests
-from Topic import Topic
+
+
 # debug requests
 # You must initialize logging, otherwise you'll not see debug output.
-try:
-    import http.client
-except ImportError:
-    # Python 2
-    import httplib as http_client
+
+import httplib as http_client
 
 
 requests = Requests()

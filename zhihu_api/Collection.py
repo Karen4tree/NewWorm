@@ -3,7 +3,7 @@ __author__ = 'ZombieGroup'
 # Build-in / Std
 
 from __init__ import *
-
+from User import User
 
 # 从Collection url指向页面中抓取信息
 class Collection:
@@ -59,6 +59,7 @@ class Collection:
                     answer_part = tag.find(
                         "div", class_="zm-item-answer ")["data-atoken"]
                     answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
+                    from Answer import Answer
                     yield Answer(answer_url)
         else:
             tags = soup.find(
@@ -68,4 +69,5 @@ class Collection:
                 answer_part = tag.find(
                     "div", class_="zm-item-answer ")["data-atoken"]
                 answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
+                from Answer import Answer
                 yield Answer(answer_url)

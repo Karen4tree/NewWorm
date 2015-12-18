@@ -2,7 +2,7 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-from zhihu_api.Requests import *
+from __init__ import *
 
 
 class ScrollLoader:
