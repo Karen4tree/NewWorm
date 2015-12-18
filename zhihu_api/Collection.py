@@ -2,8 +2,11 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-from __init__ import *
+import re
+from bs4 import BeautifulSoup
 from User import User
+from __init__ import requests
+
 
 # 从Collection url指向页面中抓取信息
 class Collection:

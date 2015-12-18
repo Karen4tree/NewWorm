@@ -1,26 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
+__package__ = 'zhihu_api'
 # Build-in / Stdimport os, sys, time, platform, random
-
-import re
-import json
-import cookielib
-import sys
-import logging
-import logging.config
-
-import termcolor
-import html2text
-from bs4 import BeautifulSoup
 
 from auth import islogin
 from auth import Logging
 from BloomFliter import BloomFilter
 from Requests import Requests
-
-import httplib as http_client # debug
-
-requests = Requests()
 
 # Bloom Fliters
 ERROR_RATE = 0.05
@@ -41,3 +27,5 @@ def get_hash_id(soup):
 
 def get_xsrf(soup):
     return soup.find("input", {"name": "_xsrf"})['value']
+
+requests = Requests()

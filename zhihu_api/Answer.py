@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 
-from __init__ import *
+import re
+import html2text
+from bs4 import BeautifulSoup
+from __init__ import requests
 
 
 # 从Answer url指向页面中抓取信息

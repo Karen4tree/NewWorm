@@ -3,8 +3,9 @@ __author__ = 'ZombieGroup'
 # Build-in / Std
 
 from ScrollLoader import ScrollLoader
-from __init__ import *
-
+import re
+from bs4 import BeautifulSoup
+from __init__ import requests,get_hash_id,get_xsrf
 # 从User个人主页抓取信息
 
 

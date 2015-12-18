@@ -4,8 +4,24 @@ __author__ = 'ZombieGroup'
 
 
 from ScrollLoader import ScrollLoader
-from __init__ import *
+import re
+import json
+import cookielib
+import sys
+import logging
+import logging.config
 
+import termcolor
+import html2text
+from bs4 import BeautifulSoup
+
+from auth import islogin
+from auth import Logging
+from BloomFliter import BloomFilter
+
+
+import httplib as http_client
+from Requests import requests
 
 # 从Comment url指向页面中抓取信息
 

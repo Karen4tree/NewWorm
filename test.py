@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 
-from zhihu_api.User import User
-from zhihu_api.Question import Question
-from zhihu_api.Answer import Answer
-from zhihu_api.Topic import Topic
-from zhihu_api.Collection import Collection
-from zhihu_api.Article import Article
 from zhihu_api import *
+from zhihu_api.User import User
 
 
 def test_user(user_url):
@@ -194,7 +189,7 @@ def main():
     test_user(user_url)
     # test_answer(answer_url)
     # topic_test(topic_url)
-    question_test(question_url)
+    #question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 

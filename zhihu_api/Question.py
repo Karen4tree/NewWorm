@@ -3,8 +3,10 @@ __author__ = 'ZombieGroup'
 # Build-in / Std
 
 from ScrollLoader import ScrollLoader
-from __init__ import *
-
+import re
+import html2text
+from bs4 import BeautifulSoup
+from __init__ import requests
 
 
 # 从Question url指向页面中抓取信息

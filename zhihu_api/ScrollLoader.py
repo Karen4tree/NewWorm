@@ -2,7 +2,8 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-from __init__ import *
+import json
+from __init__ import requests
 
 
 class ScrollLoader:

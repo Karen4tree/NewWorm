@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 
-from __init__ import *
+import cookielib
+import sys
+from auth import islogin
+from auth import Logging
+import httplib as http_client
+import requests
+
 
 class Requests:
-
     def __init__(self):
         http_client.HTTPConnection.debuglevel = 0
 
@@ -12,7 +17,7 @@ class Requests:
         self.requests = requests.Session()
         self.requests.cookies = cookielib.LWPCookieJar('cookies')
         try:
-            self.requests.cookies.load(ignore_discard=True)
+            self.requests.cookies.load(ignore_discard = True)
         except:
             Logging.error(u"你还没有登录知乎哦 ...")
             Logging.info(u"执行 `python auth.py` 即可以完成登录。")
@@ -23,10 +28,9 @@ class Requests:
             raise Exception("无权限(403)")
 
         reload(sys)
-        #sys.setdefaultencoding('utf8')
+        # sys.setdefaultencoding('utf8')
         print sys.getdefaultencoding()
-        self.proxies = {"http": "http://127.0.0.1:8080",
-                        "https": "http://127.0.0.1:8080", }
+        self.proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080",}
 
     def get(self, url, **kwargs):
         try:
@@ -39,8 +43,6 @@ class Requests:
             return self.requests.post(url, data)
         except:
             self.post(url, data)
-
-
 
 
 
