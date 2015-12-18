@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
+from DataBase import DataBase
 from User import User
 
-from DataBase import DataBase
-from ReadData import ReadData
+from database_operation.ReadData import ReadData
 from zhihu_api.Question import Question
 
 

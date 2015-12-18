@@ -9,7 +9,6 @@ import sys
 import logging
 import logging.config
 
-import requests
 import termcolor
 import html2text
 from bs4 import BeautifulSoup
@@ -19,13 +18,7 @@ from auth import Logging
 from BloomFliter import BloomFilter
 from Requests import Requests
 
-
-
-# debug requests
-# You must initialize logging, otherwise you'll not see debug output.
-
-import httplib as http_client
-
+import httplib as http_client # debug
 
 requests = Requests()
 

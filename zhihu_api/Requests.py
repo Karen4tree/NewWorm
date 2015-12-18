@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-import cookielib
-import sys
-import requests
-from auth import islogin
-from auth import Logging
-import httplib as http_client
+
+from __init__ import *
 
 class Requests:
 
@@ -27,7 +23,7 @@ class Requests:
             raise Exception("无权限(403)")
 
         reload(sys)
-        sys.setdefaultencoding('utf8')
+        #sys.setdefaultencoding('utf8')
         print sys.getdefaultencoding()
         self.proxies = {"http": "http://127.0.0.1:8080",
                         "https": "http://127.0.0.1:8080", }

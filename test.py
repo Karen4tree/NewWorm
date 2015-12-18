@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 
+from zhihu_api.User import User
+from zhihu_api.Question import Question
+from zhihu_api.Answer import Answer
+from zhihu_api.Topic import Topic
+from zhihu_api.Collection import Collection
+from zhihu_api.Article import Article
 from zhihu_api import *
 
 
