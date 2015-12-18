@@ -2,9 +2,9 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-from Requests import *
+from __init__ import *
 from ScrollLoader import ScrollLoader
-from Article import Article
+
 
 
 # 从Article url指向页面中抓取信息

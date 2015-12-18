@@ -3,8 +3,7 @@ __author__ = 'ZombieGroup'
 # Build-in / Std
 
 from ScrollLoader import ScrollLoader
-from Requests import *
-from Answer import Answer
+from __init__ import *
 
 # 从User个人主页抓取信息
 

@@ -2,6 +2,7 @@
 _author__ = 'ZombieGroup'
 
 import MySQLdb
+
 from Requests import *
 
 
@@ -183,8 +184,8 @@ class DataBase:
             values = (answer_id, question_id, author_id,
                       detail, upvote_num, visited_times)
 
-            from User import User
-            from Question import Question
+            from zhihu_api.User import User
+            from zhihu_api.Question import Question
             self.put_user_in_db(
                 User("http://www.zhihu.com/people/%s" % author_id))
             self.put_question_in_db(

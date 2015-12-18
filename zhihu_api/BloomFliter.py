@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-from Requests import *
+
 import cmath
 from BitVector import BitVector
 

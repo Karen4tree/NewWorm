@@ -4,10 +4,8 @@ __author__ = 'ZombieGroup'
 
 
 from ScrollLoader import ScrollLoader
-from Requests import *
+from __init__ import *
 
-from Answer import Answer
-from User import User
 
 # 从Comment url指向页面中抓取信息
 

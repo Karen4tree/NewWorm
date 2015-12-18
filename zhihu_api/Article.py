@@ -2,7 +2,7 @@
 __author__ = 'ZombieGroup'
 # Build-in / Std
 
-from Requests import *
+from __init__ import *
 
 # 从Article url指向页面中抓取信息
 

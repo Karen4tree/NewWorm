@@ -2,7 +2,7 @@
 __author__ = 'ZombieGroup'
 
 
-from Requests import *
+from __init__ import *
 
 # 从Topic url指向页面中抓取信息
 
