@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
-# Build-in / Stdimport os, sys, time, platform, random
 
 from auth import islogin
 from auth import Logging

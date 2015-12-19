@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-# Build-in / Std
 
 import re
 from bs4 import BeautifulSoup

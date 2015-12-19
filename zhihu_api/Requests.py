@@ -15,7 +15,7 @@ class Requests:
 
         print 'get cookies'
         self.requests = requests.Session()
-        self.requests.cookies = cookielib.LWPCookieJar('cookies')
+        self.requests.cookies = cookielib.LWPCookieJar('./cookies')
         try:
             self.requests.cookies.load(ignore_discard = True)
         except:
@@ -24,8 +24,9 @@ class Requests:
             raise Exception("无权限(403)")
 
         if not islogin():
-            Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
-            raise Exception("无权限(403)")
+            if islogin() is not None:
+                Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
+                raise Exception("无权限(403)")
 
         reload(sys)
         # sys.setdefaultencoding('utf8')
@@ -43,6 +44,4 @@ class Requests:
             return self.requests.post(url, data)
         except:
             self.post(url, data)
-
-
 

@@ -2,7 +2,7 @@
 __author__ = 'ZombieGroup'
 
 import cmath
-from BitVector import BitVector
+from BitVector.BitVector import BitVector
 
 
 class BloomFilter:

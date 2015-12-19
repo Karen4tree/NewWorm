@@ -195,6 +195,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    #from Requests import *
-    # print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
+    #main()
+    from Requests import *
+    print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
+__author__ = 'ZombieGroup'
+__package__ = 'zhihu_api'
 # Build-in / Std
 import os
 import platform
@@ -12,10 +13,10 @@ import cookielib
 import requests
 import termcolor
 
-requests = requests.Session()
-requests.cookies = cookielib.LWPCookieJar('./cookies')
+request = requests.Session()
+request.cookies = cookielib.LWPCookieJar('./cookies')
 try:
-    requests.cookies.load(ignore_discard=True)
+    request.cookies.load(ignore_discard = True)
 except:
     pass
 
@@ -56,9 +57,8 @@ Logging.flag = True
 
 
 class LoginPasswordError(Exception):
-
     def __init__(self, message):
-        if type(message) != type("") or message == "":
+        if (not isinstance(message, "")) or message == "":
             self.message = u"帐号密码错误"
         else:
             self.message = message
@@ -66,9 +66,8 @@ class LoginPasswordError(Exception):
 
 
 class NetworkError(Exception):
-
     def __init__(self, message):
-        if type(message) != type("") or message == "":
+        if (not isinstance(message,"")) or message == "":
             self.message = u"网络异常"
         else:
             self.message = message
@@ -76,9 +75,8 @@ class NetworkError(Exception):
 
 
 class AccountError(Exception):
-
     def __init__(self, message):
-        if type(message) != type("") or message == "":
+        if (not isinstance(message,"")) or message == "":
             self.message = u"帐号类型错误"
         else:
             self.message = message
@@ -87,7 +85,7 @@ class AccountError(Exception):
 
 def download_captcha():
     url = "http://www.zhihu.com/captcha.gif"
-    r = requests.get(url, params={"r": random.random()})
+    r = request.get(url, params = {"r": random.random()})
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
     image_name = u"verify." + r.headers['content-type'].split("/")[1]
@@ -115,8 +113,7 @@ def download_captcha():
     elif platform.system() == "Windows":
         os.system("open %s &" % image_name)
     else:
-        Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" %
-                     os.path.join(os.getcwd(), image_name))
+        Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" % os.path.join(os.getcwd(), image_name))
 
     captcha_code = raw_input(termcolor.colored("请输入验证码: ", "cyan"))
     return captcha_code
@@ -124,11 +121,10 @@ def download_captcha():
 
 def search_xsrf():
     url = "http://www.zhihu.com/"
-    r = requests.get(url)
+    r = request.get(url)
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
-    results = re.compile(
-        r"\<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
+    results = re.compile(r"\<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
     if len(results) < 1:
         Logging.info(u"提取XSRF 代码失败")
         return None
@@ -157,7 +153,7 @@ def upload_form(form):
                       "Safari/537.36", 'Host': "www.zhihu.com", 'Origin': "http://www.zhihu.com", 'Pragma': "no-cache",
         'Referer': "http://www.zhihu.com/", 'X-Requested-With': "XMLHttpRequest"}
 
-    r = requests.post(url, data=form, headers=headers)
+    r = request.post(url, data = form, headers = headers)
     if int(r.status_code) != 200:
         raise NetworkError(u"表单上传失败!")
 
@@ -180,7 +176,7 @@ def upload_form(form):
 def islogin():
     # check session
     url = "http://www.zhihu.com/settings/profile"
-    r = requests.get(url, allow_redirects=False)
+    r = request.get(url, allow_redirects = False)
     status_code = int(r.status_code)
     if status_code == 301 or status_code == 302:
         # 未登录
@@ -244,7 +240,7 @@ def login(account=None, password=None):
     elif "result" in result and result['result'] == True:
         # 登录成功
         Logging.success(u"登录成功！")
-        requests.cookies.save()
+        request.cookies.save('./cookies')
         return True
 
 
