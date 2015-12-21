@@ -67,7 +67,7 @@ class LoginPasswordError(Exception):
 
 class NetworkError(Exception):
     def __init__(self, message):
-        if (not isinstance(message,"")) or message == "":
+        if (not isinstance(message, "")) or message == "":
             self.message = u"网络异常"
         else:
             self.message = message
@@ -76,7 +76,7 @@ class NetworkError(Exception):
 
 class AccountError(Exception):
     def __init__(self, message):
-        if (not isinstance(message,"")) or message == "":
+        if (not isinstance(message, "")) or message == "":
             self.message = u"帐号类型错误"
         else:
             self.message = message

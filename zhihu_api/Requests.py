@@ -29,9 +29,8 @@ class Requests:
                 raise Exception("无权限(403)")
 
         reload(sys)
-        # sys.setdefaultencoding('utf8')
         print sys.getdefaultencoding()
-        self.proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080",}
+        self.proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 
     def get(self, url, **kwargs):
         try:
@@ -44,4 +43,3 @@ class Requests:
             return self.requests.post(url, data)
         except:
             self.post(url, data)
-
