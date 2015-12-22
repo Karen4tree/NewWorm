@@ -1,91 +1,18 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-__author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
-# Build-in / Std
 import os
+import re
 import platform
 import random
-import re
-import cookielib
-
-# requirements
-import requests
 import termcolor
 
-request = requests.Session()
-request.cookies = cookielib.LWPCookieJar('./cookies')
-try:
-    request.cookies.load(ignore_discard = True)
-except:
-    pass
-
-
-class Logging:
-    flag = True
-
-    @staticmethod
-    def error(msg):
-        if Logging.flag:
-            print "".join([termcolor.colored("ERROR", "red"), ": ", termcolor.colored(msg, "white")])
-
-    @staticmethod
-    def warn(msg):
-        if Logging.flag:
-            print "".join([termcolor.colored("WARN", "yellow"), ": ", termcolor.colored(msg, "white")])
-
-    @staticmethod
-    def info(msg):
-        # attrs=['reverse', 'blink']
-        if Logging.flag:
-            print "".join([termcolor.colored("INFO", "magenta"), ": ", termcolor.colored(msg, "white")])
-
-    @staticmethod
-    def debug(msg, value):
-        if Logging.flag:
-            print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white"), "  ",
-                           termcolor.colored(value, "white")])
-
-    @staticmethod
-    def success(msg):
-        if Logging.flag:
-            print "".join([termcolor.colored("SUCCES", "green"), ": ", termcolor.colored(msg, "white")])
-
-
-# Setting Logging
-Logging.flag = True
-
-
-class LoginPasswordError(Exception):
-    def __init__(self, message):
-        if (not isinstance(message, "")) or message == "":
-            self.message = u"帐号密码错误"
-        else:
-            self.message = message
-        Logging.error(self.message)
-
-
-class NetworkError(Exception):
-    def __init__(self, message):
-        if (not isinstance(message, "")) or message == "":
-            self.message = u"网络异常"
-        else:
-            self.message = message
-        Logging.error(self.message)
-
-
-class AccountError(Exception):
-    def __init__(self, message):
-        if (not isinstance(message, "")) or message == "":
-            self.message = u"帐号类型错误"
-        else:
-            self.message = message
-        Logging.error(self.message)
+from __init__ import *
+from Exceptions import *
 
 
 def download_captcha():
     url = "http://www.zhihu.com/captcha.gif"
-    r = request.get(url, params = {"r": random.random()})
+    r = requests.get(url, params = {"r": random.random()})
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
     image_name = u"verify." + r.headers['content-type'].split("/")[1]
@@ -121,10 +48,10 @@ def download_captcha():
 
 def search_xsrf():
     url = "http://www.zhihu.com/"
-    r = request.get(url)
+    r = requests.get(url)
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
-    results = re.compile(r"\<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
+    results = re.compile(r"<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
     if len(results) < 1:
         Logging.info(u"提取XSRF 代码失败")
         return None
@@ -132,10 +59,9 @@ def search_xsrf():
 
 
 def build_form(account, password):
-    account_type = "email"
     if re.match(r"^\d{11}$", account):
         account_type = "phone"
-    elif re.match(r"^\S+\@\S+\.\S+$", account):
+    elif re.match(r"^\S+@\S+\.\S+$", account):
         account_type = "email"
     else:
         raise AccountError(u"帐号类型错误")
@@ -153,7 +79,7 @@ def upload_form(form):
                       "Safari/537.36", 'Host': "www.zhihu.com", 'Origin': "http://www.zhihu.com", 'Pragma': "no-cache",
         'Referer': "http://www.zhihu.com/", 'X-Requested-With': "XMLHttpRequest"}
 
-    r = request.post(url, data = form, headers = headers)
+    r = requests.post(url, data = form, headers = headers)
     if int(r.status_code) != 200:
         raise NetworkError(u"表单上传失败!")
 
@@ -176,16 +102,16 @@ def upload_form(form):
 def islogin():
     # check session
     url = "http://www.zhihu.com/settings/profile"
-    r = request.get(url, allow_redirects = False)
+    r = requests.get(url, allow_redirects = False)
     status_code = int(r.status_code)
+    flag = False
     if status_code == 301 or status_code == 302:
-        # 未登录
-        return False
+        raise NotLogin
     elif status_code == 200:
-        return True
+        flag = True
+        return flag
     else:
-        Logging.warn(u"网络故障")
-        return None
+        raise NetworkError
 
 
 def read_account_from_config_file(config_file="config.ini"):
@@ -211,39 +137,33 @@ def read_account_from_config_file(config_file="config.ini"):
 
 
 def login(account=None, password=None):
-    if islogin():
-        Logging.success(u"你已经登录过咯")
-        return True
+    try:
+        islogin()
+    except NotLogin, e:
 
-    if account is None:
-        (account, password) = read_account_from_config_file()
-    if account is None:
-        account = raw_input("请输入登录帐号: ")
-        password = raw_input("请输入登录密码: ")
+        if account is None:
+            (account, password) = read_account_from_config_file()
+        if account is None:
+            account = raw_input("请输入登录帐号: ")
+            password = raw_input("请输入登录密码: ")
 
-    form_data = build_form(account, password)
-    """
-        result: 
-            {"result": True}
-            {"error": {"code": 19855555, "message": "unknow.", "data": "data" } }
-            {"error": {"code": -1, "message": u"unknow error"} }
-    """
-    result = upload_form(form_data)
-    if "error" in result:
-        if result['error']['code'] == 1991829:
-            # 验证码错误
-            Logging.error(u"验证码输入错误，请准备重新输入。")
-            return login()
-        else:
-            Logging.warn(u"unknow error.")
-            return False
-    elif "result" in result and result['result'] == True:
-        # 登录成功
-        Logging.success(u"登录成功！")
-        request.cookies.save('./cookies')
-        return True
-
-
-if __name__ == "__main__":
-    # login(account="xxxx@email.com", password="xxxxx")
-    login()
+        form_data = build_form(account, password)
+        """
+            result:
+                {"result": True}
+                {"error": {"code": 19855555, "message": "unknow.", "data": "data" } }
+                {"error": {"code": -1, "message": u"unknow error"} }
+        """
+        result = upload_form(form_data)
+        if "error" in result:
+            if result['error']['code'] == 1991829:
+                # 验证码错误
+                Logging.error(u"验证码输入错误，请准备重新输入。")
+                return login(account, password)
+            else:
+                Logging.warn(u"unknow error.")
+                return False
+        elif "result" in result and result['result'] == True:
+            Logging.success(u"登录成功！")
+            requests.cookies.save('./cookies')
+            return True

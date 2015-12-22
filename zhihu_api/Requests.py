@@ -1,12 +1,15 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
 __author__ = 'ZombieGroup'
+__package__='zhihu_api'
 
 import cookielib
 import sys
 from auth import islogin
-from auth import Logging
+from Logging import Logging
 import httplib as http_client
 import requests
+from Exceptions import *
 
 
 class Requests:
@@ -18,15 +21,11 @@ class Requests:
         self.requests.cookies = cookielib.LWPCookieJar('./cookies')
         try:
             self.requests.cookies.load(ignore_discard = True)
+            islogin()
+        except NotLogin:
+            Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
         except:
-            Logging.error(u"你还没有登录知乎哦 ...")
-            Logging.info(u"执行 `python auth.py` 即可以完成登录。")
-            raise Exception("无权限(403)")
-
-        if not islogin():
-            if islogin() is not None:
-                Logging.error(u"你的身份信息已经失效，请重新生成身份信息( `python auth.py` )。")
-                raise Exception("无权限(403)")
+            Logging.error(u"找不到cookie")
 
         reload(sys)
         print sys.getdefaultencoding()

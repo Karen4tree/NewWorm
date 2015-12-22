@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-_
-_author__ = 'ZombieGroup'
+__author__ = 'ZombieGroup'
+__package__='database'
 
 import MySQLdb
 
@@ -91,7 +92,6 @@ class DataBase:
         user_id = user.get_user_id()
         for column in user.getfollowing_column():
             self.put_column_in_db(column)
-            # TODO:先写完put_column_in_db
             tmp = (user_id, column.get_column_name())
             try:
                 cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
@@ -238,7 +238,6 @@ class DataBase:
         if collumnBloom.is_element_exist(collumnBloom):
             connect = self.connect
             cursor = connect.cursor()
-            # TODO: 完善Column.py
             column_name = column.get_column_name()
             column_id = column.get_column_id()
             follower_num = column.getfollower_num()
