@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
+
 
 import re
 from bs4 import BeautifulSoup
 from ScrollLoader import ScrollLoader
 from __init__ import requests
 
-
+__author__ = 'ZombieGroup'
 # 从Article url指向页面中抓取信息
 
 

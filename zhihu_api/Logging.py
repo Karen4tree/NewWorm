@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import termcolor
+from __init__ import debug_info_flag
+
+__author__ = 'ZombieGroup'
 
 
 class Logging:
@@ -24,7 +27,7 @@ class Logging:
 
     @staticmethod
     def debug(msg, value):
-        if Logging.flag:
+        if Logging.flag and debug_info_flag:
             print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white"), "  ",
                            termcolor.colored(value, "white")])
 

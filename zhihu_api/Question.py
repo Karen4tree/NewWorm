@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
 
 from ScrollLoader import ScrollLoader
 import re
 import html2text
 from bs4 import BeautifulSoup
-from __init__ import requests
+from __init__ import requests,get_xsrf
 
-
+__author__ = 'ZombieGroup'
 # 从Question url指向页面中抓取信息
+
+
 class Question:
 
     def __init__(self, url):

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
 
 
 from ScrollLoader import ScrollLoader
@@ -23,6 +21,7 @@ from BloomFliter import BloomFilter
 import httplib as http_client
 from Requests import requests
 
+__author__ = 'ZombieGroup'
 # 从Comment url指向页面中抓取信息
 
 

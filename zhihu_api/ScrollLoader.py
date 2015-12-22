@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
 
 import json
 from __init__ import requests
+__author__ = 'ZombieGroup'
 
 
 class ScrollLoader:

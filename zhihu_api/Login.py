@@ -8,11 +8,12 @@ import termcolor
 
 from __init__ import *
 from Exceptions import *
+__author__ = 'ZombieGroup'
 
 
 def download_captcha():
     url = "http://www.zhihu.com/captcha.gif"
-    r = requests.get(url, params = {"r": random.random()})
+    r = requests.get(url, params={"r": random.random()})
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
     image_name = u"verify." + r.headers['content-type'].split("/")[1]
@@ -40,7 +41,8 @@ def download_captcha():
     elif platform.system() == "Windows":
         os.system("open %s &" % image_name)
     else:
-        Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" % os.path.join(os.getcwd(), image_name))
+        Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" %
+                     os.path.join(os.getcwd(), image_name))
 
     captcha_code = raw_input(termcolor.colored("请输入验证码: ", "cyan"))
     return captcha_code
@@ -51,7 +53,8 @@ def search_xsrf():
     r = requests.get(url)
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
-    results = re.compile(r"<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
+    results = re.compile(
+        r"<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
     if len(results) < 1:
         Logging.info(u"提取XSRF 代码失败")
         return None
@@ -79,7 +82,7 @@ def upload_form(form):
                       "Safari/537.36", 'Host': "www.zhihu.com", 'Origin': "http://www.zhihu.com", 'Pragma': "no-cache",
         'Referer': "http://www.zhihu.com/", 'X-Requested-With': "XMLHttpRequest"}
 
-    r = requests.post(url, data = form, headers = headers)
+    r = requests.post(url, data=form, headers=headers)
     if int(r.status_code) != 200:
         raise NetworkError(u"表单上传失败!")
 
@@ -102,7 +105,7 @@ def upload_form(form):
 def islogin():
     # check session
     url = "http://www.zhihu.com/settings/profile"
-    r = requests.get(url, allow_redirects = False)
+    r = requests.get(url, allow_redirects=False)
     status_code = int(r.status_code)
     flag = False
     if status_code == 301 or status_code == 302:

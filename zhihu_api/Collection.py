@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
+
 
 import re
 from bs4 import BeautifulSoup
 from User import User
 from __init__ import requests
 
-
+__author__ = 'ZombieGroup'
 # 从Collection url指向页面中抓取信息
+
+
 class Collection:
     url = None
     soup = None

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-_
 __author__ = 'ZombieGroup'
-__package__='database'
+__package__ = 'database'
 
 import MySQLdb
 

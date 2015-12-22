@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
-
-from auth import islogin
-from auth import Logging
+import Login
 from BloomFliter import BloomFilter
 from Requests import Requests
+
+__author__ = 'ZombieGroup'
+__package__ = 'zhihu_api'
 
 # Bloom Fliters
 ERROR_RATE = 0.05
@@ -28,3 +27,5 @@ def get_xsrf(soup):
     return soup.find("input", {"name": "_xsrf"})['value']
 
 requests = Requests()
+
+debug_info_flag = True

@@ -189,12 +189,12 @@ def main():
     test_user(user_url)
     # test_answer(answer_url)
     # topic_test(topic_url)
-    #question_test(question_url)
+    # question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 
 
 if __name__ == '__main__':
-    #main()
+    # main()
     from Requests import *
     print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
