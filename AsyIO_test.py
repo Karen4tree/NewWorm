@@ -61,8 +61,10 @@ def master(name):
     print 'master %s' % name
     topic.get_questions()
 
-masters = [gevent.spawn(master, i) for i in xrange(10)]
-users = [gevent.spawn(user_slave, i) for i in xrange(100)]
-questions = [gevent.spawn(question_slave, i) for i in xrange(100)]
-answers = [gevent.spawn(answer_slave, i) for i in xrange(100)]
-gevent.joinall(masters + users + questions + answers)
+
+if __name__ == 'main':
+    masters = [gevent.spawn(master, i) for i in xrange(10)]
+    users = [gevent.spawn(user_slave, i) for i in xrange(100)]
+    questions = [gevent.spawn(question_slave, i) for i in xrange(100)]
+    answers = [gevent.spawn(answer_slave, i) for i in xrange(100)]
+    gevent.joinall(masters + users + questions + answers)
