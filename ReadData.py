@@ -3,23 +3,26 @@ _author__ = 'ZombieGroup'
 
 import MySQLdb
 
-# TODO: 改成类方法
-
 
 class ReadData:
+
+    connect = MySQLdb.connect('localhost', 'root', '',
+                              'zhihu', port=3306, charset='utf8')
 
     def __init__(self, user=None, host=None, password=None, dbname=None):
         self.connect = MySQLdb.connect(
             host, user, password, dbname, port=3306, charset='utf8')
 
-    def read_from_user(self, user_id):
-        connect = self.connect
+    @classmethod
+    def read_from_user(cls, user_id):
+        connect = cls.connect
         cursor = connect.cursor()
         cursor.execute('select * from Users where user_id="%s"' % user_id)
         return cursor.fetchone()
 
-    def followers_of_user_question(self, user_id):
-        connect = self.connect
+    @classmethod
+    def followers_of_user_question(cls, user_id):
+        connect = cls.connect
         cursor = connect.cursor()
 
         cursor.execute(
@@ -28,8 +31,9 @@ class ReadData:
         result = cursor.fetchall()
         return result
 
-    def followers_of_user(self, user_id):
-        connect = self.connect
+    @classmethod
+    def followers_of_user(cls, user_id):
+        connect = cls.connect
         cursor = connect.cursor()
 
         cursor.execute(
@@ -37,28 +41,32 @@ class ReadData:
         result = cursor.fetchall()
         return result
 
-    def voters_of_user_answer(self, user_id):
-        connect = self.connect
+    @classmethod
+    def voters_of_user_answer(cls, user_id):
+        connect = cls.connect
         cursor = connect.cursor()
 
         cursor.execute(
             'select voter_id from Vote_Answer where answer_id in (select answer_id from Answers where '
-            'author_id="%s")' % user_id)
+            'author_id=%s)' % user_id)
 
         result = cursor.fetchall()
         return result
 
-    def random_users(self):
-        connect = self.connect
+    @classmethod
+    def random_users(cls):
+        connect = cls.connect
         cursor = connect.cursor()
         cursor.execute('SELECT user_id FROM Users ORDER BY RAND() LIMIT 80')
         result = cursor.fetchall()
         return result
 
-    def read_unreached_users(self, num):
-        connect = self.connect
+    # 暂时用不到
+    @classmethod
+    def read_unreached_users(cls, num):
+        connect = cls.connect
         cursor = connect.cursor()
         cursor.execute(
-            'select user_id from Users where reached_flag is False limit %s' % num)
+            'select user_id from Users where reached_flag is False limit %s' % num)  # 字段尚未定义
         result = cursor.fetchall()
         return result

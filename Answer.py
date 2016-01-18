@@ -4,6 +4,7 @@ __author__ = 'ZombieGroup'
 from Requests import *
 
 
+# TODO: 改H5
 # 从Answer url指向页面中抓取信息
 class Answer:
 

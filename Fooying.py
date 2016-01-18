@@ -8,11 +8,7 @@ from Topic import Topic
 import multiprocessing as mp
 import itertools
 
-user = 'root'
-host = 'localhost'
-password = ''
-dbname = 'zhihu'
-db = DataBase(user, host, password, dbname)
+db = DataBase()
 
 
 def spider(question):
