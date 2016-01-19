@@ -119,9 +119,9 @@ def topic_test(topic_url):
     print topic_id
     topic_name = topic.get_topic_name()
     print topic_name
-    question_num = topic.get_questions_num()
+    question_num = topic.get_question_num()
     print question_num
-    follower_num = topic.get_followers_num()
+    follower_num = topic.get_follower_num()
     print follower_num
     questions = topic.get_questions()
 #    for question in questions:

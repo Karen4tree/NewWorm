@@ -44,9 +44,9 @@ class Logging:
             print "".join([termcolor.colored("INFO", "magenta"), ": ", termcolor.colored(msg, "white")])
 
     @staticmethod
-    def debug(msg, value):
+    def debug(msg):
         if Logging.flag == True:
-            print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white"), "  ", termcolor.colored(value, "white")])
+            print "".join([termcolor.colored("DEBUG", "magenta"), ": ", termcolor.colored(msg, "white")])
 
     @staticmethod
     def success(msg):
@@ -115,12 +115,13 @@ def download_captcha():
     elif platform.system() == "NetBSD":
         os.system("open %s &" % image_name)
     elif platform.system() == "Windows":
-        os.system("open %s &" % image_name)
+        os.system("%s" % image_name)
     else:
         Logging.info(u"我们无法探测你的作业系统，请自行打开验证码 %s 文件，并输入验证码。" %
                      os.path.join(os.getcwd(), image_name))
 
-    captcha_code = raw_input(termcolor.colored("请输入验证码: ", "cyan"))
+    sys.stdout.write(termcolor.colored(u"请输入验证码: ", "cyan"))
+    captcha_code = raw_input()
     return captcha_code
 
 
@@ -138,9 +139,8 @@ def search_xsrf():
 
 
 def build_form(account, password):
-    account_type = "email"
-    if re.match(r"^\d{11}$", account):
-        account_type = "phone"
+    if re.match(r"^1\d{10}$", account):
+        account_type = "phone_num"
     elif re.match(r"^\S+\@\S+\.\S+$", account):
         account_type = "email"
     else:
@@ -154,7 +154,13 @@ def build_form(account, password):
 
 
 def upload_form(form):
-    url = "http://www.zhihu.com/login/email"
+    if "email" in form:
+        url = "http://www.zhihu.com/login/email"
+    elif "phone_num" in form:
+        url = "http://www.zhihu.com/login/phone_num"
+    else:
+        raise ValueError(u"账号类型错误")
+
     headers = {
         'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36",
         'Host': "www.zhihu.com",
@@ -169,7 +175,13 @@ def upload_form(form):
         raise NetworkError(u"表单上传失败!")
 
     if r.headers['content-type'].lower() == "application/json":
-        result = r.json()
+        try:
+            result = json.loads(r.content)
+        except Exception as e:
+            Logging.error(u"JSON解析失败！")
+            Logging.debug(e)
+            Logging.debug(r.content)
+            result = {}
         if result["r"] == 0:
             Logging.success(u"登录成功！")
             return {"result": True}
@@ -186,7 +198,7 @@ def upload_form(form):
 
 def islogin():
     # check session
-    url = "http://www.zhihu.com/settings/profile"
+    url = "https://www.zhihu.com/settings/profile"
     r = requests.get(url, allow_redirects=False)
     status_code = int(r.status_code)
     if status_code == 301 or status_code == 302:
@@ -229,12 +241,14 @@ def login(account=None, password=None):
     if account == None:
         (account, password) = read_account_from_config_file()
     if account == None:
-        account = raw_input("请输入登录帐号: ")
-        password = raw_input("请输入登录密码: ")
+        sys.stdout.write(u"请输入登录账号: ")
+        account = raw_input()
+        sys.stdout.write(u"请输入登录密码: ")
+        password = raw_input()
 
     form_data = build_form(account, password)
     """
-        result: 
+        result:
             {"result": True}
             {"error": {"code": 19855555, "message": "unknow.", "data": "data" } }
             {"error": {"code": -1, "message": u"unknow error"} }

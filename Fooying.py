@@ -8,22 +8,20 @@ from Topic import Topic
 import multiprocessing as mp
 import itertools
 
-db = DataBase()
-
 
 def spider(question):
     print question.get_question_id()
-    db.put_question_in_db(question)
+    DataBase.put_question_in_db(question)
     for answer in question.get_answers():
-        db.put_answer_in_db(answer)
-        db.put_vote_in_db(answer)
+        DataBase.put_answer_in_db(answer)
+        DataBase.put_vote_in_db(answer)
 
 
 if __name__ == '__main__':
     THREADS = 8
     p = mp.Pool(THREADS)
     topic = Topic("http://www.zhihu.com/topic/19554927")  # 网络安全
-    db.put_topic_in_db(topic)
+    DataBase.put_topic_in_db(topic)
     go = topic.get_questions()
     N = 20
     while True:
