@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
 import json
-from __init__ import requests
+
+from Requests import requests
 
 __author__ = 'ZombieGroup'
 # 从Article url指向页面中抓取信息

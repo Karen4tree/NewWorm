@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
-from __init__ import requests
+
+from Requests import requests
+
 __author__ = 'ZombieGroup'
 
 

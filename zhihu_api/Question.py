@@ -4,7 +4,9 @@ from ScrollLoader import ScrollLoader
 import re
 import html2text
 from bs4 import BeautifulSoup
-from __init__ import requests,get_xsrf
+
+from __init__ import get_xsrf
+from Requests import requests
 
 __author__ = 'ZombieGroup'
 # 从Question url指向页面中抓取信息

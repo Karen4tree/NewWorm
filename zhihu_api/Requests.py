@@ -2,10 +2,11 @@
 # -*- coding:utf-8 -*-
 import cookielib
 import sys
-import Login
 import httplib as http_client
 import requests
+
 from Exceptions import *
+from Login import Login
 
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
@@ -43,3 +44,5 @@ class Requests:
             return self.requests.post(url, data)
         except:
             self.post(url, data)
+
+requests = Requests()

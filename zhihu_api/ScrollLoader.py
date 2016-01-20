@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from __init__ import requests
+from Requests import requests
 __author__ = 'ZombieGroup'
 
 

@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 
-from zhihu_api import *
 from zhihu_api.User import User
+from zhihu_api.Logging import Logging
+from zhihu_api.Question import Question
+from zhihu_api.Answer import Answer
+from zhihu_api.Topic import Topic
+from zhihu_api.Collection import Collection
+from zhihu_api.Article import Article
+
 
 
 def test_user(user_url):
@@ -195,6 +201,8 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    from Requests import *
+
+    main()
+
+    from Requests import requests
     print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")

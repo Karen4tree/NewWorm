@@ -3,8 +3,9 @@
 from ScrollLoader import ScrollLoader
 import re
 from bs4 import BeautifulSoup
-from __init__ import requests, get_hash_id, get_xsrf
 
+from __init__ import get_hash_id, get_xsrf
+from Requests import requests
 
 __author__ = 'ZombieGroup'
 # 从User个人主页抓取信息

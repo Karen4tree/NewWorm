@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import Login
+
 from BloomFliter import BloomFilter
-from Requests import Requests
 
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
@@ -26,6 +25,6 @@ def get_hash_id(soup):
 def get_xsrf(soup):
     return soup.find("input", {"name": "_xsrf"})['value']
 
-requests = Requests()
+
 
 debug_info_flag = True
