@@ -2,7 +2,9 @@
 from bs4 import BeautifulSoup
 
 from Requests import requests
-from __init__ import questionBloom
+from __init__ import questionBloom,question_queue
+from Logging import Logging
+import gevent
 
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
@@ -76,4 +78,6 @@ class Topic:
                 question_url = url_head + question_tag["href"]
                 if not questionBloom.is_element_exist(question_url):
                     questionBloom.insert_element(question_url)
-                yield Question(question_url)
+                    question_queue.put(Question(question_url))
+                    Logging.info("Put one question in queue.")
+                #yield Question(question_url)

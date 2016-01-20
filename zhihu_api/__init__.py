@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from BloomFliter import BloomFilter
+from gevent.queue import Queue
 
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
@@ -27,3 +28,5 @@ def get_xsrf(soup):
 
 
 debug_info_flag = True
+
+question_queue = Queue(maxsize = 10)
