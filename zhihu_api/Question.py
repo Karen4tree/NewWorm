@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
-
 from ScrollLoader import ScrollLoader
-from Requests import *
+import re
+import html2text
+from bs4 import BeautifulSoup
 
-from Answer import Answer
-from User import User
+from __init__ import get_xsrf,userBloom,answerBloom,topicBloom,commentBloom
+from Requests import requests
 
-
+__author__ = 'ZombieGroup'
 # 从Question url指向页面中抓取信息
+
+
 class Question:
 
     def __init__(self, url):
@@ -52,20 +53,15 @@ class Question:
 
     def get_detail(self):
         soup = self.soup
-        try:
-            detail = str(soup.find(
-                "div", id="zh-question-detail").div)
-            detail = html2text.html2text(detail)
-            return detail
-        except:
-            return None
+        detail = str(soup.find("div", id="zh-question-detail").div)
+        detail = html2text.html2text(detail)
+        return detail
 
     def get_answer_num(self):
         soup = self.soup
         answer_num = 0
         try:
-            answer_num = int(
-                soup.find("h3", id="zh-question-answer-num")["data-num"])
+            answer_num = int(soup.find("h3", id="zh-question-answer-num")["data-num"])
         except:
             pass
         finally:
@@ -78,20 +74,20 @@ class Question:
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
-            if topic_bloom.is_element_exist(Topic(topic_url, topic_name)):
-                topic_bloom.insert_element(Topic(topic_url, topic_name))
-                topic_queue.put(Topic(topic_url, topic_name))
-                # yield Topic(topic_url, topic_name)
+            if not topicBloom.is_element_exist(topic_url):
+                topicBloom.insert_element(topic_url)
+            yield Topic(topic_url, topic_name)
 
     def get_answers(self):
         soup = self.soup
         answer_tags = soup.find_all("div", class_="zm-item-answer")
+        from Answer import Answer
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
-            if not answer_bloom.is_element_exist(Answer(answer_url)):
-                answer_bloom.insert_element(Answer(answer_url))
-                answer_queue.put(Answer(answer_url))
-                # yield Answer(answer_url)
+            if not answerBloom.is_element_exist(answer_url):
+                answerBloom.insert_element(answer_url)
+            yield Answer(answer_url)
+
 
     def get_followers(self):
         url = self.url + '/followers'
@@ -107,10 +103,10 @@ class Question:
             r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
         from User import User
         for url in user_list:
-            if not user_bloom.is_element_exist(User("http://www.zhihu.com" + url)):
-                user_bloom.insert_element(User("http://www.zhihu.com" + url))
-                user_queue.put(User("http://www.zhihu.com" + url))
-                # yield User("http://www.zhihu.com" + url)
+            user_url = "http://www.zhihu.com" + url
+            if not userBloom.is_element_exist(user_url):
+                userBloom.insert_element(user_url)
+            yield User(user_url)
 
     def get_data_resourceid(self):
         soup = self.soup
@@ -131,4 +127,5 @@ class Question:
                 "span", class_="like-num ").next_element
             # Comment(author_url,question_url,answer_url,content,date,like_num)
             from Comment import Comment
+            # TODO: comment bloom
             yield Comment(author_url, self.url, None, content, date, like_num)

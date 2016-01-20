@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
+import re
+from bs4 import BeautifulSoup
 
-from Requests import *
 from User import User
-from Answer import Answer
+from Requests import requests
 
-
+__author__ = 'ZombieGroup'
 # 从Collection url指向页面中抓取信息
+
+
 class Collection:
     url = None
     soup = None
@@ -61,7 +62,7 @@ class Collection:
                     answer_part = tag.find(
                         "div", class_="zm-item-answer ")["data-atoken"]
                     answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
-                    answer_queue.put(Answer(answer_url))
+                    from Answer import Answer
                     yield Answer(answer_url)
         else:
             tags = soup.find(
@@ -71,5 +72,5 @@ class Collection:
                 answer_part = tag.find(
                     "div", class_="zm-item-answer ")["data-atoken"]
                 answer_url = "http://www.zhihu.com" + question_part + "/answer/" + answer_part
-                answer_queue.put(Answer(answer_url))
+                from Answer import Answer
                 yield Answer(answer_url)

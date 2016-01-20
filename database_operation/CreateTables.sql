@@ -36,7 +36,11 @@ create table Topic(
 );
 
 create table Answers(
+<<<<<<< HEAD:CreateTables.sql
 	answer_id char(8),
+=======
+	answer_id char(8) primary key,
+>>>>>>> master:database_operation/CreateTables.sql
 	question_id char(8),
 	author_id varchar(255),
 	detail text,
@@ -44,7 +48,8 @@ create table Answers(
 	visit_times int,
 	PRIMARY KEY (answer_id,question_id),
 	foreign key (question_id) references Questions(question_id),
-	foreign key (author_id) references Users(user_id)
+	foreign key (author_id) references Users(user_id),
+	PRIMARY KEY (answer_id,question_id)
 );
 
 create table Comment(

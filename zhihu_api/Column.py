@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
+import re
+from bs4 import BeautifulSoup
 
-from Requests import *
 from ScrollLoader import ScrollLoader
-from Article import Article
+from Requests import requests
 
-
+__author__ = 'ZombieGroup'
 # 从Article url指向页面中抓取信息
 
 
@@ -32,8 +31,9 @@ class Column:
 
     def get_articles(self):
         column_name = self.get_column_name()
-        scroll_loader = ScrollLoader("get", "http://zhuanlan.zhihu.com/api/columns/" + column_name + "/posts?limit=10",
-                                     10)
+        scroll_loader = ScrollLoader(
+            "get", "http://zhuanlan.zhihu.com/api/columns/" + column_name + "/posts?limit=10", 10)
+        from Article import Article
         for response in scroll_loader.run():
             yield Article("http://zhuanlan.zhihu.com" + response)
     # TODO: get follower num

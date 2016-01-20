@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+import re
+import html2text
+from bs4 import BeautifulSoup
+
+from Requests import requests
+from __init__ import userBloom
+
 __author__ = 'ZombieGroup'
-
-from Requests import *
-
-
+__package__ = 'zhihu_api'
 # 从Answer url指向页面中抓取信息
+
+
 class Answer:
 
     def __init__(self, url):
@@ -48,7 +54,7 @@ class Answer:
             detail = str(
                 soup.find("div", class_="zm-editable-content clearfix"))
             text = html2text.html2text(detail)
-
+            # TODO: 改H5
             r = re.findall(
                 r'&lt;img\ssrc=".*"\ndata-rawwidth=".+"\sdata-rawheight=".+"\sclass=".+"\nwidth=".+"&gt;!\[\]\(.+\)', text)
             for i in r:
@@ -83,22 +89,18 @@ class Answer:
 
     def get_upvoters(self):  # 匿名用户先忽略了
         soup = self.soup
-        data_aid = soup.find(
-            "div", class_="zm-item-answer  zm-item-expanded")["data-aid"]
+        data_aid = soup.find("div", class_="zm-item-answer  zm-item-expanded")["data-aid"]
         request_url = 'http://www.zhihu.com/node/AnswerFullVoteInfoV2'
-        r = requests.get(request_url, params={
-                         "params": "{\"answer_id\":\"%d\"}" % int(data_aid)})
+        r = requests.get(request_url, params={"params": "{\"answer_id\":\"%d\"}" % int(data_aid)})
         soup = BeautifulSoup(r.content)
         voters_info = soup.find_all("span")[1:-1]
         if len(voters_info) != 0:
             from User import User
             for voter_info in voters_info:
                 if voter_info.find('a'):
-                    voter_url = "http://www.zhihu.com" + \
-                        str(voter_info.a["href"])
-                    if not user_bloom.is_element_exist(User(voter_url)):
-                        user_bloom.insert_element(User(voter_url))
-                        user_queue.put(User(voter_url))
-                    # yield User(voter_url)
-
+                    voter_url = "http://www.zhihu.com" + str(voter_info.a["href"])
+                    # Bloom
+                    if not userBloom.is_element_exist(voter_url):
+                        userBloom.is_element_exist(voter_url)
+                    yield User(voter_url)
                     # ToDo: def get_comments()

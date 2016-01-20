@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from bs4 import BeautifulSoup
+
+from Requests import requests
+from __init__ import questionBloom
+
 __author__ = 'ZombieGroup'
-
-
-from Requests import *
+__package__ = 'zhihu_api'
 
 # 从Topic url指向页面中抓取信息
 
@@ -71,8 +74,6 @@ class Topic:
             question_on_this_page = soup.find_all("a", class_="question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
-                if not question_bloom.is_element_exist(Question(question_url)):
-                    print 'put one in the queue'
-                    question_bloom.insert_element(Question(question_url))
-                    question_queue.put(Question(question_url))
-                    # yield Question(question_url)
+                if not questionBloom.is_element_exist(question_url):
+                    questionBloom.insert_element(question_url)
+                yield Question(question_url)

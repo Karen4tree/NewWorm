@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-from Requests import *
 import cmath
-from BitVector import BitVector
+from BitVector.BitVector import BitVector
+
+__author__ = 'ZombieGroup'
 
 
 class BloomFilter:
 
     def __init__(self, error_rate, element_num):
-        self.bit_num = -1 * element_num * \
-            cmath.log(error_rate) / (cmath.log(2.0) * cmath.log(2.0))
+        self.bit_num = -1 * element_num * cmath.log(error_rate) / (cmath.log(2.0) * cmath.log(2.0))
         self.bit_num = self.align_4byte(self.bit_num.real)
         self.bit_array = BitVector(size=self.bit_num)
         self.hash_num = cmath.log(2) * self.bit_num / element_num

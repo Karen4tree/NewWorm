@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 
-from auth import Logging
-from User import User
-from Question import Question
-from Answer import Answer
-from Topic import Topic
-from Collection import Collection
-from Article import Article
+from zhihu_api.User import User
+from zhihu_api.Logging import Logging
+from zhihu_api.Question import Question
+from zhihu_api.Answer import Answer
+from zhihu_api.Topic import Topic
+from zhihu_api.Collection import Collection
+from zhihu_api.Article import Article
 
 
 def test_user(user_url):
@@ -17,65 +17,67 @@ def test_user(user_url):
     for follower in user.get_followers():
         print follower.url
 
-    # answer_num = user.get_answer_num()
-    # print answer_num
-    # ask_num = user.get_ask_num()
-    # print ask_num
-    # followee_num = user.get_followee_num()
-    # article_num = user.get_articles_num()
-    # print article_num
-    # print followee_num
-    # follower_num = user.get_follower_num()
-    # print follower_num
-    # collection_num = user.get_collection_num()
-    # print collection_num
-    # thanks_num = user.get_thanks_num()
-    # print thanks_num
-    # vote_num = user.get_vote_num()
-    # print vote_num
-    # location = user.get_location()
-    # print location
-    # print type(location)
-    # business = user.get_business()
-    # print business
-    # print type(business)
-    # employment = user.get_employment()
-    # print employment
-    # print type(employment)
-    # position = user.get_position()
-    # print position
-    # print type(position)
-    # education = user.get_education()
-    # print education
-    # print type(education)
-    # education_extra = user.get_education_extra()
-    # print education_extra
-    # print type(education_extra)
-    # following_topic_num = user.get_following_topic_num()
-    # print following_topic_num
-    # following_column_num = user.get_following_column_num()
-    # print following_column_num
-    # Logging.info(u"followeing_topics:")
-    # for followeing_topics in user.get_followeing_topics():
-    #     print followeing_topics
+    answer_num = user.get_answer_num()
+    print answer_num
+    ask_num = user.get_ask_num()
+    print ask_num
+    followee_num = user.get_followee_num()
+    article_num = user.get_articles_num()
+    print article_num
+    print followee_num
+        # follower_num = user.get_follower_num()
+        # print follower_num
+        # collection_num = user.get_collection_num()
+        # print collection_num
+        # thanks_num = user.get_thanks_num()
+        # print thanks_num
+        # vote_num = user.get_vote_num()
+        # print vote_num
+        # location = user.get_location()
+        # print location
+        # print type(location)
+        # business = user.get_business()
+        # print business
+        # print type(business)
+        # employment = user.get_employment()
+        # print employment
+        # print type(employment)
+        # position = user.get_position()
+        # print position
+        # print type(position)
+        # education = user.get_education()
+        # print education
+        # print type(education)
+        # education_extra = user.get_education_extra()
+        # print education_extra
+        # print type(education_extra)
+        # following_topic_num = user.get_following_topic_num()
+        # print following_topic_num
+        # following_column_num = user.get_following_column_num()
+        # print following_column_num
+        # Logging.info(u"followeing_topics:")
+        # for followeing_topics in user.get_followeing_topics():
+        #     print followeing_topics
 
-    #Logging.info(u"Columns and Articles of User")
-    # for column in user.get_columns():
-    #     for article in column.get_articles():
-    #         print article
+        # Logging.info(u"Columns and Articles of User")
+        # for column in user.get_columns():
+        #     for article in column.get_articles():
+        #         print article
 
-    #user_id = user.get_user_id()
-    # print user_id
-    #asks = user.get_asks()
+        # user_id = user.get_user_id()
+        # print user_id
+        # asks = user.get_asks()
 
-    #Logging.info(u"Questions of User")
-    # for question in asks:
-    #    print question.get_title()
-    #answers = user.get_answers()
+        # Logging.info(u"Questions of User")
+        # for question in asks:
+        #    print question.get_title()
+        # answers = user.get_answers()
 
-    #Logging.info(u"Answers of User")
-    # for answer in answers:
-    #    print answer.get_answer_id()
+        # Logging.info(u"Answers of User")
+        # for answer in answers:
+        #    print answer.get_answer_id()
+
+
 '''
     Logging.info(u"Followers of User")
     for follower in user.get_followers():
@@ -107,7 +109,7 @@ def test_answer(answer_url):
     print upvote_num
     visited_times = answer.get_visited_times()
     print visited_times
-    #upvoters = answer.get_upvoters()
+    # upvoters = answer.get_upvoters()
     # for upvoter in upvoters:
     # print upvoter.get_user_id()
 
@@ -119,11 +121,13 @@ def topic_test(topic_url):
     print topic_id
     topic_name = topic.get_topic_name()
     print topic_name
-    question_num = topic.get_questions_num()
+    question_num = topic.get_question_num()
     print question_num
-    follower_num = topic.get_followers_num()
+    follower_num = topic.get_follower_num()
     print follower_num
     questions = topic.get_questions()
+
+
 #    for question in questions:
 #        print question.get_question_id()
 
@@ -144,7 +148,7 @@ def question_test(question_url):
     topics = question.get_topics()
     for topic in topics:
         print topic.get_topic_id()
-    #answers = question.get_answers()
+    # answers = question.get_answers()
     # for answer in answers:
     #    print answer.get_detail()
     followers = question.get_followers()
@@ -194,12 +198,14 @@ def main():
     test_user(user_url)
     # test_answer(answer_url)
     # topic_test(topic_url)
-    question_test(question_url)
+    # question_test(question_url)
     # collection_test(collection_url)
     # article_test(article_url)
 
 
 if __name__ == '__main__':
     main()
-    #from Requests import *
-    # print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
+
+    from Requests import requests
+
+    print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
