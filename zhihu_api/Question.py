@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
 
 from ScrollLoader import ScrollLoader
-from Requests import *
+import re
+import html2text
+from bs4 import BeautifulSoup
 
-from Answer import Answer
-from User import User
+from __init__ import get_xsrf
+from Requests import requests
 
-
+__author__ = 'ZombieGroup'
 # 从Question url指向页面中抓取信息
+
+
 class Question:
 
     def __init__(self, url):
@@ -80,6 +82,7 @@ class Question:
     def get_answers(self):
         soup = self.soup
         answer_tags = soup.find_all("div", class_="zm-item-answer")
+        from Answer import Answer
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
             yield Answer(answer_url)

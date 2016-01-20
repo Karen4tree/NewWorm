@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+from bs4 import BeautifulSoup
+
+from Requests import requests
+
 __author__ = 'ZombieGroup'
 
-
-from Requests import *
 
 # 从Topic url指向页面中抓取信息
 

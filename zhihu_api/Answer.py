@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
+import re
+import html2text
+from bs4 import BeautifulSoup
 
-from Requests import *
+from Requests import requests
+
+__author__ = 'ZombieGroup'
 
 
 # TODO: 改H5

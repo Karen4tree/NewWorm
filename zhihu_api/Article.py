@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import re
+import json
+
+from Requests import requests
+
 __author__ = 'ZombieGroup'
-# Build-in / Std
-
-from Requests import *
-
 # 从Article url指向页面中抓取信息
 
 

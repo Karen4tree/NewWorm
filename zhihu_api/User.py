@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-# Build-in / Std
 
 from ScrollLoader import ScrollLoader
-from Requests import *
-from Answer import Answer
+import re
+from bs4 import BeautifulSoup
 
+from __init__ import get_hash_id, get_xsrf
+from Requests import requests
+
+__author__ = 'ZombieGroup'
 # 从User个人主页抓取信息
 
 
@@ -259,6 +261,7 @@ class User:
                 answer_url = self.url + "/answers?page=" + str(i + 1)
                 r = requests.get(answer_url)
                 soup = BeautifulSoup(r.content)
+                from Answer import Answer
                 for answer_tag in soup.find_all("a", class_="question_link"):
                     answer_url = 'http://www.zhihu.com' + answer_tag["href"]
                     yield Answer(answer_url)

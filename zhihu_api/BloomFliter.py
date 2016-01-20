@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-__author__ = 'ZombieGroup'
-from Requests import *
+
+
 import cmath
-from BitVector import BitVector
+from BitVector.BitVector import BitVector
+
+__author__ = 'ZombieGroup'
 
 
 class BloomFilter:

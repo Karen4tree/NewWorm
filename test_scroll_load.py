@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-from User import User
-from Question import Question
-from Answer import Answer
-from Topic import Topic
-from Collection import Collection
-from Article import Article
-from ScrollLoader import ScrollLoader
+from zhihu_api.User import User
 
 
 def test_user(user_url):

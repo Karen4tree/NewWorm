@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
 from DataBase import DataBase
-from ReadData import ReadData
 from User import User
-from Question import Question
+
+from database_operation.ReadData import ReadData
+from zhihu_api.Question import Question
 
 
 def main():

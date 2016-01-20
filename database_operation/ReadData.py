@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-_
-_author__ = 'ZombieGroup'
+__author__ = 'ZombieGroup'
+__package__ = 'database'
 
 import MySQLdb
-
 
 class ReadData:
 
@@ -17,7 +17,7 @@ class ReadData:
     def read_from_user(cls, user_id):
         connect = cls.connect
         cursor = connect.cursor()
-        cursor.execute('select * from Users where user_id="%s"' % user_id)
+        cursor.execute('select * from Users where user_id=%s' % user_id)
         return cursor.fetchone()
 
     @classmethod
@@ -27,7 +27,7 @@ class ReadData:
 
         cursor.execute(
             'select follower_id from Follow_Question where question_id in (select question_id from Questions where '
-            'asker_id="%s")' % user_id)
+            'asker_id=%s)' % user_id)
         result = cursor.fetchall()
         return result
 
@@ -37,7 +37,7 @@ class ReadData:
         cursor = connect.cursor()
 
         cursor.execute(
-            'select followee_id from Follow_User where follower_id="%s"' % user_id)
+            'select followee_id from Follow_User where follower_id=%s' % user_id)
         result = cursor.fetchall()
         return result
 
@@ -45,10 +45,8 @@ class ReadData:
     def voters_of_user_answer(cls, user_id):
         connect = cls.connect
         cursor = connect.cursor()
-
-        cursor.execute(
-            'select voter_id from Vote_Answer where answer_id in (select answer_id from Answers where '
-            'author_id=%s)' % user_id)
+        cursor.execute('select voter_id from Vote_Answer where answer_id in (select answer_id from Answers where '
+                       'author_id=%s)' % user_id)
 
         result = cursor.fetchall()
         return result
@@ -65,6 +63,7 @@ class ReadData:
     @classmethod
     def read_unreached_users(cls, num):
         connect = cls.connect
+        # TODO:数据库中额外的标签表示已访问
         cursor = connect.cursor()
         cursor.execute(
             'select user_id from Users where reached_flag is False limit %s' % num)  # 字段尚未定义

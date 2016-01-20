@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-_
-_author__ = 'ZombieGroup'
+__author__ = 'ZombieGroup'
+__package__ = 'database'
 
 import MySQLdb
-from Requests import *
+
+from zhihu_api import *
 
 
 class DataBase:
@@ -189,9 +191,8 @@ class DataBase:
 
             values = (answer_id, question_id, author_id,
                       detail, upvote_num, visited_times)
-
-            from User import User
-            from Question import Question
+            from zhihu_api.User import User
+            from zhihu_api.Question import Question
             cls.put_user_in_db(
                 User("http://www.zhihu.com/people/%s" % author_id))
             cls.put_question_in_db(
@@ -247,7 +248,6 @@ class DataBase:
         if collumnBloom.is_element_exist(collumnBloom):
             connect = cls.connect
             cursor = connect.cursor()
-            # TODO: 完善Column.py
             column_name = column.get_column_name()
             column_id = column.get_column_id()
             follower_num = column.getfollower_num()
