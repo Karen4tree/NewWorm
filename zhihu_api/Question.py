@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
 from ScrollLoader import ScrollLoader
 import re
 import html2text
 from bs4 import BeautifulSoup
 
-from __init__ import get_xsrf
+from __init__ import get_xsrf,userBloom,answerBloom,topicBloom,commentBloom
 from Requests import requests
 
 __author__ = 'ZombieGroup'
@@ -54,8 +53,7 @@ class Question:
 
     def get_detail(self):
         soup = self.soup
-        detail = str(soup.find(
-            "div", id="zh-question-detail").div)
+        detail = str(soup.find("div", id="zh-question-detail").div)
         detail = html2text.html2text(detail)
         return detail
 
@@ -63,8 +61,7 @@ class Question:
         soup = self.soup
         answer_num = 0
         try:
-            answer_num = int(
-                soup.find("h3", id="zh-question-answer-num")["data-num"])
+            answer_num = int(soup.find("h3", id="zh-question-answer-num")["data-num"])
         except:
             pass
         finally:
@@ -77,6 +74,8 @@ class Question:
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
+            if not topicBloom.is_element_exist(topic_url):
+                topicBloom.insert_element(topic_url)
             yield Topic(topic_url, topic_name)
 
     def get_answers(self):
@@ -85,6 +84,8 @@ class Question:
         from Answer import Answer
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
+            if not answerBloom.is_element_exist(answer_url):
+                answerBloom.insert_element(answer_url)
             yield Answer(answer_url)
 
     def get_followers(self):
@@ -101,7 +102,10 @@ class Question:
             r'<a[^>]*\nclass=\"zm-item-link-avatar\"\nhref=\"([^>]*)\">', text)
         from User import User
         for url in user_list:
-            yield User("http://www.zhihu.com" + url)
+            user_url = "http://www.zhihu.com" + url
+            if not userBloom.is_element_exist(user_url):
+                userBloom.insert_element(user_url)
+            yield User(user_url)
 
     def get_data_resourceid(self):
         soup = self.soup
@@ -122,4 +126,5 @@ class Question:
                 "span", class_="like-num ").next_element
             # Comment(author_url,question_url,answer_url,content,date,like_num)
             from Comment import Comment
+            # TODO: comment bloom
             yield Comment(author_url, self.url, None, content, date, like_num)

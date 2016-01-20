@@ -29,7 +29,7 @@ class Requests:
             Logging.error(u"找不到cookie")
 
         reload(sys)
-        print sys.getdefaultencoding()
+        Logging.info("Default encoding: " + sys.getdefaultencoding())
         self.proxies = {"http": "http://127.0.0.1:8080",
                         "https": "http://127.0.0.1:8080"}
 

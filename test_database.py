@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-from DataBase import DataBase
-from User import User
+from database_operation.DataBase import DataBase
+from zhihu_api.User import User
 
 from database_operation.ReadData import ReadData
 from zhihu_api.Question import Question

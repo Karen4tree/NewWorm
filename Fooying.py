@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-_
-__author__ = 'ZombieGroup'
-
 from database_operation.DataBase import DataBase
+from zhihu_api.Topic import Topic
 
+__author__ = 'ZombieGroup'
 # http://stackoverflow.com/questions/5318936/python-multiprocessing-pool-lazy-iteration
 import multiprocessing as mp
 import itertools

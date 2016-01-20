@@ -5,7 +5,7 @@ from BloomFliter import BloomFilter
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
 
-# Bloom Fliters
+# Bloom Filters, only store the ids in the bloom filters
 ERROR_RATE = 0.05
 ITEM_NUM = 10000
 
@@ -19,12 +19,11 @@ commentBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 
 
 def get_hash_id(soup):
-    return soup.find("button", class_="zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
+    return soup.find("button", class_ = "zg-btn zg-btn-follow zm-rich-follow-btn")['data-id']
 
 
 def get_xsrf(soup):
     return soup.find("input", {"name": "_xsrf"})['value']
-
 
 
 debug_info_flag = True

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-
 import json
-from Requests import requests
-__author__ = 'ZombieGroup'
 
+from Requests import requests
+
+__author__ = 'ZombieGroup'
+__package__ = 'zhihu_api'
 
 class ScrollLoader:
     offset = 0

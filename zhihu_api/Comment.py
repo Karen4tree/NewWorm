@@ -1,25 +1,9 @@
 # -*- coding: utf-8 -*-
-
-
-from ScrollLoader import ScrollLoader
 import re
-import json
-import cookielib
-import sys
-import logging
-import logging.config
-
-import termcolor
-import html2text
 from bs4 import BeautifulSoup
 
-from auth import islogin
-from auth import Logging
-from BloomFliter import BloomFilter
-
-
-import httplib as http_client
 from Requests import requests
+from ScrollLoader import ScrollLoader
 
 __author__ = 'ZombieGroup'
 # 从Comment url指向页面中抓取信息

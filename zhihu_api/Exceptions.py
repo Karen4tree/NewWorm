@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
 from Logging import Logging
+
 __author__ = 'ZombieGroup'
 
 
 class LoginPasswordError(Exception):
-
     def __init__(self, message):
         if (not isinstance(message, "")) or message == "":
             self.message = u"帐号密码错误"
@@ -16,7 +15,6 @@ class LoginPasswordError(Exception):
 
 
 class NetworkError(Exception):
-
     def __init__(self, message):
         if (not isinstance(message, "")) or message == "":
             self.message = u"网络异常"
@@ -26,7 +24,6 @@ class NetworkError(Exception):
 
 
 class AccountError(Exception):
-
     def __init__(self, message):
         if (not isinstance(message, "")) or message == "":
             self.message = u"帐号类型错误"
@@ -36,7 +33,6 @@ class AccountError(Exception):
 
 
 class NotLogin(Exception):
-
     def __init__(self, message):
         if (not isinstance(message, "")) or message == "":
             self.message = u"未登录"

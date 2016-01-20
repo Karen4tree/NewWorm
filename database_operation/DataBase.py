@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-_
+import MySQLdb
+
+from zhihu_api.Logging import Logging
+from zhihu_api import *
+
 __author__ = 'ZombieGroup'
 __package__ = 'database'
 
-import MySQLdb
-
-from zhihu_api import *
-
 
 class DataBase:
-    connect = MySQLdb.connect('localhost', 'root', '',
-                              'zhihu', port=3306, charset='utf8')
+    connect = MySQLdb.connect('localhost', 'root', '', 'zhihu', port = 3306, charset = 'utf8')
 
     def __init__(self, user=None, host=None, password=None, dbname=None):
-        self.connect = MySQLdb.connect(
-            host, user, password, dbname, port=3306, charset='utf8')
+        self.connect = MySQLdb.connect(host, user, password, dbname, port = 3306, charset = 'utf8')
 
     @classmethod
     def put_user_in_db(cls, user):
@@ -44,10 +43,9 @@ class DataBase:
                      business, position, employment)
 
             try:
-                cursor.execute(
-                    'insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
+            except MySQLdb.Error:
+                Logging.error("User can't be put into db.")
             finally:
                 connect.commit()
 
@@ -64,8 +62,8 @@ class DataBase:
             cls.put_user_in_db(follower)
             try:
                 cursor.execute('insert into Follow_User values (%s, %s)', tmp)
-            except MySQLdb.Error, e:
-                pass
+            except MySQLdb.Error:
+                Logging.error("Follow user can't be put into db.")
             finally:
                 connect.commit()
 
@@ -81,8 +79,8 @@ class DataBase:
             tmp = (user_id, topic.get_topic_id())
             try:
                 cursor.execute('insert into Follow_Topic values (%s,%s)', tmp)
-            except MySQLdb.Error, e:
-                pass
+            except MySQLdb.Error:
+                Logging.error("Follow topic can't be put into db.")
             finally:
                 connect.commit()
 
@@ -98,8 +96,8 @@ class DataBase:
             tmp = (user_id, column.get_column_name())
             try:
                 cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
-            except MySQLdb.Error, e:
-                pass
+            except MySQLdb.Error:
+                Logging.error("Follow column can't be put into db.")
             finally:
                 connect.commit()
 
@@ -114,10 +112,9 @@ class DataBase:
             user_id = user.get_user_id()
             values = (question_id, user_id)
             try:
-                cursor.execute(
-                    'insert into Follow_Question values (%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Follow_Question values (%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Follow Question can't be put into db.")
             finally:
                 connect.commit()
 
@@ -132,8 +129,8 @@ class DataBase:
                 cls.put_question_in_db(question)
                 cursor.execute('update Questions set asker_id=%s where question_id=%s',
                                (user.get_user_id(), question_id))
-            except MySQLdb.Error, e:
-                pass
+            except MySQLdb.Error:
+                Logging.error("User-ask can't be put into db.")
             finally:
                 connect.commit()
 
@@ -146,10 +143,9 @@ class DataBase:
             answer_id = answer.get_answer_id()
             self.put_answer_in_db(answer)
             try:
-                cursor.execute(
-                    'update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
+            except MySQLdb.Error:
+                Logging.error("User-Answer can't be put into db.")
             finally:
                 connect.commit()
 
@@ -165,15 +161,14 @@ class DataBase:
             title = question.get_title()
             answer_num = question.get_answer_num()
             follower_num = question.get_follower_num()
-            values = (question_id, asker_id, detail,
-                      title, answer_num, follower_num)
+            values = (question_id, asker_id, detail, title, answer_num, follower_num)
             try:
-                cursor.execute(
-                    'insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Question can't be put into db.")
             finally:
-                cls.put_follow_question_in_db(question)
+                # 是否级连将跟谁的question放入数据库?
+                # cls.put_follow_question_in_db(question)
                 connect.commit()
 
     @classmethod
@@ -189,19 +184,15 @@ class DataBase:
             upvote_num = answer.get_upvote_num()
             visited_times = answer.get_visited_times()
 
-            values = (answer_id, question_id, author_id,
-                      detail, upvote_num, visited_times)
+            values = (answer_id, question_id, author_id, detail, upvote_num, visited_times)
             from zhihu_api.User import User
             from zhihu_api.Question import Question
-            cls.put_user_in_db(
-                User("http://www.zhihu.com/people/%s" % author_id))
-            cls.put_question_in_db(
-                Question("http://www.zhihu.com/question/%s" % question_id))
+            cls.put_user_in_db(User("http://www.zhihu.com/people/%s" % author_id))
+            cls.put_question_in_db(Question("http://www.zhihu.com/question/%s" % question_id))
             try:
-                cursor.execute(
-                    'insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Answer can't be put into db.")
             finally:
                 connect.commit()
 
@@ -219,10 +210,9 @@ class DataBase:
             values = (topic_id, topic_name, question_num, follower_num)
 
             try:
-                cursor.execute(
-                    'insert into Topic values (%s,%s,%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Topic can't be put into db.")
             finally:
                 connect.commit()
 
@@ -236,10 +226,9 @@ class DataBase:
             question_id = question.get_question_id()
             values = (question_id, topic_id)
             try:
-                cursor.execute(
-                    'insert into Question_Topics values (%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Question_Topics values (%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Question-topic can't be put into db.")
             finally:
                 connect.commit()
 
@@ -252,11 +241,10 @@ class DataBase:
             column_id = column.get_column_id()
             follower_num = column.getfollower_num()
             values = (column_id, column_name, follower_num)
-
             try:
                 cursor.execute("insert into Columns values (%s,%s,%s)", values)
-            except MySQLdb.Error, e:
-                pass
+            except MySQLdb.Error:
+                Logging.error("Column can't be put into db.")
             finally:
                 connect.commit()
 
@@ -274,10 +262,9 @@ class DataBase:
             # TODO: Article.py 完善
             values = (article_id, column_name, comments_num, detail)
             try:
-                cursor.execute(
-                    'insert into Articles values (%s,%s,%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Articles values (%s,%s,%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Article can't be put into db.")
             finally:
                 connect.commit()
 
@@ -293,9 +280,8 @@ class DataBase:
             cls.put_user_in_db(user)
 
             try:
-                cursor.execute(
-                    'insert into Vote_Answer values (%s,%s)', values)
-            except MySQLdb.Error, e:
-                pass
+                cursor.execute('insert into Vote_Answer values (%s,%s)', values)
+            except MySQLdb.Error:
+                Logging.error("Vote can't be put into db.")
             finally:
                 connect.commit()
