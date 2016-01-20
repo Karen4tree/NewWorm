@@ -217,13 +217,13 @@ class DataBase:
                 connect.commit()
 
     @classmethod
-    def put_question_topic_in_db(cls, topic):
+    def put_question_topic_in_db(cls, question):
         connect = cls.connect
         cursor = connect.cursor()
-        topic_id = topic.get_topic_id()
-        for question in topic.get_questions():
-            cls.put_question_in_db(question)
-            question_id = question.get_question_id()
+        question_id = question.get_question_id()
+        for topic in question.get_topics():
+            cls.put_topic_in_db(topic)
+            topic_id = topic.get_topic_id()
             values = (question_id, topic_id)
             try:
                 cursor.execute('insert into Question_Topics values (%s,%s)', values)

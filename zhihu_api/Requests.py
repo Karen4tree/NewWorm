@@ -27,6 +27,7 @@ class Requests:
             Login.login()
         except:
             Logging.error(u"找不到cookie")
+            Login.login()
 
         reload(sys)
         Logging.info("Default encoding: " + sys.getdefaultencoding())
