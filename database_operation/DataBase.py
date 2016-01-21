@@ -38,9 +38,10 @@ class DataBase:
             collection_num = user.get_collection_num()
             following_topic_num, following_column_num = user.get_following_topic_colum_num()
 
-            value = (user_id, follower_num, followee_num, vote_num, thanks_num, ask_num, answer_num, article_num,
-                     collection_num, following_topic_num, following_column_num, education, education_extra, location,
-                     business, position, employment)
+            value = (
+            user_id, follower_num, followee_num, vote_num, thanks_num, ask_num, answer_num, article_num, collection_num,
+            following_topic_num, following_column_num, education, education_extra, location, business, position,
+            employment)
 
             try:
                 cursor.execute('insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
@@ -68,6 +69,22 @@ class DataBase:
                 connect.commit()
 
     @classmethod
+    def put_follow_user_in_db(cls, user, follower):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        user_id = user.get_user_id()
+        follower_id = follower.get_user_id()
+        value = (user_id, follower_id)
+
+        try:
+            cursor.execute('insert into Follow_User values (%s, %s)', value)
+        except MySQLdb.Error:
+            Logging.error("Follow user can't be put into db.")
+        finally:
+            connect.commit()
+
+    @classmethod
     def put_follow_topic_in_db(cls, user):
         connect = cls.connect
         cursor = connect.cursor()
@@ -83,6 +100,21 @@ class DataBase:
                 Logging.error("Follow topic can't be put into db.")
             finally:
                 connect.commit()
+
+    @classmethod
+    def put_follow_topic_in_db(cls,user,topic):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        user_id = user.get_user_id()
+        topic_id = topic.get_topic_id()
+        value = (user_id,topic_id)
+        try:
+            cursor.execute('insert into Follow_Topic values (%s,%s)', value)
+        except MySQLdb.Error:
+            Logging.error("Follow topic can't be put into db.")
+        finally:
+            connect.commit()
 
     @classmethod
     def put_follow_column_in_db(cls, user):
@@ -102,6 +134,21 @@ class DataBase:
                 connect.commit()
 
     @classmethod
+    def put_follow_column_in_db(cls,user,column):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        user_id = user.get_user_id()
+        column_id = column.get_column_name()
+        tmp = (user_id, column_id)
+        try:
+            cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
+        except MySQLdb.Error:
+            Logging.error("Follow column can't be put into db.")
+        finally:
+            connect.commit()
+
+    @classmethod
     def put_follow_question_in_db(cls, question):
         connect = cls.connect
         cursor = connect.cursor()
@@ -117,6 +164,21 @@ class DataBase:
                 Logging.error("Follow Question can't be put into db.")
             finally:
                 connect.commit()
+
+    @classmethod
+    def put_follow_question_in_db(cls,question,user):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        question_id = question.get_question_id()
+        user_id = user.get_user_id()
+        value = (question_id,user_id)
+        try:
+            cursor.execute('insert into Follow_Question values (%s,%s)', value)
+        except MySQLdb.Error:
+            Logging.error("Follow Question can't be put into db.")
+        finally:
+            connect.commit()
 
     @classmethod
     def put_user_ask_in_db(cls, user):

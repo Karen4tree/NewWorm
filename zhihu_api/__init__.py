@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from BloomFliter import BloomFilter
+from Queue import Queue
 
 __author__ = 'ZombieGroup'
 __package__ = 'zhihu_api'
@@ -16,6 +17,14 @@ topicBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 articleBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 collumnBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 commentBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
+
+userQueue = Queue()
+questionQueue = Queue()
+answerQueue = Queue()
+topicQueue = Queue()
+articleQueue = Queue()
+collumnQueue = Queue()
+commentQueue = Queue()
 
 
 def get_hash_id(soup):
