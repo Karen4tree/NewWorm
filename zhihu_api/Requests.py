@@ -20,7 +20,8 @@ class Requests:
         try:
             Logging.info('geting cookies')
             self.requests = requests.Session()
-            self.cookies = cookielib.LWPCookieJar('zhihu_api/cookies')
+            self.requests.cookies = cookielib.LWPCookieJar('zhihu_api/cookies')
+            self.cookies = self.requests.cookies
             self.requests.cookies.load(ignore_discard=True)
             Login.islogin()
         except NotLogin:

@@ -210,4 +210,4 @@ if __name__ == '__main__':
 
     print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
     from zhihu_api.Login import Login
-    Login.login()
+    print Login.islogin()
