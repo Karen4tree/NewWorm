@@ -7,7 +7,6 @@ from Requests import requests
 from __init__ import userBloom
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 # 从Answer url指向页面中抓取信息
 
 
@@ -102,8 +101,8 @@ class Answer:
                 if voter_info.find('a'):
                     voter_url = "http://www.zhihu.com" + str(voter_info.a["href"])
                     # Bloom
-                    if not userBloom.is_element_exist(voter_url):
-                        userBloom.is_element_exist(voter_url)
+                    #if not userBloom.is_element_exist(voter_url):
+                    #   userBloom.is_element_exist(voter_url)
                     yield User(voter_url)
 
                     # ToDo: def get_comments()

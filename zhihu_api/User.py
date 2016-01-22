@@ -7,7 +7,6 @@ from __init__ import get_hash_id, get_xsrf,userBloom,questionBloom,answerBloom,c
 from Requests import requests
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 # 从User个人主页抓取信息
 
 
@@ -236,8 +235,8 @@ class User:
         followee_url_list = re.findall(
             r'<a[^>]+href=\"([^>]*)\"\x20class=\"zg-link\"', text)
         for url in followee_url_list:
-            if not userBloom.is_element_exist(url):
-                userBloom.insert_element(url)
+            #if not userBloom.is_element_exist(url):
+            #    userBloom.insert_element(url)
             yield User(url)
 
     def get_asks(self):
@@ -251,8 +250,8 @@ class User:
                 soup = BeautifulSoup(r.content)
                 for question in soup.find_all("a", class_="question_link"):
                     url = "http://www.zhihu.com" + question["href"]
-                    if not questionBloom.is_element_exist(url):
-                        questionBloom.insert_element(url)
+                    #if not questionBloom.is_element_exist(url):
+                    #    questionBloom.insert_element(url)
                     from Question import Question
                     yield Question(url)
 
@@ -268,8 +267,8 @@ class User:
                 from Answer import Answer
                 for answer_tag in soup.find_all("a", class_="question_link"):
                     answer_url = 'http://www.zhihu.com' + answer_tag["href"]
-                    if not answerBloom.is_element_exist(answer_url):
-                        answerBloom.insert_element(answer_url)
+                    #if not answerBloom.is_element_exist(answer_url):
+                    #    answerBloom.insert_element(answer_url)
                     yield Answer(answer_url)
 
     def get_columns(self):
@@ -277,8 +276,8 @@ class User:
         r = requests.get(post_url)
         soup = BeautifulSoup(r.content)
         for each_column in soup.find_all("a", "avatar-link"):
-            if not collumnBloom.is_element_exist(each_column['href']):
-                collumnBloom.insert_element(each_column['href'])
+            #if not collumnBloom.is_element_exist(each_column['href']):
+            #    collumnBloom.insert_element(each_column['href'])
             from Column import Column
             yield Column(each_column['href'])
 
@@ -296,8 +295,8 @@ class User:
             r'<a\x20class=\"zm-list-avatar-link\"\x20href=\"([^>]*)\">', text)
         from Topic import Topic
         for url in topic_list:
-            if not topicBloom.is_element_exist(url):
-                topicBloom.insert_element(url)
+            #if not topicBloom.is_element_exist(url):
+            #    topicBloom.insert_element(url)
             yield Topic("http://www.zhihu.com" + url)
 
     # TODO: 缺少一个get_following_column()函数

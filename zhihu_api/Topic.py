@@ -2,10 +2,8 @@
 from bs4 import BeautifulSoup
 
 from Requests import requests
-from __init__ import questionBloom
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 
 # 从Topic url指向页面中抓取信息
 
@@ -25,8 +23,11 @@ class Topic:
             self.parser()
 
     def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
 
     def get_topic_id(self):
         topic_id = self.url[len(self.url) - 8:len(self.url)]
@@ -54,7 +55,7 @@ class Topic:
         soup = self.soup
         followers_num = soup.find(
             "div", class_="zm-topic-side-followers-info").find("a").strong.string
-        return followers_num
+        return int(followers_num)
 
     def get_questions(self):
         url = self.url + "/questions?page="
@@ -70,6 +71,4 @@ class Topic:
             question_on_this_page = soup.find_all("a", class_="question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
-                if not questionBloom.is_element_exist(question_url):
-                    questionBloom.insert_element(question_url)
                 yield Question(question_url)

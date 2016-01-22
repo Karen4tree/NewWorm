@@ -9,7 +9,6 @@ from Exceptions import *
 from Login import Login
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 
 
 class Requests:
@@ -30,6 +29,7 @@ class Requests:
             Logging.error(u"找不到cookie")
 
         reload(sys)
+        sys.setdefaultencoding('utf8')
         Logging.info("Default encoding: " + sys.getdefaultencoding())
         self.proxies = {"http": "http://127.0.0.1:8080",
                         "https": "http://127.0.0.1:8080"}

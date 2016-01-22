@@ -2,44 +2,18 @@
 __author__ = 'ZombieGroup'
 from database_operation.DataBase import DataBase
 from zhihu_api.User import User
+from zhihu_api.Topic import Topic
 
 from database_operation.ReadData import ReadData
 from zhihu_api.Question import Question
 
 
 def main():
-    user = 'root'
-    host = 'localhost'
-    password = ''
-    dbname = 'zhihu'
-    database = DataBase(user, host, password, dbname)
-    readdata = ReadData(user, host, password, dbname)
-    user_msg = User(u"http://www.zhihu.com/people/Fooying")
-    question_msg = Question(u"http://www.zhihu.com/question/31918396")
-
-    '''user_id, follower_num, followee_num, vote_num, thanks_num, ask_num, answer_num, article_num, collection_num, \
-    following_topic_num, following_column_num, education, education_extra, location, business, position, employment =\
-        readdata.read_from_user(
-        user_msg.get_user_id())
-    value = (
-        user_id, follower_num, followee_num, vote_num, thanks_num, ask_num, answer_num, article_num, collection_num,
-        following_topic_num, following_column_num, education, education_extra, location, business, position, employment)
-    print value'''
-
-    user_id = user_msg.get_user_id()
-    print "follower of user"
-    for follower_id in readdata.followers_of_user(user_id):
-        print follower_id
-
-    print "follower of user's question"
-    for follower_id in readdata.followers_of_user_question(user_id):
-        print follower_id
-
-    print "voter of user's answer"
-    for voter_id in readdata.voters_of_user_answer(user_id):
-        print voter_id
-
-    # database.put_user_in_db(user_msg)
+    #user_msg = User(u"http://www.zhihu.com/people/Fooying")
+    topic = Topic("http://www.zhihu.com/topic/19553732")
+    DataBase.put_topic_in_db(topic)
+    #question_msg = Question(u"http://www.zhihu.com/question/31918396")
+    #DataBase.put_user_in_db(user_msg)
     # database.put_follow_user_in_db(user_msg)
 
     # for user in user_msg.get_followers():

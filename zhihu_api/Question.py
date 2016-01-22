@@ -18,6 +18,7 @@ class Question:
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
         else:
             self.url = url
+        self.title = None
         self.parser()
 
     def parser(self):
@@ -103,8 +104,8 @@ class Question:
         from User import User
         for url in user_list:
             user_url = "http://www.zhihu.com" + url
-            if not userBloom.is_element_exist(user_url):
-                userBloom.insert_element(user_url)
+            #if not userBloom.is_element_exist(user_url):
+            #    userBloom.insert_element(user_url)
             yield User(user_url)
 
     def get_data_resourceid(self):

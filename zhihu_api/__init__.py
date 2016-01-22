@@ -4,7 +4,6 @@ from BloomFliter import BloomFilter
 from Queue import Queue
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 
 # Bloom Filters, only store the ids in the bloom filters
 ERROR_RATE = 0.05
@@ -18,13 +17,14 @@ articleBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 collumnBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 commentBloom = BloomFilter(ERROR_RATE, ITEM_NUM)
 
-userQueue = Queue()
-questionQueue = Queue()
-answerQueue = Queue()
-topicQueue = Queue()
-articleQueue = Queue()
-collumnQueue = Queue()
-commentQueue = Queue()
+MAXSIZE = 100
+userQueue = Queue(maxsize = MAXSIZE)
+questionQueue = Queue(maxsize = MAXSIZE)
+answerQueue = Queue(maxsize = MAXSIZE)
+topicQueue = Queue(maxsize = MAXSIZE)
+articleQueue = Queue(maxsize = MAXSIZE)
+collumnQueue = Queue(maxsize = MAXSIZE)
+commentQueue = Queue(maxsize = MAXSIZE)
 
 
 def get_hash_id(soup):
