@@ -204,8 +204,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
 
-    from Requests import requests
+    from zhihu_api.Requests import requests
 
     print requests.get("http://www.zhihu.com/people/li-ji-87-69-14")
+    from zhihu_api.Login import Login
+    Login.login()
