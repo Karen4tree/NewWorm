@@ -20,14 +20,20 @@ def spider(questions):
         for follower in question.get_followers():
             if not userBloom.is_element_exist(follower.get_user_id()):
                 userBloom.insert_element(follower.get_user_id())
-                #userQueue.put(follower)
                 DataBase.put_user_in_db(follower)
+                for userfollower in follower.get_followers():
+                    if not userBloom.is_element_exist(userfollower.get_user_id()):
+                        userBloom.insert_element(userfollower.get_user_id())
+                        DataBase.put_user_in_db(userfollower)
+                    DataBase.put_follow_user_in_db(follower,userfollower)
             DataBase.put_follow_question_in_db(question, follower)
+
         Logging.info("Topics of question id %s" % question.get_question_id())
         for topic in question.get_topics():
             if not topicBloom.is_element_exist(topic.get_topic_id()):
                 topicBloom.insert_element(topic.get_topic_id())
             DataBase.put_question_topic_in_db(question, topic)
+
         Logging.info("Answers of question id %s"%question.get_question_id())
         for answer in question.get_answers():
             if not answerBloom.is_element_exist(answer.get_answer_id()):

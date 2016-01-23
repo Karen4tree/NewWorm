@@ -13,7 +13,7 @@ __author__ = 'ZombieGroup'
 class User:
 
     def __init__(self, url):
-        if not re.match("http://www.zhihu.com/people/.+", url):
+        if not (re.match("http://www.zhihu.com/people/.+", url) or re.match("https://www.zhihu.com/people/.+", url)):
             raise ValueError("\"" + url + "\"" + " : it isn't a user url.")
         else:
             self.url = url
@@ -28,8 +28,12 @@ class User:
             self.parser()
 
     def get_user_id(self):
-        tmp = re.match(r'^(http://www.zhihu.com/people/)(.+)$', self.url)
-        user_id = tmp.group(2)
+        try:
+            tmp = re.match(r'^(http://www.zhihu.com/people/)(.+)$', self.url)
+            user_id = tmp.group(2)
+        except AttributeError:
+            tmp = re.match(r'^(https://www.zhihu.com/people/)(.+)$', self.url)
+            user_id = tmp.group(2)
         return user_id
 
     def get_follower_num(self):

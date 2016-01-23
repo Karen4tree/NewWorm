@@ -14,7 +14,7 @@ __author__ = 'ZombieGroup'
 class Question:
 
     def __init__(self, url):
-        if url[0:len(url) - 8] != "http://www.zhihu.com/question/":
+        if not (re.match("http://www.zhihu.com/question/.+", url) or re.match("https://www.zhihu.com/question/.+", url)):
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
         else:
             self.url = url

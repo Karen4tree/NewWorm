@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
+import re
 
 from Requests import requests
 
@@ -13,7 +14,7 @@ class Topic:
     soup = None
 
     def __init__(self, url, name=None):
-        if url[0:len(url) - 8] != "http://www.zhihu.com/topic/":
+        if not (re.match("http://www.zhihu.com/topic/.+", url) or re.match("https://www.zhihu.com/topic/.+", url)):
             raise ValueError("\"" + url + "\"" + " : it isn't a topic url.")
         else:
             self.url = url
