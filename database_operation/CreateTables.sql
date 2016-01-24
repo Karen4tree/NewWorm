@@ -36,7 +36,7 @@ create table Topic(
 );
 
 create table Answers(
-	answer_id char(8) primary key,
+	answer_id char(8),
 	question_id char(8),
 	author_id varchar(255),
 	detail text,
