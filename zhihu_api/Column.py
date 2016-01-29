@@ -22,8 +22,11 @@ class Column:
             self.parser()
 
     def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
 
     def get_column_name(self):
         m = re.search(r"http://zhuanlan.zhihu.com/(.*)", self.url)

@@ -25,8 +25,11 @@ class Collection:
             self.parser()
 
     def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
 
     def get_collection_id(self):
         return self.url[len(self.url) - 8:len(self.url)]
