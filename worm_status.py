@@ -24,12 +24,14 @@ class Worm_status:
         else:
             ERROR_RATE = cf.get("basic", "ERROR_RATE")
             ITEM_NUM = cf.get("basic", "ITEM_NUM")
-            return BloomFilter(ERROR_RATE,ITEM_NUM)
+            return BloomFilter(ERROR_RATE, ITEM_NUM)
 
     @classmethod
     def record_status(cls, section, value):
         cf = ConfigParser()
-        cf.set(section, "bit_num", value = value.bit_num)
-        cf.set(section, "bit_array", value = value.bit_array)
-        cf.set(section, "hash_num", value = value.hash_num)
-        cf.set(section, "hash_seeds", value = value.hash_seeds)
+        cf.read(cls.config_file)
+        cf.set(section = section, option = "bit_num", value = value.bit_num)
+        cf.set(section = section, option = "bit_array", value = value.bit_array)
+        cf.set(section = section, option = "hash_num", value = value.hash_num)
+        cf.set(section = section, option = "hash_seeds", value = value.hash_seeds)
+        cf.write(cls.config_file)
