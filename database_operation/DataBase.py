@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-_
 import MySQLdb
+import re
 
-from Logging import Logging
+import Logging
 from Exceptions import *
 
 __author__ = 'ZombieGroup'
@@ -45,7 +46,8 @@ class DataBase:
         try:
             cursor.execute('insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -63,7 +65,8 @@ class DataBase:
             try:
                 cursor.execute('insert into Follow_User values (%s, %s)', tmp)
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -79,7 +82,8 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_User values (%s, %s)', value)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -96,7 +100,8 @@ class DataBase:
             try:
                 cursor.execute('insert into Follow_Topic values (%s,%s)', tmp)
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -111,7 +116,8 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_Topic values (%s,%s)', value)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -128,7 +134,8 @@ class DataBase:
             try:
                 cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -143,7 +150,7 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):                     Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -160,7 +167,8 @@ class DataBase:
             try:
                 cursor.execute('insert into Follow_Question values (%s,%s)', values)
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -175,7 +183,8 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_Question values (%s,%s)', value)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -191,7 +200,8 @@ class DataBase:
                 cursor.execute('update Questions set asker_id=%s where question_id=%s',
                                (user.get_user_id(), question_id))
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -206,7 +216,8 @@ class DataBase:
             try:
                 cursor.execute('update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -226,7 +237,8 @@ class DataBase:
         try:
             cursor.execute('insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -247,7 +259,8 @@ class DataBase:
         try:
             cursor.execute('insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -267,7 +280,8 @@ class DataBase:
         try:
             cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -283,7 +297,8 @@ class DataBase:
             try:
                 cursor.execute('insert into Question_Topics values (%s,%s)', values)
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -297,7 +312,8 @@ class DataBase:
         try:
             cursor.execute('insert into Question_Topics values (%s,%s)', values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -313,7 +329,8 @@ class DataBase:
         try:
             cursor.execute("insert into Columns values (%s,%s,%s)", values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -333,7 +350,8 @@ class DataBase:
         try:
             cursor.execute('insert into Articles values (%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
 
@@ -351,7 +369,8 @@ class DataBase:
             try:
                 cursor.execute('insert into Vote_Answer values (%s,%s)', values)
             except MySQLdb.Error, e:
-                Logging.error(str(e))
+                if re.match(r'\(1062',str(e)):
+                    Logging.info(str(e))
             finally:
                 connect.commit()
 
@@ -366,6 +385,7 @@ class DataBase:
         try:
             cursor.execute('insert into Vote_Answer values (%s,%s)', values)
         except MySQLdb.Error, e:
-            Logging.error(str(e))
+            if re.match(r'\(1062',str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
