@@ -4,7 +4,7 @@ import re
 import html2text
 from bs4 import BeautifulSoup
 
-from __init__ import get_xsrf,userBloom,answerBloom,topicBloom,commentBloom
+from __init__ import get_xsrf
 from Requests import requests
 
 __author__ = 'ZombieGroup'
@@ -75,8 +75,6 @@ class Question:
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
-            if not topicBloom.is_element_exist(topic_url):
-                topicBloom.insert_element(topic_url)
             yield Topic(topic_url, topic_name)
 
     def get_answers(self):
@@ -85,8 +83,6 @@ class Question:
         from Answer import Answer
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
-            if not answerBloom.is_element_exist(answer_url):
-                answerBloom.insert_element(answer_url)
             yield Answer(answer_url)
 
     def get_followers(self):

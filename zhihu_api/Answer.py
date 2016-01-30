@@ -4,7 +4,6 @@ import html2text
 from bs4 import BeautifulSoup
 
 from Requests import requests
-from __init__ import userBloom
 
 __author__ = 'ZombieGroup'
 # 从Answer url指向页面中抓取信息

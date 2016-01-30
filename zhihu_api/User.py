@@ -3,7 +3,7 @@ from ScrollLoader import ScrollLoader
 import re
 from bs4 import BeautifulSoup
 
-from __init__ import get_hash_id, get_xsrf,userBloom,questionBloom,answerBloom,collumnBloom,topicBloom
+from __init__ import get_hash_id, get_xsrf
 from Requests import requests
 
 __author__ = 'ZombieGroup'
