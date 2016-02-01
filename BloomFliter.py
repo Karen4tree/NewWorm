@@ -7,7 +7,15 @@ __author__ = 'ZombieGroup'
 
 class BloomFilter:
     def __init__(self, error_rate, element_num, bit_num=None, bit_array=None, hash_num=None, hash_seeds=None):
-        if bit_num is None or bit_array is None or hash_num is None or hash_seeds is None:
+        if (bit_num is None) or (bit_array is None) or (hash_num is None) or (hash_seeds is None):
+            self.bit_num = -1 * element_num * cmath.log(error_rate) / (cmath.log(2.0) * cmath.log(2.0))
+            self.bit_num = self.align_4byte(self.bit_num.real)
+            self.bit_array = BitVector(size = self.bit_num)
+            self.hash_num = cmath.log(2) * self.bit_num / element_num
+            self.hash_num = self.hash_num.real
+            self.hash_num = int(self.hash_num) + 1
+            self.hash_seeds = self.generate_hashseeds(self.hash_num)
+        elif (bit_num is "") or (bit_array is "") or (hash_num is "") or (hash_seeds is ""):
             self.bit_num = -1 * element_num * cmath.log(error_rate) / (cmath.log(2.0) * cmath.log(2.0))
             self.bit_num = self.align_4byte(self.bit_num.real)
             self.bit_array = BitVector(size = self.bit_num)
@@ -17,7 +25,7 @@ class BloomFilter:
             self.hash_seeds = self.generate_hashseeds(self.hash_num)
         else:
             self.bit_num = bit_num
-            self.bit_array = bit_array
+            self.bit_array = BitVector(textstring = bit_array)
             self.hash_num = hash_num
             self.hash_seeds = hash_seeds
 
