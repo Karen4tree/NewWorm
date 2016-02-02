@@ -19,7 +19,7 @@ Requirement
 Anouncement
 * worminit.ini need to be created like this
   
-  [userBloom]
+  [userBloom]  
   bit_num =  
   hash_num =  
   bit_array =  
