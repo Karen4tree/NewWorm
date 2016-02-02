@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-_
-__author__ = 'ZombieGroup'
-
 import MySQLdb
 
-class ReadData:
+__author__ = 'ZombieGroup'
 
-    connect = MySQLdb.connect('localhost', 'root', '',
-                              'zhihu', port=3306, charset='utf8')
+
+class ReadData:
+    connect = MySQLdb.connect('localhost', 'root', '', 'zhihu', port = 3306, charset = 'utf8')
 
     def __init__(self, user=None, host=None, password=None, dbname=None):
-        self.connect = MySQLdb.connect(
-            host, user, password, dbname, port=3306, charset='utf8')
+        self.connect = MySQLdb.connect(host, user, password, dbname, port = 3306, charset = 'utf8')
 
     @classmethod
     def read_from_user(cls, user_id):
@@ -25,8 +23,8 @@ class ReadData:
         cursor = connect.cursor()
 
         cursor.execute(
-            'select follower_id from Follow_Question where question_id in (select question_id from Questions where '
-            'asker_id=%s)' % user_id)
+                'select follower_id from Follow_Question where question_id in (select question_id from Questions where '
+                'asker_id=%s)' % user_id)
         result = cursor.fetchall()
         return result
 
@@ -35,8 +33,7 @@ class ReadData:
         connect = cls.connect
         cursor = connect.cursor()
 
-        cursor.execute(
-            'select followee_id from Follow_User where follower_id=%s' % user_id)
+        cursor.execute('select followee_id from Follow_User where follower_id=%s' % user_id)
         result = cursor.fetchall()
         return result
 
@@ -64,7 +61,6 @@ class ReadData:
         connect = cls.connect
         # TODO:数据库中额外的标签表示已访问
         cursor = connect.cursor()
-        cursor.execute(
-            'select user_id from Users where reached_flag is False limit %s' % num)  # 字段尚未定义
+        cursor.execute('select user_id from Users where reached_flag is False limit %s' % num)  # 字段尚未定义
         result = cursor.fetchall()
         return result
