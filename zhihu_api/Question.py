@@ -68,6 +68,17 @@ class Question:
         finally:
             return answer_num
 
+    def get_edit_time(self):
+        url = self.url + "/log"
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content)
+        logs = soup.find_all("div",class_="zm-item")
+        timelist = []
+        for log in logs:
+            timelist.append(log.find("time").string)
+        timelist.sort()
+        return timelist
+
     def get_topics(self):
         soup = self.soup
         topic_tags = soup.find_all("a", class_="zm-item-tag")

@@ -32,18 +32,23 @@ class Answer:
         question_id = tmp.group(2)
         return question_id
 
-    def get_author_id(self):
+    def get_author(self):
         soup = self.soup
-        author_tag = soup.find("h3", class_="zm-item-answer-author-wrap")
-        author_id = 'None'
+        from User import User
         try:
-            author_url = author_tag.find("a")["href"]
-            tmp = re.match(r'^(/people/)(.+)$', author_url)
-            author_id = tmp.group(2)
+            author_tag = soup.find("a", class_="author-link")
+            author_url = author_tag['href']
+            author = User("http://www.zhihu.com"+author_url)
+            return author
         except:
-            pass
-        finally:
-            return author_id
+            return None
+
+    def get_author_id(self):
+        author = self.get_author()
+        if author is None:
+            return None
+        else:
+            return author.get_user_id()
 
     def get_detail(self):
         soup = self.soup
@@ -84,6 +89,17 @@ class Answer:
             pass
         finally:
             return visited_times
+
+    def get_post_time(self):
+        soup = self.soup
+        time = soup.find("a", class_ = "answer-date-link last_updated meta-item")["data-tip"]
+        tmp = re.match(r'.+发布于\s(.+-.+-.+)',time)
+        time = tmp.group(1)
+        return time
+
+    def get_last_edit_time(self):
+        soup = self.soup
+        return soup.find("a", class_ = "answer-date-link last_updated meta-item").string
 
     def get_upvoters(self):  # 匿名用户先忽略了
         soup = self.soup

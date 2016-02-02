@@ -103,6 +103,6 @@ if __name__ == '__main__':
     N = 20
     while True:
         try:
-            p.map(spider, itertools.islice(go, N))
+            p.map_async(spider, itertools.islice(go, N))
         except TypeError:
             continue
