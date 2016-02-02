@@ -111,8 +111,6 @@ class Question:
         from User import User
         for url in user_list:
             user_url = "http://www.zhihu.com" + url
-            #if not userBloom.is_element_exist(user_url):
-            #    userBloom.insert_element(user_url)
             yield User(user_url)
 
     def get_data_resourceid(self):
@@ -132,7 +130,6 @@ class Question:
             date = comment_div.find("span", class_="date").next_element
             like_num = comment_div.find(
                 "span", class_="like-num ").next_element
-            # Comment(author_url,question_url,answer_url,content,date,like_num)
             from Comment import Comment
             # TODO: comment bloom
             yield Comment(author_url, self.url, None, content, date, like_num)
