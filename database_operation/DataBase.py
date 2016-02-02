@@ -46,29 +46,10 @@ class DataBase:
         try:
             cursor.execute('insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
-
-    @classmethod
-    def put_follow_user_in_db(cls, user):
-        connect = cls.connect
-        cursor = connect.cursor()
-
-        user_id = user.get_user_id()
-
-        for follower in user.get_followers():
-            follower_id = follower.get_user_id()
-            tmp = (user_id, follower_id)
-            cls.put_user_in_db(follower)
-            try:
-                cursor.execute('insert into Follow_User values (%s, %s)', tmp)
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
 
     @classmethod
     def put_follow_user_in_db(cls, user, follower):
@@ -82,28 +63,10 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_User values (%s, %s)', value)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
-
-    @classmethod
-    def put_follow_topic_in_db(cls, user):
-        connect = cls.connect
-        cursor = connect.cursor()
-
-        user_id = user.get_user_id()
-        topics = user.get_followeing_topics()
-        for topic in topics:
-            cls.put_topic_in_db(topic)
-            tmp = (user_id, topic.get_topic_id())
-            try:
-                cursor.execute('insert into Follow_Topic values (%s,%s)', tmp)
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
 
     @classmethod
     def put_follow_topic_in_db(cls, user, topic):
@@ -116,28 +79,10 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_Topic values (%s,%s)', value)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
-
-    @classmethod
-    def put_follow_column_in_db(cls, user):
-        connect = cls.connect
-        cursor = connect.cursor()
-
-        user_id = user.get_user_id()
-        for column in user.getfollowing_column():
-            cls.put_column_in_db(column)
-            # TODO:先写完put_column_in_db
-            tmp = (user_id, column.get_column_name())
-            try:
-                cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
 
     @classmethod
     def put_follow_column_in_db(cls, user, column):
@@ -150,27 +95,10 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):                     Logging.info(str(e))
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
         finally:
             connect.commit()
-
-    @classmethod
-    def put_follow_question_in_db(cls, question):
-        connect = cls.connect
-        cursor = connect.cursor()
-
-        question_id = question.get_question_id()
-        for user in question.get_followers():
-            cls.put_user_in_db(user)
-            user_id = user.get_user_id()
-            values = (question_id, user_id)
-            try:
-                cursor.execute('insert into Follow_Question values (%s,%s)', values)
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
 
     @classmethod
     def put_follow_question_in_db(cls, question, user):
@@ -183,43 +111,41 @@ class DataBase:
         try:
             cursor.execute('insert into Follow_Question values (%s,%s)', value)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
 
     @classmethod
-    def put_user_ask_in_db(cls, user):
+    def put_user_ask_in_db(cls, user, question):
         connect = cls.connect
         cursor = connect.cursor()
 
-        for question in user.get_asks():
-            question_id = question.get_question_id()
-            try:
-                cls.put_question_in_db(question)
-                cursor.execute('update Questions set asker_id=%s where question_id=%s',
+        question_id = question.get_question_id()
+        try:
+            #cls.put_question_in_db(question)
+            cursor.execute('update Questions set asker_id=%s where question_id=%s',
                                (user.get_user_id(), question_id))
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
+        except MySQLdb.Error, e:
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
+        finally:
+            connect.commit()
 
     @classmethod
-    def put_user_answer_in_db(cls, user):
+    def put_user_answer_in_db(cls, user, answer):
         connect = cls.connect
         cursor = connect.cursor()
 
-        for answer in user.get_answers():
-            answer_id = answer.get_answer_id()
-            cls.put_answer_in_db(answer)
-            try:
-                cursor.execute('update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
+        answer_id = answer.get_answer_id()
+        #cls.put_answer_in_db(answer)
+        try:
+            cursor.execute('update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
+        except MySQLdb.Error, e:
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
+        finally:
+            connect.commit()
 
     @classmethod
     def put_question_in_db(cls, question):
@@ -237,7 +163,7 @@ class DataBase:
         try:
             cursor.execute('insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
@@ -259,7 +185,7 @@ class DataBase:
         try:
             cursor.execute('insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
@@ -280,27 +206,10 @@ class DataBase:
         try:
             cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
-
-    @classmethod
-    def put_question_topic_in_db(cls, question):
-        connect = cls.connect
-        cursor = connect.cursor()
-        question_id = question.get_question_id()
-        for topic in question.get_topics():
-            cls.put_topic_in_db(topic)
-            topic_id = topic.get_topic_id()
-            values = (question_id, topic_id)
-            try:
-                cursor.execute('insert into Question_Topics values (%s,%s)', values)
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
 
     @classmethod
     def put_question_topic_in_db(cls, question, topic):
@@ -312,7 +221,7 @@ class DataBase:
         try:
             cursor.execute('insert into Question_Topics values (%s,%s)', values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
@@ -329,7 +238,7 @@ class DataBase:
         try:
             cursor.execute("insert into Columns values (%s,%s,%s)", values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
@@ -350,29 +259,10 @@ class DataBase:
         try:
             cursor.execute('insert into Articles values (%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
-
-    @classmethod
-    def put_vote_in_db(cls, answer):
-        connect = cls.connect
-        cursor = connect.cursor()
-
-        answer_id = answer.get_answer_id()
-        for user in answer.get_upvoters():
-            user_id = user.get_user_id()
-            values = (user_id, answer_id)
-            cls.put_user_in_db(user)
-
-            try:
-                cursor.execute('insert into Vote_Answer values (%s,%s)', values)
-            except MySQLdb.Error, e:
-                if re.match(r'\(1062',str(e)):
-                    Logging.info(str(e))
-            finally:
-                connect.commit()
 
     @classmethod
     def put_vote_in_db(cls, answer, voter):
@@ -385,7 +275,7 @@ class DataBase:
         try:
             cursor.execute('insert into Vote_Answer values (%s,%s)', values)
         except MySQLdb.Error, e:
-            if re.match(r'\(1062',str(e)):
+            if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
         finally:
             connect.commit()
