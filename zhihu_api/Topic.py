@@ -22,6 +22,8 @@ class Topic:
             self.name = name
         if self.soup is None:
             self.parser()
+        self.father = None
+        self.child = None
 
     def parser(self):
         try:
@@ -73,3 +75,18 @@ class Topic:
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
                 yield Question(question_url)
+
+    def get_father(self):
+        soup = self.soup
+        url_head = "http://www.zhihu.com"
+        parrent_url = soup.find("div", class_ = "zm-side-section-inner parent-topic").find_all("a", class_ = "zm-item-tag")["href"]
+        for item in parrent_url:
+            yield Topic(url_head + item)
+
+    def get_child(self):
+        soup = self.soup
+        url_head = "http://www.zhihu.com"
+        child_url = soup.find("div",class_ = "zm-side-section-inner child-topic").find_all("a", class_ = "zm-item-tag")["href"]
+        for item in child_url:
+            yield Topic(url_head+item)
+
