@@ -21,6 +21,14 @@ class TopicTree:
         except:
             self.parser()
 
+    def get_roots(self):
+        soup = self.soup
+        catagories = soup.find("ul", class_ = "zm-topic-cat-main clearfix").find_all("li")
+        for hashtag in catagories:
+            url = self.starturl + hashtag.find("a")["href"]
+            catagory_id = int(hashtag["data-id"])
+            yield url,catagory_id
+
     def get_top_level(self):
         soup = self.soup
         self.depth += 1
