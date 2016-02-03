@@ -25,6 +25,8 @@ create table Questions(
 	title varchar(255),
 	answers_num int,
 	followers_num int,
+	post_time TIMESTAMP,
+	last_update_time TIMESTAMP,
 	foreign key (asker_id) references Users(user_id)
 );
 
@@ -42,6 +44,8 @@ create table Answers(
 	detail text,
 	upvote int,
 	visit_times int,
+	post_time TIMESTAMP,
+	last_edit_time TIMESTAMP,
 	foreign key (question_id) references Questions(question_id),
 	foreign key (author_id) references Users(user_id),
 	PRIMARY KEY (answer_id,question_id)
