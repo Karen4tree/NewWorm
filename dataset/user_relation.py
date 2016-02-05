@@ -63,14 +63,14 @@ class UserRelation:
         return cursor.fetchone()[0]
 
     def caculate_strength(self):
-        answerPower = 1
-        votePower =1
+        answerpower = 1
+        votepower = 1
         if self.is_1_follow_2():
             self.user1_to_user2 += 1
         if self.is_2_follow_1():
             self.user2_to_user1 += 1
-        self.user1_to_user2 += self.num_1_answer_2()*answerPower + self.num_1_vote_2()*votePower
-        self.user2_to_user1 += self.num_2_answer_1()*answerPower + self.num_2_vote_1()*votePower
+        self.user1_to_user2 += self.num_1_answer_2() * answerpower + self.num_1_vote_2() * votepower
+        self.user2_to_user1 += self.num_2_answer_1() * answerpower + self.num_2_vote_1() * votepower
         self.strength = self.user1_to_user2 + self.user2_to_user1
-        
+
         return self.strength, self.user1_to_user2, self.user2_to_user1

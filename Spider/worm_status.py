@@ -3,7 +3,8 @@
 import os
 import re
 from ConfigParser import ConfigParser
-from BloomFliter import BloomFilter
+
+from Spider.BloomFliter import BloomFilter
 
 
 class Worm_status:
