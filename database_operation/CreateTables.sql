@@ -27,6 +27,7 @@ create table Questions(
 	followers_num int,
 	post_time TIMESTAMP,
 	last_update_time TIMESTAMP,
+	opinion int,
 	foreign key (asker_id) references Users(user_id)
 );
 
@@ -46,6 +47,7 @@ create table Answers(
 	visit_times int,
 	post_time TIMESTAMP,
 	last_edit_time TIMESTAMP,
+	opinion int,
 	foreign key (question_id) references Questions(question_id),
 	foreign key (author_id) references Users(user_id),
 	PRIMARY KEY (answer_id,question_id)
@@ -54,6 +56,7 @@ create table Answers(
 create table Comment(
 	author_id varchar(255),
 	answer_id char(8),
+	opinion int,
 	primary key (author_id, answer_id),
 	foreign key (author_id) references Users(user_id),
 	foreign key (answer_id) references Answers(answer_id)
