@@ -6,24 +6,26 @@ from bs4 import BeautifulSoup
 from zhihu_api import get_xsrf, get_hash_id
 from zhihu_api.Topic import Topic
 from zhihu_api.Requests import requests
+
+
 # 现阶段使用知乎本身的层次结构,如果有必要,可以再上BRT
 
 
 class TreeNode:
-    def __init__(self,content):
+    def __init__(self, content):
         self.parent = None
         self.content = content
         self.children = []
         self.depth = 0
 
-    def setParent(self, parent):
-        parent.insertChildren(self)
+    def set_parent(self, parent):
+        parent.insert_children(self)
         self.parent = parent
 
-    def setContent(self, content):
+    def set_content(self, content):
         self.content = content
 
-    def insertChildren(self, child):
+    def insert_children(self, child):
         if self.children == []:
             self.depth = child.depth + 1
         elif child.depth > max(self.children):
@@ -52,8 +54,8 @@ class TopicTree:
         for hashtag in catagories:
             url = self.starturl + hashtag.find("a")["href"]
             catagory_id = int(hashtag["data-id"])
-            tmp = TreeNode({'url':url,'catagory_id':catagory_id})
-            self.superRoot.insertChildren(tmp)
+            tmp = TreeNode({'url': url, 'catagory_id': catagory_id})
+            self.superRoot.insert_children(tmp)
 
     def get_top_level(self):
         for node in self.superRoot.children:
@@ -90,7 +92,7 @@ class TopicTree:
             for item in topic_url:
                 tmp = re.match(r'<a target="_blank" href="(.+)">', item)
                 url_tail = tmp.group(1)
-                node.insertChildren(TreeNode(Topic(url_head + url_tail)))
+                node.insert_children(TreeNode(Topic(url_head + url_tail)))
 
     def grow(self, node):
         if node == self.superRoot:
@@ -98,12 +100,12 @@ class TopicTree:
             self.get_top_level()
             for item in self.superRoot.children:
                 self.grow(item)
+        else:
+            for child in node.content.getchild():
+                node.insert_children(TreeNode(child))
 
-        for child in node.content.getchild():
-            node.insertChildren(TreeNode(child))
-
-        for subnode in node.children:
-            self.grow(subnode)
+            for subnode in node.children:
+                self.grow(subnode)
 
     def trans_into_BRT(self):
         pass
