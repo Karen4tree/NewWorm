@@ -131,7 +131,7 @@ class Login:
         r = requests.get(url, allow_redirects = False)
         status_code = int(r.status_code)
         if status_code == 301 or status_code == 302:
-            # 未登录
+            Logging.warn(u"未登录")
             return False
         elif status_code == 200:
             return True

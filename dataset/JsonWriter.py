@@ -12,13 +12,7 @@ class TreeWriter(json.JSONEncoder):
     def default(self,node):
         #convert object to a dict
         d = {}
-        #d['name'] = node.__class__.__name__
-        #d['children'] = node.__module__
-        d.update(node.__dict__)
+        d['name'] = node.name
+        d['children'] = node.children
+        #d.update(node.__dict__)
         return d
-
-
-writer = TreeWriter()
-writer.tree.grow(writer.tree.superRoot)
-
-print writer.default(writer.tree.superRoot)
