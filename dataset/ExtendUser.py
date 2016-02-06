@@ -56,7 +56,7 @@ class ExtendUser(User):
                 answer_reach += answer.get_upvote_num()
                 amp_question += float(answer.get_upvote_num()) / float(answer_reach)
         amp_question = amp_question / self.get_ask_num()
-        return amp_answer + amp_question
+        return amp_answer*1 + amp_question*1
 
     def network_score(self):
         # A measurement of the influence of a user's audience.

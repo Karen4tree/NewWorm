@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from zhihu_api.Comment import Comment
+from OpinionMeasuring import OpinionMeasuring
 
 
 class ExtendComment(Comment):

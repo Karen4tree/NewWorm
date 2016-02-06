@@ -6,10 +6,35 @@ from bs4 import BeautifulSoup
 from zhihu_api import get_xsrf, get_hash_id
 from zhihu_api.Topic import Topic
 from zhihu_api.Requests import requests
+# 现阶段使用知乎本身的层次结构,如果有必要,可以再上BRT
+
+
+class TreeNode:
+    def __init__(self,content):
+        self.parent = None
+        self.content = content
+        self.children = []
+        self.depth = 0
+
+    def setParent(self, parent):
+        parent.insertChildren(self)
+        self.parent = parent
+
+    def setContent(self, content):
+        self.content = content
+
+    def insertChildren(self, child):
+        if self.children == []:
+            self.depth = child.depth + 1
+        elif child.depth > max(self.children):
+            self.depth = child.depth + 1
+        self.children.append(child)
+        child.parent = self
 
 
 class TopicTree:
     def __init__(self):
+        self.superRoot = TreeNode('SuperRoot')
         self.depth = 0
         self.starturl = 'https://www.zhihu.com/topics'
         self.parser()
@@ -27,15 +52,13 @@ class TopicTree:
         for hashtag in catagories:
             url = self.starturl + hashtag.find("a")["href"]
             catagory_id = int(hashtag["data-id"])
-            yield url, catagory_id
+            tmp = TreeNode({'url':url,'catagory_id':catagory_id})
+            self.superRoot.insertChildren(tmp)
 
     def get_top_level(self):
-        soup = self.soup
-        self.depth += 1
-        catagories = soup.find("ul", class_ = "zm-topic-cat-main clearfix").find_all("li")
-        for hashtag in catagories:
-            url = self.starturl + hashtag.find("a")["href"]
-            catagory_id = int(hashtag["data-id"])
+        for node in self.superRoot.children:
+            url = node.content['url']
+            catagory_id = node.content['catagory_id']
             r = requests.get(url)
             soup = BeautifulSoup(r.content)
             text = r.text
@@ -67,9 +90,20 @@ class TopicTree:
             for item in topic_url:
                 tmp = re.match(r'<a target="_blank" href="(.+)">', item)
                 url_tail = tmp.group(1)
-                yield Topic(url_head + url_tail)
+                node.insertChildren(TreeNode(Topic(url_head + url_tail)))
 
-    def get_next_level(self, currentlevel):
-        self.depth += 1
-        for topic in currentlevel:
-            topic.get_child()
+    def grow(self, node):
+        if node == self.superRoot:
+            self.get_roots()
+            self.get_top_level()
+            for item in self.superRoot.children:
+                self.grow(item)
+
+        for child in node.content.getchild():
+            node.insertChildren(TreeNode(child))
+
+        for subnode in node.children:
+            self.grow(subnode)
+
+    def trans_into_BRT(self):
+        pass
