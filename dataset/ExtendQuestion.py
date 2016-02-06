@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from zhihu_api.Question import Question
+from OpinionMeasuring import OpinionMeasuring
 
 
 class ExtendQuestion(Question):
