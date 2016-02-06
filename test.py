@@ -184,23 +184,21 @@ def article_test(article_url):
 def test_topic(topic_url):
     Logging.info(u"topic_test:")
     topic = Topic(topic_url)
-    for question in topic.get_questions():
-        print question.get_question_id()
+    #for question in topic.get_questions():
+        #print question.get_question_id()
+    topic.get_question_num()
+    for topic in topic.get_child():
+        print topic.get_topic_name()
 
 
 def main():
     user_url = "http://www.zhihu.com/people/li-ji-87-69-14"
     answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
-    topic_url = "http://www.zhihu.com/topic/19554927"
+    topic_url = "http://www.zhihu.com/topic/19776749"
     question_url = "http://www.zhihu.com/question/23623967"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    test_user(user_url)
-    # test_answer(answer_url)
-    # topic_test(topic_url)
-    # question_test(question_url)
-    # collection_test(collection_url)
-    # article_test(article_url)
+    test_topic(topic_url)
 
 
 if __name__ == '__main__':
