@@ -159,9 +159,10 @@ class DataBase:
         title = question.get_title()
         answer_num = question.get_answer_num()
         follower_num = question.get_follower_num()
-        values = (question_id, asker_id, detail, title, answer_num, follower_num)
+        time = question.get_edit_time()[0]
+        values = (question_id, asker_id, detail, title, answer_num, follower_num,time)
         try:
-            cursor.execute('insert into Questions values (%s,%s,%s,%s,%s,%s)', values)
+            cursor.execute('insert into Questions(question_id, asker_id, detail, title, answers_num, followers_num, post_time) values (%s,%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -200,11 +201,12 @@ class DataBase:
         topic_name = topic.get_topic_name()
         question_num = topic.get_question_num()
         follower_num = topic.get_follower_num()
+        parent = topic.get_father()
 
-        values = (topic_id, topic_name, question_num, follower_num)
+        values = (topic_id, topic_name, question_num, follower_num,parent)
 
         try:
-            cursor.execute('insert into Topic values (%s,%s,%s,%s)', values)
+            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num, parent) values (%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))

@@ -35,7 +35,9 @@ create table Topic(
 	topic_id char(8) primary key,
 	topic_name varchar(255),
 	question_num int,
-	followers_num int
+	followers_num int,
+	parent char(8),
+	FOREIGN KEY (parent) REFERENCES Topic(parent)
 );
 
 create table Answers(
