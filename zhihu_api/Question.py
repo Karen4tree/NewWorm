@@ -43,14 +43,11 @@ class Question:
             return followers_num
 
     def get_title(self):
-        if hasattr(self, "title"):
-            return self.title
-        else:
-            soup = self.soup
-            title = soup.find(
-                "h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
-            self.title = title
-            return title
+        soup = self.soup
+        title = soup.find(
+            "h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
+        self.title = title
+        return title
 
     def get_detail(self):
         soup = self.soup

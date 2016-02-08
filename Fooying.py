@@ -41,6 +41,7 @@ def spider(question):
         Logging.info("Topics of question id %s" % question.get_question_id())
         for topictag in question.get_topics():
             if not topicBloom.is_element_exist(topictag.get_topic_id()):
+                DataBase.put_topic_in_db(topiclock)
                 topiclock.acquire()
                 topicBloom.insert_element(topictag.get_topic_id())
                 Worm_status.record_status("topicBloom", topicBloom)
@@ -55,7 +56,7 @@ def spider(question):
                 Worm_status.record_status("answerBloom", answerBloom)
                 answerlock.release()
             if not userBloom.is_element_exist(answer.get_author_id()):
-                DataBase.put_user_in_db(User("http://www.zhihu.com/people/%s" % answer.get_author_id()))
+                DataBase.put_user_in_db(answer.get_author())
                 userlock.acquire()
                 userBloom.insert_element(answer.get_author_id())
                 Worm_status.record_status("userBloom", userBloom)
@@ -63,6 +64,7 @@ def spider(question):
             DataBase.put_answer_in_db(answer)
             for user in answer.get_upvoters():
                 if not userBloom.is_element_exist(user.get_user_id()):
+                    DataBase.put_user_in_db(user)
                     userlock.acquire()
                     userBloom.insert_element(user.get_user_id())
                     Worm_status.record_status("userBloom", userBloom)
@@ -72,11 +74,11 @@ def spider(question):
         Logging.info("Follower of question id %s" % question.get_question_id())
         for follower in question.get_followers():
             if not userBloom.is_element_exist(follower.get_user_id()):
+                DataBase.put_user_in_db(follower)
                 userlock.acquire()
                 userBloom.insert_element(follower.get_user_id())
                 Worm_status.record_status("userBloom", userBloom)
                 userlock.release()
-                DataBase.put_user_in_db(follower)
                 for userfollower in follower.get_followers():
                     if not userBloom.is_element_exist(userfollower.get_user_id()):
                         userlock.acquire()
@@ -88,7 +90,14 @@ def spider(question):
             DataBase.put_follow_question_in_db(question, follower)
     else:
         questionlock.release()
-    time.sleep(0)
+    #time.sleep(0)
+
+
+def user_spider(user):
+    DataBase.put_user_in_db(user)
+    for follower in user.get_followers():
+        DataBase.put_user_in_db(follower)
+        DataBase.put_follow_user_in_db(user,follower)
 
 
 if __name__ == '__main__':
@@ -98,11 +107,13 @@ if __name__ == '__main__':
     if not topicBloom.is_element_exist(topic.get_topic_id()):
         topicBloom.insert_element(topic.get_topic_id())
         Worm_status.record_status("topicBloom", topicBloom)
-        DataBase.put_topic_in_db(topic)
+    DataBase.put_topic_in_db(topic)
     go = topic.get_questions()
     N = 20
     while True:
         try:
             p.map_async(spider, itertools.islice(go, N))
         except TypeError:
+            continue
+        except AttributeError:
             continue
