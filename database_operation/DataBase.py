@@ -201,7 +201,6 @@ class DataBase:
 
     @classmethod
     def put_topic_in_db(cls, topic):
-        # if not topicBloom.is_element_exist(topic):
         connect = cls.connect
         cursor = connect.cursor()
 
@@ -209,13 +208,13 @@ class DataBase:
         topic_name = topic.get_topic_name()
         question_num = topic.get_question_num()
         follower_num = topic.get_follower_num()
-        parent = topic.get_father()
+        #parent = topic.get_father()
 
-        values = (topic_id, topic_name, question_num, follower_num,parent)
+        values = (topic_id, topic_name, question_num, follower_num)
 
         try:
-            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num, parent) '
-                           'values (%s,%s,%s,%s,%s)', values)
+            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num) '
+                           'values (%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
