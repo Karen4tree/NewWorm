@@ -109,6 +109,8 @@ def test_answer(answer_url):
     print upvote_num
     visited_times = answer.get_visited_times()
     print visited_times
+    print "Post time"+answer.get_post_time()
+    print "Last edit time"+answer.get_last_edit_time()
     # upvoters = answer.get_upvoters()
     # for upvoter in upvoters:
     # print upvoter.get_user_id()
@@ -135,27 +137,7 @@ def topic_test(topic_url):
 def question_test(question_url):
     Logging.info(u"question_test:")
     question = Question(question_url)
-    question_id = question.get_question_id()
-    print question_id
-    follower_num = question.get_follower_num()
-    print follower_num
-    title = question.get_title()
-    detail = question.get_detail()
-    print title
-    print detail
-    answer_num = question.get_answer_num()
-    print answer_num
-    topics = question.get_topics()
-    for topic in topics:
-        print topic.get_topic_id()
-    # answers = question.get_answers()
-    # for answer in answers:
-    #    print answer.get_detail()
-    followers = question.get_followers()
-    for follower in followers:
-        print follower.get_user_id()
-
-    question.get_followers()
+    print question.get_edit_time()
 
 
 def collection_test(collection_url):
@@ -198,7 +180,7 @@ def main():
     question_url = "http://www.zhihu.com/question/23623967"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    test_topic(topic_url)
+    question_test(question_url)
 
 
 if __name__ == '__main__':

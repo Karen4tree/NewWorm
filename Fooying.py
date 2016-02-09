@@ -28,8 +28,7 @@ def content_spider(question):
             DataBase.put_user_in_db(answer.get_author())
             DataBase.put_answer_in_db(answer)
             for user in answer.get_upvoters():
-                if not IfExist.user_exist(user):
-                    DataBase.put_user_in_db(user)
+                DataBase.put_user_in_db(user)
                 DataBase.put_vote_in_db(answer, user)
 
         Logging.info("Follower of question id %s" % question.get_question_id())
@@ -57,9 +56,4 @@ if __name__ == '__main__':
     go = topic.get_questions()
     N = 20
     while True:
-        try:
-            p.map(content_spider, itertools.islice(go, N))
-        except TypeError:
-            continue
-        except AttributeError:
-            continue
+        p.map(content_spider, itertools.islice(go, N))
