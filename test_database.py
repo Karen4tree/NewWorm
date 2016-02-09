@@ -1,28 +1,22 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-from database_operation.DataBase import DataBase
+
 from zhihu_api.User import User
 from zhihu_api.Topic import Topic
-
-from database_operation.ReadData import ReadData
 from zhihu_api.Question import Question
+from zhihu_api.Answer import Answer
+
+from database_operation.IfExist import IfExist
+from database_operation.DataBase import DataBase
 
 
 def main():
-    #user_msg = User(u"http://www.zhihu.com/people/Fooying")
-    topic = Topic("http://www.zhihu.com/topic/19553732")
-    DataBase.put_topic_in_db(topic)
-    #question_msg = Question(u"http://www.zhihu.com/question/31918396")
-    #DataBase.put_user_in_db(user_msg)
-    # database.put_follow_user_in_db(user_msg)
-
-    # for user in user_msg.get_followers():
-    #   database.put_follow_user_in_db(user)
-
-    # database.put_user_answer_in_db(user_msg)
-    # database.put_user_ask_in_db(user_msg)
-
-    # database.put_question_in_db(question_msg)
+    answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
+    answer = Answer(answer_url)
+    question = Question("http://www.zhihu.com/question/36713461")
+    DataBase.put_user_in_db(answer.get_author())
+    DataBase.put_question_in_db(question)
+    DataBase.put_answer_in_db(answer)
 
 
 if __name__ == '__main__':

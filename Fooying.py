@@ -6,6 +6,7 @@ import multiprocessing as mp
 import time
 
 from database_operation.DataBase import DataBase
+from database_operation.IfExist import IfExist
 from worm_status import Worm_status
 from zhihu_api.Logging import Logging
 from zhihu_api.Topic import Topic
@@ -37,7 +38,6 @@ def spider(question):
         Worm_status.record_status("questionBloom", questionBloom)
         questionlock.release()
         DataBase.put_question_in_db(question)
-
         Logging.info("Topics of question id %s" % question.get_question_id())
         for topictag in question.get_topics():
             if not topicBloom.is_element_exist(topictag.get_topic_id()):
