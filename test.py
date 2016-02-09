@@ -166,8 +166,6 @@ def article_test(article_url):
 def test_topic(topic_url):
     Logging.info(u"topic_test:")
     topic = Topic(topic_url)
-    #for question in topic.get_questions():
-        #print question.get_question_id()
     topic.get_question_num()
     for topic in topic.get_child():
         print topic.get_topic_name()
@@ -180,7 +178,7 @@ def main():
     question_url = "http://www.zhihu.com/question/23623967"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    question_test(question_url)
+    test_topic(topic_url)
 
 
 if __name__ == '__main__':
