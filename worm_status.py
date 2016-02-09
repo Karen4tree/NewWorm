@@ -4,7 +4,7 @@ import os
 import re
 from ConfigParser import ConfigParser
 
-from Spider.BloomFliter import BloomFilter
+from BloomFliter import BloomFilter
 
 
 class Worm_status:

@@ -44,7 +44,10 @@ class DataBase:
             employment)
 
         try:
-            cursor.execute('insert into Users values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
+            cursor.execute('insert into Users(user_id, followers_num, followees_num, agrees_num, thanks_num, asks_num, '
+                           'answers_num, articles_num, collections_num, following_topics_num, following_columns, '
+                           'education, education_extra, location, business, position, employment)'
+                           ' values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', value)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -61,7 +64,7 @@ class DataBase:
         value = (user_id, follower_id)
 
         try:
-            cursor.execute('insert into Follow_User values (%s, %s)', value)
+            cursor.execute('insert into Follow_User(follower_id, followee_id) values (%s, %s)', value)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -77,7 +80,7 @@ class DataBase:
         topic_id = topic.get_topic_id()
         value = (user_id, topic_id)
         try:
-            cursor.execute('insert into Follow_Topic values (%s,%s)', value)
+            cursor.execute('insert into Follow_Topic(follower_id, topic_id) values (%s,%s)', value)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -93,7 +96,7 @@ class DataBase:
         column_id = column.get_column_name()
         tmp = (user_id, column_id)
         try:
-            cursor.execute('insert into Follow_Column values (%s,%s)', tmp)
+            cursor.execute('insert into Follow_Column(follower_id, column_name) values (%s,%s)', tmp)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -109,7 +112,7 @@ class DataBase:
         user_id = user.get_user_id()
         value = (question_id, user_id)
         try:
-            cursor.execute('insert into Follow_Question values (%s,%s)', value)
+            cursor.execute('insert into Follow_Question(question_id, follower_id) values (%s,%s)', value)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -162,7 +165,9 @@ class DataBase:
         time = question.get_edit_time()[0]
         values = (question_id, asker_id, detail, title, answer_num, follower_num,time)
         try:
-            cursor.execute('insert into Questions(question_id, asker_id, detail, title, answers_num, followers_num, post_time) values (%s,%s,%s,%s,%s,%s,%s)', values)
+            cursor.execute('insert into Questions(question_id, asker_id, detail, title, answers_num, '
+                           'followers_num, post_time)'
+                           ' values (%s,%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -171,7 +176,6 @@ class DataBase:
 
     @classmethod
     def put_answer_in_db(cls, answer):
-        # if not answerBloom.is_element_exist(answer):
         connect = cls.connect
         cursor = connect.cursor()
 
@@ -181,10 +185,14 @@ class DataBase:
         detail = answer.get_detail()
         upvote_num = answer.get_upvote_num()
         visited_times = answer.get_visited_times()
+        post_time = answer.get_post_time()
+        last_update = answer.get_last_edit_time()
 
-        values = (answer_id, question_id, author_id, detail, upvote_num, visited_times)
+        values = (answer_id, question_id, author_id, detail, upvote_num, visited_times,post_time,last_update)
         try:
-            cursor.execute('insert into Answers values (%s,%s,%s,%s,%s,%s)', values)
+            cursor.execute('insert into Answers(answer_id, question_id, author_id, detail, upvote, '
+                           'visit_times, post_time, last_edit_time) '
+                           'values (%s,%s,%s,%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -193,7 +201,6 @@ class DataBase:
 
     @classmethod
     def put_topic_in_db(cls, topic):
-        # if not topicBloom.is_element_exist(topic):
         connect = cls.connect
         cursor = connect.cursor()
 
@@ -201,11 +208,13 @@ class DataBase:
         topic_name = topic.get_topic_name()
         question_num = topic.get_question_num()
         follower_num = topic.get_follower_num()
+        #parent = topic.get_father()
 
         values = (topic_id, topic_name, question_num, follower_num)
 
         try:
-            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num) values (%s,%s,%s,%s)', values)
+            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num) '
+                           'values (%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -220,7 +229,7 @@ class DataBase:
         topic_id = topic.get_topic_id()
         values = (question_id, topic_id)
         try:
-            cursor.execute('insert into Question_Topics values (%s,%s)', values)
+            cursor.execute('insert into Question_Topics(question_id, topic_id) values (%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -237,7 +246,7 @@ class DataBase:
         follower_num = column.getfollower_num()
         values = (column_id, column_name, follower_num)
         try:
-            cursor.execute("insert into Columns values (%s,%s,%s)", values)
+            cursor.execute("insert into Columns(column_name, owner_id, follower_num) values (%s,%s,%s)", values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -274,7 +283,7 @@ class DataBase:
         user_id = voter.get_user_id()
         values = (user_id, answer_id)
         try:
-            cursor.execute('insert into Vote_Answer values (%s,%s)', values)
+            cursor.execute('insert into Vote_Answer(voter_id, answer_id) values (%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))

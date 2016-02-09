@@ -80,21 +80,22 @@ class Topic:
                 yield Question(question_url)
 
     def get_father(self):
-        soup = self.soup
-        url_head = "http://www.zhihu.com"
-        try:
-            parrent_url = soup.find("div", class_ = "zm-side-section-inner parent-topic").find_all("a", class_ = "zm-item-tag")
-            for item in parrent_url:
-                yield Topic(url_head + item["href"])
-        except AttributeError:
-            yield None
+        url = self.url+ "/organize"
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content)
+        parrent_div = soup.find(id="zh-topic-organize-parent-editor")
+        parrent_url = parrent_div.find_all("a")
+        url_head = "http://www.zhihu.com/topic/"
+        for item in parrent_url:
+            yield Topic(url_head + item["data-token"])
 
     def get_child(self):
-        soup = self.soup
-        url_head = "http://www.zhihu.com"
-        try:
-            child_url = soup.find("div",class_ = "zm-side-section-inner child-topic").find_all("a", class_ = "zm-item-tag")
-            for item in child_url:
-                yield Topic(url_head+item["href"])
-        except AttributeError:
-            yield None
+        url = self.url+ "/organize"
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content)
+        child_div = soup.find(id="zh-topic-organize-child-editor")
+        child_url = child_div.find_all("a")
+        url_head = "http://www.zhihu.com/topic/"
+        for item in child_url:
+            yield Topic(url_head + item["data-token"])
+

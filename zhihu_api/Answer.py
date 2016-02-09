@@ -92,14 +92,50 @@ class Answer:
 
     def get_post_time(self):
         soup = self.soup
-        time = soup.find("a", class_ = "answer-date-link last_updated meta-item")["data-tip"]
-        tmp = re.match(r'.+发布于\s(.+-.+-.+)',time)
-        time = tmp.group(1)
-        return time
+        timestr = soup.find("a", class_ = "answer-date-link last_updated meta-item")["data-tip"]
+        timestr = str(timestr)
+        tmp = re.split(r'\s', timestr)
+        timestr = tmp[-1]
+        if re.match(r'\d{4}-\d{2}-\d{2}',timestr):
+            timestr += " 00:00:00"
+        elif re.match(r'\d{2}\:\d{2}',timestr):
+            if tmp[1] == '昨天':
+                import datetime
+                threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days = 1))
+                string = threeDayAgo.strftime("%Y-%m-%d %H:%M:%S")
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+            else:
+                import time
+                string = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+        return timestr
 
     def get_last_edit_time(self):
         soup = self.soup
-        return soup.find("a", class_ = "answer-date-link last_updated meta-item").string
+        timestr = soup.find("a", class_ = "answer-date-link last_updated meta-item").string
+        tmp = re.split(r'\s',timestr)
+        timestr = tmp[-1]
+        if re.match(r'\d{4}-\d{2}-\d{2}',timestr):
+            timestr += " 00:00:00"
+        elif re.match(r'\d{2}\:\d{2}',timestr):
+            if tmp[1] == '昨天':
+                import datetime
+                threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days = 1))
+                string = threeDayAgo.strftime("%Y-%m-%d %H:%M:%S")
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+            else:
+                import time
+                string = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+        return timestr
 
     def get_upvoters(self):  # 匿名用户先忽略了
         soup = self.soup
