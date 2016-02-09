@@ -76,21 +76,15 @@ class Topic:
                 yield Question(question_url)
 
     def get_father(self):
-        url = self.url + "/organize"
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content)
+        soup = self.soup
         url_head = "http://www.zhihu.com"
-        parrent_url = soup.find("div",id_="zh-topic-organize-parent-editor").find_all("a", class_ = "zm-item-tag")
+        parrent_url = soup.find("div", class_ = "zm-side-section-inner parent-topic").find_all("a", class_ = "zm-item-tag")
         for item in parrent_url:
-            itemurl = item["href"]
-            yield Topic(url_head + itemurl)
+            yield Topic(url_head + item["href"])
 
     def get_child(self):
-        url = self.url + "/organize"
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content)
+        soup = self.soup
         url_head = "http://www.zhihu.com"
-        child_url = soup.find("div",id_="zh-topic-organize-child-editor").find_all("a",class_="zm-item-tag")
+        child_url = soup.find("div",class_ = "zm-side-section-inner child-topic").find_all("a", class_ = "zm-item-tag")
         for item in child_url:
-            itemurl = item["href"]
-            yield Topic(url_head+itemurl)
+            yield Topic(url_head+item["href"])
