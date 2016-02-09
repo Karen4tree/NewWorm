@@ -8,16 +8,16 @@ import termcolor
 import sys
 import json
 
-from Requests import requests
 from Exceptions import *
 
 __author__ = 'ZombieGroup'
 
-class Login:
 
+class Login:
     @classmethod
     def download_captcha(cls):
         url = "http://www.zhihu.com/captcha.gif"
+        from Requests import requests
         r = requests.get(url, params = {"r": random.random()})
         if int(r.status_code) != 200:
             raise NetworkError(u"验证码请求失败")
@@ -55,17 +55,18 @@ class Login:
     @classmethod
     def search_xsrf(cls):
         url = "http://www.zhihu.com/"
+        from Requests import requests
         r = requests.get(url)
         if int(r.status_code) != 200:
             raise NetworkError(u"验证码请求失败")
-        results = re.compile(r"\<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
+        results = re.compile(r"<input\stype=\"hidden\"\sname=\"_xsrf\"\svalue=\"(\S+)\"", re.DOTALL).findall(r.text)
         if len(results) < 1:
             Logging.info(u"提取XSRF 代码失败")
             return None
         return results[0]
 
     @classmethod
-    def build_form(cls,account, password):
+    def build_form(cls, account, password):
         if re.match(r"^1\d{10}$", account):
             account_type = "phone_num"
         elif re.match(r"^\S+@\S+\.\S+$", account):
@@ -79,7 +80,7 @@ class Login:
         return form
 
     @classmethod
-    def upload_form(cls,form):
+    def upload_form(cls, form):
         if "email" in form:
             url = "http://www.zhihu.com/login/email"
         elif "phone_num" in form:
@@ -89,9 +90,14 @@ class Login:
 
         headers = {
             'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 "
-                          "Safari/537.36", 'Host': "www.zhihu.com", 'Origin': "http://www.zhihu.com", 'Pragma': "no-cache",
-            'Referer': "http://www.zhihu.com/", 'X-Requested-With': "XMLHttpRequest"}
-
+                          "Safari/537.36",
+            'Host': "www.zhihu.com",
+            'Origin': "http://www.zhihu.com",
+            'Pragma': "no-cache",
+            'Referer': "http://www.zhihu.com/",
+            'X-Requested-With': "XMLHttpRequest"
+        }
+        from Requests import requests
         r = requests.post(url, data = form, headers = headers)
         if int(r.status_code) != 200:
             raise NetworkError(u"表单上传失败!")
@@ -121,6 +127,7 @@ class Login:
     def islogin(cls):
         # check session
         url = "https://www.zhihu.com/settings/profile"
+        from Requests import requests
         r = requests.get(url, allow_redirects = False)
         status_code = int(r.status_code)
         if status_code == 301 or status_code == 302:
@@ -133,7 +140,7 @@ class Login:
             return None
 
     @classmethod
-    def read_account_from_config_file(cls,config_file="config.ini"):
+    def read_account_from_config_file(cls, config_file="zhihu_api/config.ini"):
         # NOTE: The ConfigParser module has been renamed to configparser in Python 3.
         #       The 2to3 tool will automatically adapt imports when converting your sources to Python 3.
         #       https://docs.python.org/2/library/configparser.html
@@ -152,10 +159,10 @@ class Login:
                 return email, password
         else:
             Logging.error(u"配置文件加载失败！")
-            return (None, None)
+            return None, None
 
     @classmethod
-    def login(cls,account=None, password=None):
+    def login(cls, account=None, password=None):
         if cls.islogin():
             Logging.success(u"你已经登录过咯")
             return True
@@ -187,5 +194,6 @@ class Login:
         elif "result" in result and result['result'] == True:
             # 登录成功
             Logging.success(u"登录成功！")
+            from Requests import requests
             requests.cookies.save()
             return True

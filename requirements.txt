@@ -1,7 +1,8 @@
+BitVector
 requests
 beautifulsoup4
 html2text
 termcolor
 Mysql-python
-BitVector
 gevent
+nose

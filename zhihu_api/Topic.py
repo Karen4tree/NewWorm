@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
+import re
 
 from Requests import requests
-from __init__ import questionBloom,question_queue
+from __init__ import question_queue
 from Logging import Logging
 import gevent
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 
 # 从Topic url指向页面中抓取信息
 
@@ -17,7 +17,7 @@ class Topic:
     soup = None
 
     def __init__(self, url, name=None):
-        if url[0:len(url) - 8] != "http://www.zhihu.com/topic/":
+        if not (re.match("http://www.zhihu.com/topic/.+", url) or re.match("https://www.zhihu.com/topic/.+", url)):
             raise ValueError("\"" + url + "\"" + " : it isn't a topic url.")
         else:
             self.url = url
@@ -27,8 +27,11 @@ class Topic:
             self.parser()
 
     def parser(self):
-        r = requests.get(self.url)
-        self.soup = BeautifulSoup(r.content)
+        try:
+            r = requests.get(self.url)
+            self.soup = BeautifulSoup(r.content)
+        except:
+            self.parser()
 
     def get_topic_id(self):
         topic_id = self.url[len(self.url) - 8:len(self.url)]
@@ -60,7 +63,7 @@ class Topic:
         soup = self.soup
         followers_num = soup.find(
             "div", class_="zm-topic-side-followers-info").find("a").strong.string
-        return followers_num
+        return int(followers_num)
 
     def get_questions(self):
         url = self.url + "/questions?page="
@@ -76,8 +79,19 @@ class Topic:
             question_on_this_page = soup.find_all("a", class_="question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
-                if not questionBloom.is_element_exist(question_url):
-                    questionBloom.insert_element(question_url)
-                    question_queue.put(Question(question_url))
-                    Logging.info("Put one question in queue.")
-                #yield Question(question_url)
+                yield Question(question_url)
+
+    def get_father(self):
+        soup = self.soup
+        url_head = "http://www.zhihu.com"
+        parrent_url = soup.find("div", class_ = "zm-side-section-inner parent-topic").find_all("a", class_ = "zm-item-tag")
+        for item in parrent_url:
+            yield Topic(url_head + item["href"])
+
+    def get_child(self):
+        soup = self.soup
+        url_head = "http://www.zhihu.com"
+        child_url = soup.find("div",class_ = "zm-side-section-inner child-topic").find_all("a", class_ = "zm-item-tag")
+        for item in child_url:
+            yield Topic(url_head+item["href"])
+

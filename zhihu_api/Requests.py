@@ -9,7 +9,6 @@ from Exceptions import *
 from Login import Login
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 
 
 class Requests:
@@ -20,7 +19,8 @@ class Requests:
         try:
             Logging.info('geting cookies')
             self.requests = requests.Session()
-            self.requests.cookies = cookielib.LWPCookieJar('./cookies')
+            self.requests.cookies = cookielib.LWPCookieJar('zhihu_api/cookies')
+            self.cookies = self.requests.cookies
             self.requests.cookies.load(ignore_discard=True)
             Login.islogin()
         except NotLogin:
@@ -30,6 +30,7 @@ class Requests:
             Login.login()
 
         reload(sys)
+        sys.setdefaultencoding('utf8')
         Logging.info("Default encoding: " + sys.getdefaultencoding())
         self.proxies = {"http": "http://127.0.0.1:8080",
                         "https": "http://127.0.0.1:8080"}
@@ -40,10 +41,10 @@ class Requests:
         except:
             self.get(url, **kwargs)
 
-    def post(self, url, data):
+    def post(self, url, data=None, **kwargs):
         try:
-            return self.requests.post(url, data)
+            return self.requests.post(url, data, **kwargs)
         except:
-            self.post(url, data)
+            self.post(url, data, **kwargs)
 
 requests = Requests()

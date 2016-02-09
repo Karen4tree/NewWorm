@@ -25,6 +25,9 @@ create table Questions(
 	title varchar(255),
 	answers_num int,
 	followers_num int,
+	post_time TIMESTAMP,
+	last_update_time TIMESTAMP,
+	opinion int,
 	foreign key (asker_id) references Users(user_id)
 );
 
@@ -32,21 +35,21 @@ create table Topic(
 	topic_id char(8) primary key,
 	topic_name varchar(255),
 	question_num int,
-	followers_num int
+	followers_num int,
+	parent char(8),
+	FOREIGN KEY (parent) REFERENCES Topic(parent)
 );
 
 create table Answers(
-<<<<<<< HEAD:CreateTables.sql
 	answer_id char(8),
-=======
-	answer_id char(8) primary key,
->>>>>>> master:database_operation/CreateTables.sql
 	question_id char(8),
 	author_id varchar(255),
 	detail text,
 	upvote int,
 	visit_times int,
-	PRIMARY KEY (answer_id,question_id),
+	post_time TIMESTAMP,
+	last_edit_time TIMESTAMP,
+	opinion int,
 	foreign key (question_id) references Questions(question_id),
 	foreign key (author_id) references Users(user_id),
 	PRIMARY KEY (answer_id,question_id)
@@ -55,6 +58,7 @@ create table Answers(
 create table Comment(
 	author_id varchar(255),
 	answer_id char(8),
+	opinion int,
 	primary key (author_id, answer_id),
 	foreign key (author_id) references Users(user_id),
 	foreign key (answer_id) references Answers(answer_id)

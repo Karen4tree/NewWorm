@@ -4,10 +4,8 @@ import html2text
 from bs4 import BeautifulSoup
 
 from Requests import requests
-from __init__ import userBloom
 
 __author__ = 'ZombieGroup'
-__package__ = 'zhihu_api'
 # 从Answer url指向页面中抓取信息
 
 
@@ -34,18 +32,23 @@ class Answer:
         question_id = tmp.group(2)
         return question_id
 
-    def get_author_id(self):
+    def get_author(self):
         soup = self.soup
-        author_tag = soup.find("h3", class_="zm-item-answer-author-wrap")
-        author_id = 'None'
+        from User import User
         try:
-            author_url = author_tag.find("a")["href"]
-            tmp = re.match(r'^(/people/)(.+)$', author_url)
-            author_id = tmp.group(2)
+            author_tag = soup.find("a", class_="author-link")
+            author_url = author_tag['href']
+            author = User("http://www.zhihu.com"+author_url)
+            return author
         except:
-            pass
-        finally:
-            return author_id
+            return None
+
+    def get_author_id(self):
+        author = self.get_author()
+        if author is None:
+            return None
+        else:
+            return author.get_user_id()
 
     def get_detail(self):
         soup = self.soup
@@ -87,6 +90,53 @@ class Answer:
         finally:
             return visited_times
 
+    def get_post_time(self):
+        soup = self.soup
+        timestr = soup.find("a", class_ = "answer-date-link last_updated meta-item")["data-tip"]
+        timestr = str(timestr)
+        tmp = re.split(r'\s', timestr)
+        timestr = tmp[-1]
+        if re.match(r'\d{4}-\d{2}-\d{2}',timestr):
+            timestr += " 00:00:00"
+        elif re.match(r'\d{2}\:\d{2}',timestr):
+            if tmp[1] == '昨天':
+                import datetime
+                threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days = 1))
+                string = threeDayAgo.strftime("%Y-%m-%d %H:%M:%S")
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+            else:
+                import time
+                string = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+        return timestr
+
+    def get_last_edit_time(self):
+        soup = self.soup
+        timestr = soup.find("a", class_ = "answer-date-link last_updated meta-item").string
+        tmp = re.split(r'\s',timestr)
+        timestr = tmp[-1]
+        if re.match(r'\d{4}-\d{2}-\d{2}',timestr):
+            timestr += " 00:00:00"
+        elif re.match(r'\d{2}\:\d{2}',timestr):
+            if tmp[1] == '昨天':
+                import datetime
+                threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days = 1))
+                string = threeDayAgo.strftime("%Y-%m-%d %H:%M:%S")
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+            else:
+                import time
+                string = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                datestring = re.split(r'\s', string)
+                datestring = datestring[0]
+                timestr = datestring + " " +timestr
+        return timestr
+
     def get_upvoters(self):  # 匿名用户先忽略了
         soup = self.soup
         data_aid = soup.find("div", class_="zm-item-answer  zm-item-expanded")["data-aid"]
@@ -100,7 +150,7 @@ class Answer:
                 if voter_info.find('a'):
                     voter_url = "http://www.zhihu.com" + str(voter_info.a["href"])
                     # Bloom
-                    if not userBloom.is_element_exist(voter_url):
-                        userBloom.is_element_exist(voter_url)
+                    #if not userBloom.is_element_exist(voter_url):
+                    #   userBloom.is_element_exist(voter_url)
                     yield User(voter_url)
                     # ToDo: def get_comments()

@@ -4,7 +4,7 @@ import re
 import html2text
 from bs4 import BeautifulSoup
 
-from __init__ import get_xsrf,userBloom,answerBloom,topicBloom,commentBloom
+from __init__ import get_xsrf
 from Requests import requests
 
 __author__ = 'ZombieGroup'
@@ -14,10 +14,11 @@ __author__ = 'ZombieGroup'
 class Question:
 
     def __init__(self, url):
-        if url[0:len(url) - 8] != "http://www.zhihu.com/question/":
+        if not (re.match("http://www.zhihu.com/question/.+", url) or re.match("https://www.zhihu.com/question/.+", url)):
             raise ValueError("\"" + url + "\"" + " : it isn't a question url.")
         else:
             self.url = url
+        self.title = None
         self.parser()
 
     def parser(self):
@@ -42,14 +43,11 @@ class Question:
             return followers_num
 
     def get_title(self):
-        if hasattr(self, "title"):
-            return self.title
-        else:
-            soup = self.soup
-            title = soup.find(
-                "h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
-            self.title = title
-            return title
+        soup = self.soup
+        title = soup.find(
+            "h2", class_="zm-item-title").string.encode("utf-8").replace("\n", "")
+        self.title = title
+        return title
 
     def get_detail(self):
         soup = self.soup
@@ -67,6 +65,17 @@ class Question:
         finally:
             return answer_num
 
+    def get_edit_time(self):
+        url = self.url + "/log"
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content)
+        logs = soup.find_all("div",class_="zm-item")
+        timelist = []
+        for log in logs:
+            timelist.append(log.find("time").string)
+        timelist.sort()
+        return timelist
+
     def get_topics(self):
         soup = self.soup
         topic_tags = soup.find_all("a", class_="zm-item-tag")
@@ -74,8 +83,6 @@ class Question:
         for topic_tag in topic_tags:
             topic_name = topic_tag.string
             topic_url = "http://www.zhihu.com" + topic_tag["href"]
-            if not topicBloom.is_element_exist(topic_url):
-                topicBloom.insert_element(topic_url)
             yield Topic(topic_url, topic_name)
 
     def get_answers(self):
@@ -84,8 +91,6 @@ class Question:
         from Answer import Answer
         for answer_tag in answer_tags:
             answer_url = self.url + "/answer/" + answer_tag["data-atoken"]
-            if not answerBloom.is_element_exist(answer_url):
-                answerBloom.insert_element(answer_url)
             yield Answer(answer_url)
 
 
@@ -104,8 +109,8 @@ class Question:
         from User import User
         for url in user_list:
             user_url = "http://www.zhihu.com" + url
-            if not userBloom.is_element_exist(user_url):
-                userBloom.insert_element(user_url)
+            #if not userBloom.is_element_exist(user_url):
+            #    userBloom.insert_element(user_url)
             yield User(user_url)
 
     def get_data_resourceid(self):
