@@ -23,8 +23,6 @@ class Topic:
             self.name = name
         if self.soup is None:
             self.parser()
-        self.father = None
-        self.child = None
 
     def parser(self):
         try:
@@ -45,19 +43,25 @@ class Topic:
     def get_question_num(self):
         r = requests.get(self.url + "/questions")
         soup1 = BeautifulSoup(r.content)
-        pages = soup1.find("div", class_ = "zm-invite-pager").find_all("span")
-        total_pages = pages[len(pages) - 2].find("a").string
-        tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
-        r = requests.get(self.url + "/questions?page=" + total_pages)
-        soup2 = BeautifulSoup(r.content)
-        question_on_last_page = soup2.find_all("div", class_ = "feed-item feed-item-hook question-item")
-        question_num = tmp + len(question_on_last_page)
-        return question_num
+        try:
+            pages = soup1.find("div", class_ = "zm-invite-pager").find_all("span")
+            total_pages = pages[len(pages) - 2].find("a").string
+            tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
+            r = requests.get(self.url + "/questions?page=" + total_pages)
+            soup2 = BeautifulSoup(r.content)
+            question_on_last_page = soup2.find_all("div", class_ = "feed-item feed-item-hook question-item")
+            question_num = tmp + len(question_on_last_page)
+            return question_num
+        except AttributeError:
+            return 0
 
     def get_follower_num(self):
         soup = self.soup
-        followers_num = soup.find("div", class_ = "zm-topic-side-followers-info").find("a").strong.string
-        return int(followers_num)
+        try:
+            followers_num = soup.find("div", class_ = "zm-topic-side-followers-info").find("a").strong.string
+            return int(followers_num)
+        except AttributeError:
+            return 0
 
     def get_questions(self):
         url = self.url + "/questions?page="
@@ -78,13 +82,19 @@ class Topic:
     def get_father(self):
         soup = self.soup
         url_head = "http://www.zhihu.com"
-        parrent_url = soup.find("div", class_ = "zm-side-section-inner parent-topic").find_all("a", class_ = "zm-item-tag")
-        for item in parrent_url:
-            yield Topic(url_head + item["href"])
+        try:
+            parrent_url = soup.find("div", class_ = "zm-side-section-inner parent-topic").find_all("a", class_ = "zm-item-tag")
+            for item in parrent_url:
+                yield Topic(url_head + item["href"])
+        except AttributeError:
+            yield None
 
     def get_child(self):
         soup = self.soup
         url_head = "http://www.zhihu.com"
-        child_url = soup.find("div",class_ = "zm-side-section-inner child-topic").find_all("a", class_ = "zm-item-tag")
-        for item in child_url:
-            yield Topic(url_head+item["href"])
+        try:
+            child_url = soup.find("div",class_ = "zm-side-section-inner child-topic").find_all("a", class_ = "zm-item-tag")
+            for item in child_url:
+                yield Topic(url_head+item["href"])
+        except AttributeError:
+            yield None

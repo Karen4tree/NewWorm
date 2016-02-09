@@ -6,12 +6,13 @@ from database_operation.DataBase import DataBase
 
 
 def store(topic):
-    for item in topic.get_child():
-        store(item)
-    DataBase.put_topic_in_db(topic)
+    if topic is not None:
+        for item in topic.get_child():
+            store(item)
+        DataBase.put_topic_in_db(topic)
+        print topic.get_topic_name()
 
-rootTopic = Topic("http://www.zhihu.com/topic/19776749")
 
 if __name__ == "__main__":
-    rootTopic = Topic("http://www.zhihu.com/topic/19776749")
+    rootTopic = Topic("http://www.zhihu.com/topic/19550434")
     store(rootTopic)
