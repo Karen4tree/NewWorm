@@ -31,8 +31,8 @@ commentlock = mp.Lock()
 
 
 def spider(question):
-    questionlock.acquire()
     if not questionBloom.is_element_exist(question.get_question_id()):
+        questionlock.acquire()
         questionBloom.insert_element(question.get_question_id())
         Worm_status.record_status("questionBloom", questionBloom)
         questionlock.release()
@@ -41,7 +41,7 @@ def spider(question):
         Logging.info("Topics of question id %s" % question.get_question_id())
         for topictag in question.get_topics():
             if not topicBloom.is_element_exist(topictag.get_topic_id()):
-                DataBase.put_topic_in_db(topiclock)
+                DataBase.put_topic_in_db(topictag)
                 topiclock.acquire()
                 topicBloom.insert_element(topictag.get_topic_id())
                 Worm_status.record_status("topicBloom", topicBloom)
@@ -79,18 +79,10 @@ def spider(question):
                 userBloom.insert_element(follower.get_user_id())
                 Worm_status.record_status("userBloom", userBloom)
                 userlock.release()
-                for userfollower in follower.get_followers():
-                    if not userBloom.is_element_exist(userfollower.get_user_id()):
-                        userlock.acquire()
-                        userBloom.insert_element(userfollower.get_user_id())
-                        Worm_status.record_status("userBloom", userBloom)
-                        userlock.release()
-                        DataBase.put_user_in_db(userfollower)
-                    DataBase.put_follow_user_in_db(follower, userfollower)
             DataBase.put_follow_question_in_db(question, follower)
     else:
-        questionlock.release()
-    #time.sleep(0)
+        Logging.debug("Exist Question")
+        time.sleep(0.1)
 
 
 def user_spider(user):
@@ -101,19 +93,18 @@ def user_spider(user):
 
 
 if __name__ == '__main__':
+    import sys
+    sys.setrecursionlimit(1000000)
     THREADS = 8
-    p = mp.Pool(THREADS)
-    topic = Topic("http://www.zhihu.com/topic/19736651")
+    p = mp.Pool(processes = THREADS)
+    topic = Topic("http://www.zhihu.com/topic/19554927")
     if not topicBloom.is_element_exist(topic.get_topic_id()):
         topicBloom.insert_element(topic.get_topic_id())
         Worm_status.record_status("topicBloom", topicBloom)
     DataBase.put_topic_in_db(topic)
     go = topic.get_questions()
-    N = 20
-    while True:
-        try:
-            p.map_async(spider, itertools.islice(go, N))
-        except TypeError:
-            continue
-        except AttributeError:
-            continue
+    for question in go:
+        p.apply_async(spider,(question,))
+
+    p.close()
+    p.join()
