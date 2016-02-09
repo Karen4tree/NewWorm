@@ -82,7 +82,7 @@ def spider(question):
             DataBase.put_follow_question_in_db(question, follower)
     else:
         Logging.debug("Exist Question")
-        time.sleep(0.1)
+        #time.sleep(0.1)
 
 
 def user_spider(user):
@@ -95,7 +95,7 @@ def user_spider(user):
 if __name__ == '__main__':
     import sys
     sys.setrecursionlimit(1000000)
-    THREADS = 8
+    THREADS = 10
     p = mp.Pool(processes = THREADS)
     topic = Topic("http://www.zhihu.com/topic/19554927")
     if not topicBloom.is_element_exist(topic.get_topic_id()):
@@ -103,8 +103,12 @@ if __name__ == '__main__':
         Worm_status.record_status("topicBloom", topicBloom)
     DataBase.put_topic_in_db(topic)
     go = topic.get_questions()
-    for question in go:
-        p.apply_async(spider,(question,))
+    num = topic.get_question_num()
+    while num >= 0:
+        try:
+            p.map(spider,itertools.islice(go,20))
+        except AttributeError:
+            pass
+        finally:
+            num -= 20
 
-    p.close()
-    p.join()
