@@ -4,7 +4,7 @@
 import itertools
 import multiprocessing as mp
 
-from Spider import read_status,record_status
+from spider import read_status,record_status
 from database_operation.DataBase import DataBase
 from zhihu_api.Logging import Logging
 from zhihu_api.Topic import Topic
