@@ -1,3 +1,4 @@
+pandas
 BitVector
 requests
 beautifulsoup4

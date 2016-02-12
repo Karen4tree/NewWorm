@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ZombieGroup'
-
+"""
 from zhihu_api.User import User
 from zhihu_api.Logging import Logging
 from zhihu_api.Question import Question
@@ -169,7 +169,7 @@ def test_topic(topic_url):
     topic.get_question_num()
     for topic in topic.get_child():
         print topic.get_topic_name()
-
+"""
 
 def main():
     user_url = "http://www.zhihu.com/people/li-ji-87-69-14"
@@ -178,8 +178,11 @@ def main():
     question_url = "http://www.zhihu.com/question/23623967"
     collection_url = "http://www.zhihu.com/collection/19689137"
     article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    test_topic(topic_url)
+    #test_topic(topic_url)
 
 
 if __name__ == '__main__':
-    main()
+    from opinion.LinguisticProcessing import LinguisticProcessing
+    ling = LinguisticProcessing(u'俄国希望伊朗没有制造核武器计划')
+    print ling.sent_tree
+    print ling.sent_tree.leaf_treeposition(-1)

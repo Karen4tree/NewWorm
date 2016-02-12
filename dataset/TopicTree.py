@@ -48,6 +48,5 @@ class TopicTree:
         for node in treenode.children:
             self.grow(node)
 
-
     def trans_into_BRT(self):
         pass
