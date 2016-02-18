@@ -29,11 +29,14 @@ Anouncement
 
 NLP  
 
-* Stanford segmenter for Chinese with CTB
-* Stanford POS tagger for Chinese
+* Stanford segmenter for Chinese trained with CTB
+* Stanford parser trained with CTB
 * nltk
 
 Thanks
 
-* [Stanford NLP Group](http://nlp.stanford.edu)
+* [Stanford NLP Group](http://nlp.stanford.edu)提供中文分词和句子分析
 * [PangYang](http://www.52nlp.cn)
+* 知网提供词表
+* NTUSD提供词表
+* 知乎不杀之恩

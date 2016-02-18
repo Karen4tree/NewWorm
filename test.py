@@ -185,4 +185,5 @@ if __name__ == '__main__':
     from opinion.LinguisticProcessing import LinguisticProcessing
     ling = LinguisticProcessing(u'俄国希望伊朗没有制造核武器计划')
     print ling.sent_tree
-    print ling.sent_tree.leaf_treeposition(-1)
+    print len(ling.sent_tree)
+    print ling.sent_tree.leaf_treeposition(2)

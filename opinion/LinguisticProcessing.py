@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-import re
 from nltk.tokenize.stanford_segmenter import StanfordSegmenter
 from nltk.parse.stanford import StanfordParser
-from nltk.tree import Tree
 
 
 class LinguisticProcessing:
@@ -45,17 +43,17 @@ class LinguisticProcessing:
                 path_to_jar = u'/usr/local/Cellar/stanford-parser/3.5.2/libexec/stanford-parser.jar',
                 path_to_models_jar = u'/usr/local/Cellar/stanford-parser/3.5.2/libexec/stanford-parser-3.5.2-models.jar',
                 model_path = u'edu/stanford/nlp/models/lexparser/chinesePCFG.ser.gz')
-        self.pos_tag, self.sent_tree = self.parse()
+        self.sent_tree = self.parse()
         self.negation = {'word': [], 'scope': []}
 
     def parse(self):
         segmented_sent = self.segmenter.segment(self.raw)
         sent_tree = list(self.parser.raw_parse(sentence = segmented_sent))[0]
-        return sent_tree.pos(), sent_tree
+        return sent_tree
 
     def identification_negation_scopes(self, predefined_disc):
-        pos = self.pos_tag
-        for pair in pos:
-            if pair[0] in predefined_disc:
-                self.negation['word'].append(pair[0])
-                self.negation['scope'].append(())
+        positions = self.sent_tree.treepositions()
+        for position in positions:
+            if self.sent_tree[position][::-1] in predefined_disc:
+                self.negation['word'].append(self.sent_tree[position][::-1])
+                self.negation['scope'].append(position)

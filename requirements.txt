@@ -7,3 +7,5 @@ termcolor
 Mysql-python
 nose
 nltk
+
+stanford-parser(brew install/python setup.py)
