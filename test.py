@@ -182,7 +182,7 @@ def main():
 
 
 if __name__ == '__main__':
-    from opinion.LinguisticProcessing import LinguisticProcessing
+
     ling = LinguisticProcessing(u'香港特别行政区行政长官董建华已於七月一日向终审法院首席法官李国能申报了利益，记录在案。')
     print ling.sent_tree
     print len(ling.sent_tree)
