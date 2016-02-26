@@ -7,7 +7,8 @@ import random
 import sys
 import os
 sys.path.append(os.path.split(os.path.realpath(__file__))[0] + os.sep + '..')
-from common.request import Request
+from qcloudapi.QcloudApi.common.request import Request
+
 
 class Base:
     debug = 0

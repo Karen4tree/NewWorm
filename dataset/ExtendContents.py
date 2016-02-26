@@ -1,60 +1,36 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import re
-from zhihu_api.Answer import Answer
-from zhihu_api.Comment import Comment
-from zhihu_api.Question import Question
+from pandas import Series
 from qcloudapi.QcloudApi.qcloudapi import QcloudApi
-
-module = 'wenzhi'
-action = 'TextSentiment'
-config = {
-    'Region': 'gz',
-    'secretId': 'AKIDS6fypYffcsCMxFmAsac9FOjEdncAlHMM',
-    'secretKey': 'eu7cqU9zL90nMKodFwxGihRO62PNqTEB',
-    'method': 'get'
-}
+import pandas.io.sql as pandasql
+from database_operation.ReadData import ReadData
 
 
-class ExtendQuestion(Question):
-    def __init__(self, url=None, question=None):
-        if question is None:
-            Question.__init__(self, url)
-        elif url is None:
-            Question.__init__(self, question.url)
-
-        params = {
-            'content': self.get_detail()
+class Opinion:
+    def __init__(self):
+        module = 'wenzhi'
+        config = {
+            'Region': 'gz',
+            'secretId': 'AKIDS6fypYffcsCMxFmAsac9FOjEdncAlHMM',
+            'secretKey': 'eu7cqU9zL90nMKodFwxGihRO62PNqTEB',
+            'method': 'get'
         }
-        service = QcloudApi(module, config)
-        tmp = re.match(r'\"positive\":(.*),\"negative\"', service.call(action, params))
-        self.opinion = float(tmp.group(1))
+        # Limit 5 调试结束后可去掉
+        self.answer_frame = pandasql.read_frame('select detail,author_id,last_edit_time from Answers LIMIT 5', ReadData.connect)
+        self.service = QcloudApi(module, config)
 
-
-class ExtendAnswer(Answer):
-    def __init__(self, url=None, answer=None):
-        if answer is None:
-            Answer.__init__(self, url)
-        elif url is None:
-            Answer.__init__(self, answer.url)
-        params = {
-            'content': self.get_detail()
-        }
-        service = QcloudApi(module, config)
-        tmp = re.match(r'\"positive\":(.*),\"negative\"', service.call(action, params))
-        self.opinion = float(tmp.group(1))
-
-
-class ExtendComment(Comment):
-    def __init__(self, url=None, comment=None):
-        if comment is None:
-            Comment.__init__(self, url)
-        elif url is None:
-            Comment.__init__(self, comment.url)
-        params = {
-            'content': self.get_detail()
-        }
-        service = QcloudApi(module, config)
-        tmp = re.match(r'\"positive\":(.*),\"negative\"', service.call(action, params))
-        self.opinion = float(tmp.group(1))
-
+    def caculate_opinion(self):
+        opinion = []
+        for text in self.answer_frame.detail:
+            text = text.encode('utf8')
+            params = {
+                'content': text,
+            }
+            try:
+                string = self.service.call('TextSentiment', params)
+                tmp = re.match(u'.*\"positive\":(.*),\"negative\".*', string)
+                opinion.append(float(tmp.group(1)))
+            except:
+                opinion.append(0.5)
+        self.answer_frame['opinion'] = Series(opinion)

@@ -26,7 +26,7 @@ class TreeNode:
         self.topic = content
 
     def insert_children(self, child):
-        if self.children == []:
+        if len(self.children) == 0:
             self.depth = child.depth + 1
         elif child.depth > max(self.children):
             self.depth = child.depth + 1

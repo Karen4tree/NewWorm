@@ -4,14 +4,11 @@ from zhihu_api.User import User
 
 
 # User Influence is caculated with similar method used in Klout
-# http://klout.com/home, published in May, 2014
+# http://klout.com/home
 
 
 class ExtendUser(User):
     def __init__(self, url=None, user=None):
-        #if url is None:
-        #    User.__init__(self, user.url)
-        #elif user is None:
         User.__init__(self, url)
         self.influence = 0
         self.caculate_influence()

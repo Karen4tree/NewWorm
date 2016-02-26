@@ -182,7 +182,7 @@ def main():
 
 
 if __name__ == '__main__':
-    from qcloudapi.QcloudApi.qcloudapi import QcloudApi
+    """from qcloudapi.QcloudApi.qcloudapi import QcloudApi
     import re
     module = 'wenzhi'
     action = 'TextSentiment'
@@ -204,4 +204,7 @@ if __name__ == '__main__':
         num = float(positive)
         print num
     except Exception, e:
-        print 'exception:', e
+        print 'exception:', e"""
+    from dataset.ExtendContents import Opinion
+    opinion = Opinion()
+    opinion.caculate_opinion()

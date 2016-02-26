@@ -55,12 +55,16 @@ class ReadData:
         result = cursor.fetchall()
         return result
 
-    # 暂时用不到
     @classmethod
-    def read_unreached_users(cls, num):
+    def get_user_answer(cls, user):
         connect = cls.connect
-        # TODO:数据库中额外的标签表示已访问
         cursor = connect.cursor()
-        cursor.execute('select user_id from Users where reached_flag is False limit %s' % num)  # 字段尚未定义
+        cursor.execute('select detail from Answers WHERE author_id = %s'% user)
         result = cursor.fetchall()
         return result
+
+    @classmethod
+    def get_user_ask(cls, user):
+        connect = cls.connect
+        cursor = connect.cursor()
+        cursor.execute('select detail from Questions WHERE asker_id = %s'% user)
