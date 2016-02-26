@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from nltk.tokenize.stanford_segmenter import StanfordSegmenter
+from __future__ import unicode_literals, print_function
 from nltk.parse.stanford import StanfordParser
 
+from stanford_segmenter_async import StanfordSegmenter
 
 class LinguisticProcessing:
     """
@@ -32,23 +33,24 @@ class LinguisticProcessing:
     AS:内容标记
     VRD:动补复合词
     """
+
     def __init__(self, raw_text):
         self.raw = raw_text
         self.segmenter = StanfordSegmenter(
-                path_to_jar = u"opinion/stanford-segmenter/stanford-segmenter.jar",
-                path_to_sihan_corpora_dict = u"opinion/stanford-segmenter/data",
-                path_to_model = u"opinion/stanford-segmenter/data/ctb.gz",
-                path_to_dict = u"opinion/stanford-segmenter/data/dict-chris6.ser.gz")
+            path_to_jar=u"opinion/stanford-segmenter/stanford-segmenter.jar",
+            path_to_sihan_corpora_dict=u"opinion/stanford-segmenter/data",
+            path_to_model=u"opinion/stanford-segmenter/data/ctb.gz",
+            path_to_dict=u"opinion/stanford-segmenter/data/dict-chris6.ser.gz")
         self.parser = StanfordParser(
-                path_to_jar = u'/usr/local/Cellar/stanford-parser/3.5.2/libexec/stanford-parser.jar',
-                path_to_models_jar = u'/usr/local/Cellar/stanford-parser/3.5.2/libexec/stanford-parser-3.5.2-models.jar',
-                model_path = u'edu/stanford/nlp/models/lexparser/chinesePCFG.ser.gz')
+            path_to_jar=u'/usr/local/Cellar/stanford-parser/3.5.2/libexec/stanford-parser.jar',
+            path_to_models_jar=u'/usr/local/Cellar/stanford-parser/3.5.2/libexec/stanford-parser-3.5.2-models.jar',
+            model_path=u'edu/stanford/nlp/models/lexparser/chinesePCFG.ser.gz')
         self.sent_tree = self.parse()
         self.negation = {'word': [], 'scope': []}
 
     def parse(self):
         segmented_sent = self.segmenter.segment(self.raw)
-        sent_tree = list(self.parser.raw_parse(sentence = segmented_sent))[0]
+        sent_tree = list(self.parser.raw_parse(sentence=segmented_sent))[0]
         return sent_tree
 
     def identification_negation_scopes(self, predefined_disc):
