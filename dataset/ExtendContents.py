@@ -1,8 +1,19 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+import re
 from zhihu_api.Answer import Answer
 from zhihu_api.Comment import Comment
 from zhihu_api.Question import Question
+from qcloudapi.QcloudApi.qcloudapi import QcloudApi
+
+module = 'wenzhi'
+action = 'TextSentiment'
+config = {
+    'Region': 'gz',
+    'secretId': 'AKIDS6fypYffcsCMxFmAsac9FOjEdncAlHMM',
+    'secretKey': 'eu7cqU9zL90nMKodFwxGihRO62PNqTEB',
+    'method': 'get'
+}
 
 
 class ExtendQuestion(Question):
@@ -11,7 +22,13 @@ class ExtendQuestion(Question):
             Question.__init__(self, url)
         elif url is None:
             Question.__init__(self, question.url)
-        self.opinion = 0.0
+
+        params = {
+            'content': self.get_detail()
+        }
+        service = QcloudApi(module, config)
+        tmp = re.match(r'\"positive\":(.*),\"negative\"', service.call(action, params))
+        self.opinion = float(tmp.group(1))
 
 
 class ExtendAnswer(Answer):
@@ -20,7 +37,12 @@ class ExtendAnswer(Answer):
             Answer.__init__(self, url)
         elif url is None:
             Answer.__init__(self, answer.url)
-        self.opinion = 0.0
+        params = {
+            'content': self.get_detail()
+        }
+        service = QcloudApi(module, config)
+        tmp = re.match(r'\"positive\":(.*),\"negative\"', service.call(action, params))
+        self.opinion = float(tmp.group(1))
 
 
 class ExtendComment(Comment):
@@ -29,5 +51,10 @@ class ExtendComment(Comment):
             Comment.__init__(self, url)
         elif url is None:
             Comment.__init__(self, comment.url)
-        self.opinion = 0.0
+        params = {
+            'content': self.get_detail()
+        }
+        service = QcloudApi(module, config)
+        tmp = re.match(r'\"positive\":(.*),\"negative\"', service.call(action, params))
+        self.opinion = float(tmp.group(1))
 

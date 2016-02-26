@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
 class QcloudApi:
     def __init__(self, module, config):
         self.module = module
@@ -59,7 +60,7 @@ class QcloudApi:
             from modules.eip import Eip
             service = Eip(config)
         else:
-            raise ValueError , 'module not exists'
+            raise ValueError, 'module not exists'
 
         return service
 
@@ -90,22 +91,16 @@ class QcloudApi:
 
         return service.call(action, params)
 
+
 def main():
     module = 'cdn'
     action = 'UploadCdnEntity'
-    config = {
-        'Region': 'gz',
-        'secretId': '你的secretId',
-        'secretKey': '你的secretKey',
-        'method': 'post'
-    }
-    params = {
-        'entityFileName': '/test_____don.html',
-        'entityFile': 'c:/xampp/htdocs/index.html'
-    }
+    config = {'Region': 'gz', 'secretId': '你的secretId', 'secretKey': '你的secretKey', 'method': 'post'}
+    params = {'entityFileName': '/test_____don.html', 'entityFile': 'c:/xampp/htdocs/index.html'}
     service = QcloudApi(module, config)
     print ('URL:\n' + service.generateUrl(action, params))
     print (service.call(action, params))
+
 
 if (__name__ == '__main__'):
     main()
