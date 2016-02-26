@@ -25,57 +25,57 @@ def test_user(user_url):
     article_num = user.get_articles_num()
     print article_num
     print followee_num
-        # follower_num = user.get_follower_num()
-        # print follower_num
-        # collection_num = user.get_collection_num()
-        # print collection_num
-        # thanks_num = user.get_thanks_num()
-        # print thanks_num
-        # vote_num = user.get_vote_num()
-        # print vote_num
-        # location = user.get_location()
-        # print location
-        # print type(location)
-        # business = user.get_business()
-        # print business
-        # print type(business)
-        # employment = user.get_employment()
-        # print employment
-        # print type(employment)
-        # position = user.get_position()
-        # print position
-        # print type(position)
-        # education = user.get_education()
-        # print education
-        # print type(education)
-        # education_extra = user.get_education_extra()
-        # print education_extra
-        # print type(education_extra)
-        # following_topic_num = user.get_following_topic_num()
-        # print following_topic_num
-        # following_column_num = user.get_following_column_num()
-        # print following_column_num
-        # Logging.info(u"followeing_topics:")
-        # for followeing_topics in user.get_followeing_topics():
-        #     print followeing_topics
+    # follower_num = user.get_follower_num()
+    # print follower_num
+    # collection_num = user.get_collection_num()
+    # print collection_num
+    # thanks_num = user.get_thanks_num()
+    # print thanks_num
+    # vote_num = user.get_vote_num()
+    # print vote_num
+    # location = user.get_location()
+    # print location
+    # print type(location)
+    # business = user.get_business()
+    # print business
+    # print type(business)
+    # employment = user.get_employment()
+    # print employment
+    # print type(employment)
+    # position = user.get_position()
+    # print position
+    # print type(position)
+    # education = user.get_education()
+    # print education
+    # print type(education)
+    # education_extra = user.get_education_extra()
+    # print education_extra
+    # print type(education_extra)
+    # following_topic_num = user.get_following_topic_num()
+    # print following_topic_num
+    # following_column_num = user.get_following_column_num()
+    # print following_column_num
+    # Logging.info(u"followeing_topics:")
+    # for followeing_topics in user.get_followeing_topics():
+    #     print followeing_topics
 
-        # Logging.info(u"Columns and Articles of User")
-        # for column in user.get_columns():
-        #     for article in column.get_articles():
-        #         print article
+    # Logging.info(u"Columns and Articles of User")
+    # for column in user.get_columns():
+    #     for article in column.get_articles():
+    #         print article
 
-        # user_id = user.get_user_id()
-        # print user_id
-        # asks = user.get_asks()
+    # user_id = user.get_user_id()
+    # print user_id
+    # asks = user.get_asks()
 
-        # Logging.info(u"Questions of User")
-        # for question in asks:
-        #    print question.get_title()
-        # answers = user.get_answers()
+    # Logging.info(u"Questions of User")
+    # for question in asks:
+    #    print question.get_title()
+    # answers = user.get_answers()
 
-        # Logging.info(u"Answers of User")
-        # for answer in answers:
-        #    print answer.get_answer_id()
+    # Logging.info(u"Answers of User")
+    # for answer in answers:
+    #    print answer.get_answer_id()
 
 
 '''
@@ -109,8 +109,8 @@ def test_answer(answer_url):
     print upvote_num
     visited_times = answer.get_visited_times()
     print visited_times
-    print "Post time"+answer.get_post_time()
-    print "Last edit time"+answer.get_last_edit_time()
+    print "Post time" + answer.get_post_time()
+    print "Last edit time" + answer.get_last_edit_time()
     # upvoters = answer.get_upvoters()
     # for upvoter in upvoters:
     # print upvoter.get_user_id()
@@ -163,23 +163,20 @@ def article_test(article_url):
     print title
 
 
-def test_topic(topic_url):
-    Logging.info(u"topic_test:")
-    topic = Topic(topic_url)
-    topic.get_question_num()
-    for topic in topic.get_child():
-        print topic.get_topic_name()
+def recursive_crawler(topic):
+    print topic.get_topic_name()
+    root_tree = None
+    for child_topic in topic.get_child():
+        if root_tree is None:
+            root_tree = {}
+        root_tree[child_topic.get_topic_name()] = recursive_crawler(child_topic)
+    return root_tree
 
 
 def main():
-    user_url = "http://www.zhihu.com/people/li-ji-87-69-14"
-    answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
-    topic_url = "http://www.zhihu.com/topic/19776749"
-    question_url = "http://www.zhihu.com/question/23623967"
-    collection_url = "http://www.zhihu.com/collection/19689137"
-    article_url = "http://zhuanlan.zhihu.com/seasee/20275752"
-    test_topic(topic_url)
-
+    root_url = "http://www.zhihu.com/topic/19776749"
+    root_tree = recursive_crawler(Topic(root_url))
+    print root_tree
 
 if __name__ == '__main__':
     main()
