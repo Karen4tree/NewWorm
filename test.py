@@ -177,6 +177,7 @@ def main():
     root_url = "http://www.zhihu.com/topic/19776749"
     root_tree = recursive_crawler(Topic(root_url))
     print root_tree
+    print "finished"
 
 if __name__ == '__main__':
     main()

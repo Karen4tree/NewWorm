@@ -8,6 +8,16 @@ __author__ = 'ZombieGroup'
 
 
 # 从Topic url指向页面中抓取信息
+def apply(func):
+    def handler(*args, **kwargs):  # 1
+        try:
+            return func(*args, **kwargs)  # 2
+        except:
+            print "Arguments were: %s, %s" % (args, kwargs)
+            args[0].parser()  # args[0] is the instance itself
+            return handler(*args, **kwargs)
+
+    return handler
 
 
 class Topic:
@@ -35,21 +45,22 @@ class Topic:
         topic_id = self.url[len(self.url) - 8:len(self.url)]
         return topic_id
 
+    @apply
     def get_topic_name(self):
         soup = self.soup
-        self.name = soup.find("h1", class_ = "zm-editable-content").string
+        self.name = soup.find("h1", class_="zm-editable-content").string
         return self.name
 
     def get_question_num(self):
         r = requests.get(self.url + "/questions")
         soup1 = BeautifulSoup(r.content)
         try:
-            pages = soup1.find("div", class_ = "zm-invite-pager").find_all("span")
+            pages = soup1.find("div", class_="zm-invite-pager").find_all("span")
             total_pages = pages[len(pages) - 2].find("a").string
             tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
             r = requests.get(self.url + "/questions?page=" + total_pages)
             soup2 = BeautifulSoup(r.content)
-            question_on_last_page = soup2.find_all("div", class_ = "feed-item feed-item-hook question-item")
+            question_on_last_page = soup2.find_all("div", class_="feed-item feed-item-hook question-item")
             question_num = tmp + len(question_on_last_page)
             return question_num
         except AttributeError:
@@ -58,7 +69,7 @@ class Topic:
     def get_follower_num(self):
         soup = self.soup
         try:
-            followers_num = soup.find("div", class_ = "zm-topic-side-followers-info").find("a").strong.string
+            followers_num = soup.find("div", class_="zm-topic-side-followers-info").find("a").strong.string
             return int(followers_num)
         except AttributeError:
             return 0
@@ -68,19 +79,19 @@ class Topic:
         url_head = "http://www.zhihu.com"
         r = requests.get(url + '1')
         soup = BeautifulSoup(r.content)
-        pages = soup.find("div", class_ = "zm-invite-pager").find_all("span")
+        pages = soup.find("div", class_="zm-invite-pager").find_all("span")
         total_pages = int(pages[len(pages) - 2].find("a").string)
         from Question import Question
         for i in range(1, total_pages + 1):
             r = requests.get(url + '%d' % i)
             soup = BeautifulSoup(r.content)
-            question_on_this_page = soup.find_all("a", class_ = "question_link")
+            question_on_this_page = soup.find_all("a", class_="question_link")
             for question_tag in question_on_this_page:
                 question_url = url_head + question_tag["href"]
                 yield Question(question_url)
 
     def get_father(self):
-        url = self.url+ "/organize"
+        url = self.url + "/organize"
         r = requests.get(url)
         soup = BeautifulSoup(r.content)
         parrent_div = soup.find(id="zh-topic-organize-parent-editor")
@@ -90,13 +101,16 @@ class Topic:
             yield Topic(url_head + item["data-token"])
 
     def get_child(self):
-        url = self.url+ "/organize"
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content)
-        child_div = soup.find(id="zh-topic-organize-child-editor")
-        if child_div is not None:
-            child_url = child_div.find_all("a")
-            url_head = "http://www.zhihu.com/topic/"
-            for item in child_url:
-                yield Topic(url_head + item["data-token"])
-
+        try:
+            url = self.url + "/organize"
+            r = requests.get(url)
+            soup = BeautifulSoup(r.content)
+            child_div = soup.find(id="zh-topic-organize-child-editor")
+            if child_div is not None:
+                child_url = child_div.find_all("a")
+                url_head = "http://www.zhihu.com/topic/"
+                for item in child_url:
+                    if item.has_attr("data-token"):
+                        yield Topic(url_head + item["data-token"])
+        except:
+            pass
