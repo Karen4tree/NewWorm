@@ -8,6 +8,7 @@ from zhihu_api.Answer import Answer
 from zhihu_api.Topic import Topic
 from zhihu_api.Collection import Collection
 from zhihu_api.Article import Article
+from multiprocessing import Pool
 
 
 def test_user(user_url):
@@ -173,11 +174,29 @@ def recursive_crawler(topic):
     return root_tree
 
 
+def start_crawler(topic):
+    return recursive_crawler(topic), topic
+
+
 def main():
     root_url = "http://www.zhihu.com/topic/19776749"
-    root_tree = recursive_crawler(Topic(root_url))
+    url_list = ["https://www.zhihu.com/topic/19778317",
+                "https://www.zhihu.com/topic/19778287",
+                "https://www.zhihu.com/topic/19560891",
+                "https://www.zhihu.com/topic/19618774",
+                "https://www.zhihu.com/topic/19776751",
+                "https://www.zhihu.com/topic/19778298"]
+    topic_list = []
+    for url in url_list:
+        topic_list.append(Topic(url))
+    tree_list = Pool().map(start_crawler, topic_list)
+
+    root_tree = {}
+    for tree in tree_list:
+        root_tree[tree[1].get_topic_name()] = tree[0]
     print root_tree
     print "finished"
+
 
 if __name__ == '__main__':
     main()
