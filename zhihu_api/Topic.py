@@ -106,11 +106,19 @@ class Topic:
             r = requests.get(url)
             soup = BeautifulSoup(r.content)
             child_div = soup.find(id="zh-topic-organize-child-editor")
+            child_url_list = []
             if child_div is not None:
                 child_url = child_div.find_all("a")
                 url_head = "http://www.zhihu.com/topic/"
                 for item in child_url:
                     if item.has_attr("data-token"):
-                        yield Topic(url_head + item["data-token"])
+                        child_url_list.append(url_head + item["data-token"])
+            return child_url_list
         except:
             pass
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *err):
+        pass

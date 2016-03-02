@@ -9,6 +9,7 @@ from zhihu_api.Topic import Topic
 from zhihu_api.Collection import Collection
 from zhihu_api.Article import Article
 from multiprocessing import Pool
+import json
 
 
 def test_user(user_url):
@@ -164,18 +165,22 @@ def article_test(article_url):
     print title
 
 
-def recursive_crawler(topic):
-    print topic.get_topic_name()
+def recursive_crawler(topic_url):
+    with Topic(topic_url) as topic:
+        topic_name = topic.get_topic_name()
+        child_url_list = topic.get_child()
+        print topic_name
     root_tree = None
-    for child_topic in topic.get_child():
+    for child_topic_url in child_url_list:
         if root_tree is None:
             root_tree = {}
-        root_tree[child_topic.get_topic_name()] = recursive_crawler(child_topic)
-    return root_tree
+        sub_tree, sub_topic_name = recursive_crawler(child_topic_url)
+        root_tree[sub_topic_name] = sub_tree
+    return root_tree, topic_name
 
 
-def start_crawler(topic):
-    return recursive_crawler(topic), topic
+def start_crawler(topic_url):
+    return recursive_crawler(topic_url)
 
 
 def main():
@@ -186,15 +191,13 @@ def main():
                 "https://www.zhihu.com/topic/19618774",
                 "https://www.zhihu.com/topic/19776751",
                 "https://www.zhihu.com/topic/19778298"]
-    topic_list = []
-    for url in url_list:
-        topic_list.append(Topic(url))
-    tree_list = Pool().map(start_crawler, topic_list)
+    tree_list = Pool().map(start_crawler, url_list)
 
     root_tree = {}
     for tree in tree_list:
-        root_tree[tree[1].get_topic_name()] = tree[0]
-    print root_tree
+        root_tree[tree[1]] = tree[0]
+    with open('data.txt', 'w') as outfile:
+        json.dump(root_tree, outfile)
     print "finished"
 
 

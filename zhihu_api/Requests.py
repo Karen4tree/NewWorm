@@ -35,7 +35,7 @@ class Requests:
 
     def get(self, url, **kwargs):
         try:
-            kwargs["verify"] = False # ban SSL request
+            #kwargs["verify"] = False # ban SSL request
             return self.requests.get(url, **kwargs)
         except:
             self.get(url, **kwargs)
