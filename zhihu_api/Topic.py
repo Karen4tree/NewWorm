@@ -110,12 +110,13 @@ class Topic:
             if child_div is not None:
                 child_url = child_div.find_all("a")
                 url_head = "http://www.zhihu.com/topic/"
-                for item in child_url:
-                    if item.has_attr("data-token"):
-                        child_url_list.append(url_head + item["data-token"])
+                if child_url is not None:
+                    for item in child_url:
+                        if item.has_attr("data-token"):
+                            child_url_list.append(url_head + item["data-token"])
             return child_url_list
         except:
-            pass
+            return []
 
     def __enter__(self):
         return self

@@ -171,11 +171,12 @@ def recursive_crawler(topic_url):
         child_url_list = topic.get_child()
         print topic_name
     root_tree = None
-    for child_topic_url in child_url_list:
-        if root_tree is None:
-            root_tree = {}
-        sub_tree, sub_topic_name = recursive_crawler(child_topic_url)
-        root_tree[sub_topic_name] = sub_tree
+    if child_url_list is not None:
+        for child_topic_url in child_url_list:
+            if root_tree is None:
+                root_tree = {}
+            sub_tree, sub_topic_name = recursive_crawler(child_topic_url)
+            root_tree[sub_topic_name] = sub_tree
     return root_tree, topic_name
 
 
@@ -191,11 +192,15 @@ def main():
                 "https://www.zhihu.com/topic/19618774",
                 "https://www.zhihu.com/topic/19776751",
                 "https://www.zhihu.com/topic/19778298"]
-    tree_list = Pool().map(start_crawler, url_list)
+    # tree_list = Pool(6).map(start_crawler, url_list)
 
-    root_tree = {}
-    for tree in tree_list:
-        root_tree[tree[1]] = tree[0]
+    
+
+    # root_tree = {}
+    # for tree in tree_list:
+    #     root_tree[tree[1]] = tree[0]
+    root_tree,root_name = recursive_crawler("https://www.zhihu.com/topic/19550560")
+
     with open('data.txt', 'w') as outfile:
         json.dump(root_tree, outfile)
     print "finished"
