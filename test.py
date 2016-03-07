@@ -182,29 +182,4 @@ def main():
 
 
 if __name__ == '__main__':
-    """from qcloudapi.QcloudApi.qcloudapi import QcloudApi
-    import re
-    module = 'wenzhi'
-    action = 'TextSentiment'
 
-    config = {
-        'Region': 'gz',
-        'secretId': 'AKIDS6fypYffcsCMxFmAsac9FOjEdncAlHMM',
-        'secretKey': 'eu7cqU9zL90nMKodFwxGihRO62PNqTEB',
-        'method': 'get'
-    }
-    params = {
-        'content': '胡萝卜鸡蛋海苔卷。材料：胡萝卜、鸡蛋、海苔（紫菜片也可）、大葱、盐。做法：胡萝卜切碎丁，鸡蛋搅碎，大葱切碎，三者搅拌到一起，加适量盐和酱油。平底锅抹油（为了控热不要放太多，最好有不粘锅）后，摊成蛋饼，在蛋饼上盖海苔片，用锅勺卷两次后成蛋卷。出锅切块装盘，可以撒点肉松。',
-    }
-    try:
-        service = QcloudApi(module, config)
-        result = service.call(action, params)
-        tmp = re.match(u'.*\"positive\":(.*),\"negative\".*', result)
-        positive = tmp.group(1)
-        num = float(positive)
-        print num
-    except Exception, e:
-        print 'exception:', e"""
-    from dataset.ExtendContents import Opinion
-    opinion = Opinion()
-    opinion.caculate_opinion()
