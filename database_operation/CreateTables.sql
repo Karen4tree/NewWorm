@@ -1,5 +1,7 @@
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ALLOW_INVALID_DATES';
+ALTER DATABASE zhihu CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 create table Users(
-	user_id varchar(255) primary key,
+	user_id varchar(191) primary key,
 	followers_num int,
 	followees_num int,
 	agrees_num int,
@@ -10,19 +12,19 @@ create table Users(
 	collections_num int,
 	following_topics_num int,
 	following_columns int,
-	education varchar(255),
-	education_extra varchar(255),
-	location varchar(255),
-	business varchar(255),
-	position varchar(255),
-	employment varchar(255)
+	education varchar(191),
+	education_extra varchar(191),
+	location varchar(191),
+	business varchar(191),
+	position varchar(191),
+	employment varchar(191)
 );
 
 create table Questions(
 	question_id char(8) primary key,
-	asker_id varchar(255),
+	asker_id varchar(191),
 	detail text,
-	title varchar(255),
+	title varchar(191),
 	answers_num int,
 	followers_num int,
 	post_time TIMESTAMP,
@@ -33,17 +35,16 @@ create table Questions(
 
 create table Topic(
 	topic_id char(8) primary key,
-	topic_name varchar(255),
+	topic_name varchar(191),
 	question_num int,
 	followers_num int,
-	parent char(8),
-	FOREIGN KEY (parent) REFERENCES Topic(parent)
+	visited int
 );
 
 create table Answers(
 	answer_id char(8),
 	question_id char(8),
-	author_id varchar(255),
+	author_id varchar(191),
 	detail text,
 	upvote int,
 	visit_times int,
@@ -56,7 +57,7 @@ create table Answers(
 );
 
 create table Comment(
-	author_id varchar(255),
+	author_id varchar(191),
 	answer_id char(8),
 	opinion int,
 	primary key (author_id, answer_id),
@@ -66,29 +67,29 @@ create table Comment(
 
 create table Collection(
 	collection_id char(8) primary key,
-	name varchar(255),
-	creator varchar(255),
+	name varchar(191),
+	creator varchar(191),
 	foreign key (creator) references Users(user_id)
 );
 
 create table Follow_Question(
 	question_id char(8),
-	follower_id varchar(255),
+	follower_id varchar(191),
 	foreign key (question_id) references Questions(question_id),
 	foreign key (follower_id) references Users(user_id),
 	primary key (question_id, follower_id)
 );
 
 create table Follow_User(
-	follower_id varchar(255),
-	followee_id varchar(255),
+	follower_id varchar(191),
+	followee_id varchar(191),
 	foreign key (follower_id) references Users(user_id),
 	foreign key (followee_id) references Users(user_id),
 	primary key (followee_id, follower_id)
 );
 
 create table Follow_Topic(
-	follower_id varchar(255),
+	follower_id varchar(191),
 	topic_id char(8),
 	foreign key (follower_id) references Users(user_id),
 	foreign key (topic_id) references Topic(topic_id),
@@ -103,8 +104,16 @@ create table Question_Topics(
 	primary key (question_id, topic_id)
 );
 
+create table Topic_Topics(
+	father_topid_id char(8),
+	child_topid_id char(8),
+	foreign key (father_topid_id) references Topic(topic_id),
+	foreign key (child_topid_id) references Topic(topic_id),
+	primary key (father_topid_id, child_topid_id)
+);
+
 create table Vote_Answer(
-	voter_id varchar(255),
+	voter_id varchar(191),
 	answer_id char(8),
 	foreign key (voter_id) references Users(user_id),
 	foreign key (answer_id) references Answers(answer_id),
@@ -120,24 +129,24 @@ create table Collection_Answers(
 );
 
 create table Columns(
-	column_name varchar(255) primary key,
-	owner_id varchar(255),
+	column_name varchar(191) primary key,
+	owner_id varchar(191),
 	follower_num int,
 	foreign key (owner_id) references Users(user_id)
 );
 
 create table Articles(
 	article_id char(8) primary key,
-	column_name varchar(255),
-	article_title varchar(255),
+	column_name varchar(191),
+	article_title varchar(191),
 	comment_num int,
 	detail text,
 	foreign key (column_name) references Columns(column_name)
 );
 
 create table Follow_Column(
-	follower_id varchar(255),
-	column_name varchar(255),
+	follower_id varchar(191),
+	column_name varchar(191),
 	foreign key (follower_id) references Users(user_id),
 	foreign key (column_name) references Columns(column_name),
 	primary key (follower_id, column_name)
