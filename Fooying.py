@@ -83,7 +83,6 @@ def spider(question):
 
 
 def user_spider(user):
-    DataBase.put_user_in_db(user)
     for follower in user.get_followers():
         DataBase.put_user_in_db(follower)
         DataBase.put_follow_user_in_db(user,follower)
@@ -92,7 +91,7 @@ def user_spider(user):
 if __name__ == '__main__':
     import sys
     sys.setrecursionlimit(1000000)
-    THREADS = 10
+    """THREADS = 10
     p = mp.Pool(processes = THREADS)
     topic = Topic("http://www.zhihu.com/topic/19554927")
     if not topicBloom.is_element_exist(topic.get_topic_id()):
@@ -107,5 +106,14 @@ if __name__ == '__main__':
         except AttributeError:
             pass
         finally:
-            num -= 20
+            num -= 20"""
+    from database_operation.ReadData import ReadData
+    from database_operation.IfExist import IfExist
+    from zhihu_api.User import User
+    for i in range(10000):
+        users = ReadData.read_all_user()
+        for user in users:
+            user_id = str(user[0])
+            if not IfExist.user_exist_in_follow_user(user_id):
+                user_spider(User('http://www.zhihu.com/people/'+user_id))
 

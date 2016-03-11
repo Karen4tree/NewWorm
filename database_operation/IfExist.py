@@ -48,3 +48,13 @@ class IfExist:
         result = cursor.fetchall()
         return result
 
+    @classmethod
+    def user_exist_in_follow_user(cls, user_id):
+        connect = cls.connect
+        cursor = connect.cursor()
+        cursor.execute('select count(*) from Follow_User where followee_id = %s', user_id)
+        r = cursor.fetchone()
+        if r[0] != 0:
+            return True
+        else:
+            return False

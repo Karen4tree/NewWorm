@@ -18,6 +18,13 @@ class ReadData:
         return cursor.fetchone()
 
     @classmethod
+    def read_all_user(cls):
+        connect = cls.connect
+        cursor = connect.cursor()
+        cursor.execute('select user_id from Users')
+        return cursor.fetchall()
+
+    @classmethod
     def followers_of_user_question(cls, user_id):
         connect = cls.connect
         cursor = connect.cursor()
