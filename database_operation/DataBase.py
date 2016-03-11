@@ -64,7 +64,7 @@ class DataBase:
         value = (user_id, follower_id)
 
         try:
-            cursor.execute('insert into Follow_User(follower_id, followee_id) values (%s, %s)', value)
+            cursor.execute('insert into Follow_User(followee_id, follower_id) values (%s, %s)', value)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
