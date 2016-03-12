@@ -9,10 +9,10 @@ __author__ = 'ZombieGroup'
 
 
 class DataBase:
-    connect = MySQLdb.connect('localhost', 'root', '', 'zhihu', port = 3306, charset = 'utf8')
+    connect = MySQLdb.connect('localhost', 'root', '', 'zhihu', port=3306, charset='utf8')
 
     def __init__(self, user=None, host=None, password=None, dbname=None):
-        self.connect = MySQLdb.connect(host, user, password, dbname, port = 3306, charset = 'utf8')
+        self.connect = MySQLdb.connect(host, user, password, dbname, port=3306, charset='utf8')
 
     @classmethod
     def put_user_in_db(cls, user):
@@ -64,7 +64,7 @@ class DataBase:
         value = (user_id, follower_id)
 
         try:
-            cursor.execute('insert into Follow_User(follower_id, followee_id) values (%s, %s)', value)
+            cursor.execute('insert into Follow_User(followee_id, follower_id) values (%s, %s)', value)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -126,9 +126,9 @@ class DataBase:
 
         question_id = question.get_question_id()
         try:
-            #cls.put_question_in_db(question)
+            # cls.put_question_in_db(question)
             cursor.execute('update Questions set asker_id=%s where question_id=%s',
-                               (user.get_user_id(), question_id))
+                           (user.get_user_id(), question_id))
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -141,7 +141,7 @@ class DataBase:
         cursor = connect.cursor()
 
         answer_id = answer.get_answer_id()
-        #cls.put_answer_in_db(answer)
+        # cls.put_answer_in_db(answer)
         try:
             cursor.execute('update Answers set author_id=%s where answer_id=%s', (user.get_user_id(), answer_id))
         except MySQLdb.Error, e:
@@ -163,7 +163,7 @@ class DataBase:
         answer_num = question.get_answer_num()
         follower_num = question.get_follower_num()
         time = question.get_edit_time()[0]
-        values = (question_id, asker_id, detail, title, answer_num, follower_num,time)
+        values = (question_id, asker_id, detail, title, answer_num, follower_num, time)
         try:
             cursor.execute('insert into Questions(question_id, asker_id, detail, title, answers_num, '
                            'followers_num, post_time)'
@@ -188,7 +188,7 @@ class DataBase:
         post_time = answer.get_post_time()
         last_update = answer.get_last_edit_time()
 
-        values = (answer_id, question_id, author_id, detail, upvote_num, visited_times,post_time,last_update)
+        values = (answer_id, question_id, author_id, detail, upvote_num, visited_times, post_time, last_update)
         try:
             cursor.execute('insert into Answers(answer_id, question_id, author_id, detail, upvote, '
                            'visit_times, post_time, last_edit_time) '
@@ -208,13 +208,12 @@ class DataBase:
         topic_name = topic.get_topic_name()
         question_num = topic.get_question_num()
         follower_num = topic.get_follower_num()
-        #parent = topic.get_father()
+        # parent = topic.get_father()
 
-        values = (topic_id, topic_name, question_num, follower_num)
-
+        values = (topic_id, topic_name, question_num, follower_num, 0)
         try:
-            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num) '
-                           'values (%s,%s,%s,%s)', values)
+            cursor.execute('insert into Topic(topic_id,topic_name,question_num,followers_num,visited) '
+                           'values (%s,%s,%s,%s,%s)', values)
         except MySQLdb.Error, e:
             if re.match(r'\(1062', str(e)):
                 Logging.info(str(e))
@@ -289,3 +288,70 @@ class DataBase:
                 Logging.info(str(e))
         finally:
             connect.commit()
+
+    @classmethod
+    def put_topic_topic_in_db(cls, parent_topic, child_topic):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        parent_topic_id = parent_topic.get_topic_id()
+        child_topic_id = child_topic.get_topic_id()
+
+        values = (parent_topic_id, child_topic_id)
+
+        try:
+            cursor.execute('insert into Topic_Topics(father_topid_id,child_topid_id) '
+                           'values (%s,%s)', values)
+        except MySQLdb.Error, e:
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
+        finally:
+            connect.commit()
+
+    @classmethod
+    def topic_checked(cls, topic):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        values = topic.get_topic_id()
+        try:
+            cursor.execute('update Topic set visited=1 where topic_id=%s', values)
+        except MySQLdb.Error, e:
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
+        finally:
+            connect.commit()
+
+    @classmethod
+    def topic_exist(cls, topic):
+        connect = cls.connect
+        cursor = connect.cursor()
+
+        values = topic.get_topic_id()
+
+        try:
+            cursor.execute('SELECT EXISTS(SELECT 1 FROM table1 WHERE topic_id="%s")', values)
+            if cursor.fetchall():
+                return True
+            else:
+                return False
+        except MySQLdb.Error, e:
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
+        return False
+
+    @classmethod
+    def one_topic_id_unvisited(cls):
+        connect = cls.connect
+        cursor = connect.cursor()
+        try:
+            cursor.execute('SELECT topic_id FROM Topic WHERE visited=0 limit 1')
+            result = cursor.fetchone()
+            if result is not None:
+                return result[0]
+            else:
+                return None
+        except MySQLdb.Error, e:
+            if re.match(r'\(1062', str(e)):
+                Logging.info(str(e))
+        return None

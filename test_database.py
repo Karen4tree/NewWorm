@@ -10,14 +10,23 @@ from database_operation.IfExist import IfExist
 from database_operation.DataBase import DataBase
 
 
-def main():
-    answer_url = "http://www.zhihu.com/question/36713461/answer/68820809"
-    answer = Answer(answer_url)
-    question = Question("http://www.zhihu.com/question/36713461")
-    DataBase.put_user_in_db(answer.get_author())
-    DataBase.put_question_in_db(question)
-    DataBase.put_answer_in_db(answer)
+def topic_crawler(topic):
+    print topic.get_topic_name()
+    for child_topic in topic.get_child():
+        if not DataBase.topic_exist(child_topic):
+            DataBase.put_topic_in_db(child_topic)
+        DataBase.put_topic_topic_in_db(topic,child_topic)
+    DataBase.topic_checked(topic)
 
+
+def main():
+    root_url = "http://www.zhihu.com/topic/19776749"
+    topic = Topic(root_url)
+    DataBase.put_topic_in_db(topic)
+    topic_id = DataBase.one_topic_id_unvisited()
+    while topic_id is not None:
+        topic_crawler(Topic("http://www.zhihu.com/topic/{0}".format(topic_id)))
+        topic_id = DataBase.one_topic_id_unvisited()
 
 if __name__ == '__main__':
     main()

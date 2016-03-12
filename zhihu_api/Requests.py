@@ -12,7 +12,6 @@ __author__ = 'ZombieGroup'
 
 
 class Requests:
-
     def __init__(self):
         http_client.HTTPConnection.debuglevel = 0
 
@@ -22,12 +21,16 @@ class Requests:
             self.requests.cookies = cookielib.LWPCookieJar('zhihu_api/cookies')
             self.cookies = self.requests.cookies
             self.requests.cookies.load(ignore_discard=True)
+<<<<<<< HEAD
             if not Login.islogin():
                 Login.login()
+=======
+>>>>>>> topics
         except NotLogin:
             Login.login()
         except:
             Logging.error(u"找不到cookie")
+            Login.login()
 
         reload(sys)
         sys.setdefaultencoding('utf8')
@@ -37,6 +40,7 @@ class Requests:
 
     def get(self, url, **kwargs):
         try:
+            #kwargs["verify"] = False # ban SSL request
             return self.requests.get(url, **kwargs)
         except:
             self.get(url, **kwargs)
@@ -46,5 +50,6 @@ class Requests:
             return self.requests.post(url, data, **kwargs)
         except:
             self.post(url, data, **kwargs)
+
 
 requests = Requests()

@@ -43,7 +43,9 @@ class UserInfluence:
             v = dot(m,v) * self.epsilon + (1-self.epsilon)
         self.user_frame['influence'] = Series(v)
 
-    def write_to_db(self):
-        cursor = ReadData.connect.cursor()
-        cursor.execute('')
-
+    def output(self):
+        """
+        This method is used for make the output of the UserFrame
+        :return: A Data Serie with only one column from UserFrame : influence and with user_id as index
+        """
+        return self.user_frame['influence']

@@ -8,6 +8,16 @@ __author__ = 'ZombieGroup'
 
 
 # 从Topic url指向页面中抓取信息
+def apply(func):
+    def handler(*args, **kwargs):  # 1
+        try:
+            return func(*args, **kwargs)  # 2
+        except:
+            print "Arguments were: %s, %s" % (args, kwargs)
+            args[0].parser()  # args[0] is the instance itself
+            return handler(*args, **kwargs)
+
+    return handler
 
 
 class Topic:
@@ -35,21 +45,34 @@ class Topic:
         topic_id = self.url[len(self.url) - 8:len(self.url)]
         return topic_id
 
+    @apply
     def get_topic_name(self):
         soup = self.soup
+<<<<<<< HEAD
         self.name = soup.find("h1", class_ = "zm-editable-content").string
+=======
+        self.name = soup.find("h1", class_="zm-editable-content").string
+>>>>>>> topics
         return self.name
 
     def get_question_num(self):
         r = requests.get(self.url + "/questions")
         soup1 = BeautifulSoup(r.content)
         try:
+<<<<<<< HEAD
             pages = soup1.find("div", class_ = "zm-invite-pager").find_all("span")
+=======
+            pages = soup1.find("div", class_="zm-invite-pager").find_all("span")
+>>>>>>> topics
             total_pages = pages[len(pages) - 2].find("a").string
             tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
             r = requests.get(self.url + "/questions?page=" + total_pages)
             soup2 = BeautifulSoup(r.content)
+<<<<<<< HEAD
             question_on_last_page = soup2.find_all("div", class_ = "feed-item feed-item-hook question-item")
+=======
+            question_on_last_page = soup2.find_all("div", class_="feed-item feed-item-hook question-item")
+>>>>>>> topics
             question_num = tmp + len(question_on_last_page)
             return question_num
         except AttributeError:
@@ -58,7 +81,11 @@ class Topic:
     def get_follower_num(self):
         soup = self.soup
         try:
+<<<<<<< HEAD
             followers_num = soup.find("div", class_ = "zm-topic-side-followers-info").find("a").strong.string
+=======
+            followers_num = soup.find("div", class_="zm-topic-side-followers-info").find("a").strong.string
+>>>>>>> topics
             return int(followers_num)
         except AttributeError:
             return 0
@@ -80,7 +107,7 @@ class Topic:
                 yield Question(question_url)
 
     def get_father(self):
-        url = self.url+ "/organize"
+        url = self.url + "/organize"
         r = requests.get(url)
         soup = BeautifulSoup(r.content)
         parrent_div = soup.find(id="zh-topic-organize-parent-editor")
@@ -90,12 +117,23 @@ class Topic:
             yield Topic(url_head + item["data-token"])
 
     def get_child(self):
-        url = self.url+ "/organize"
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content)
-        child_div = soup.find(id="zh-topic-organize-child-editor")
-        child_url = child_div.find_all("a")
-        url_head = "http://www.zhihu.com/topic/"
-        for item in child_url:
-            yield Topic(url_head + item["data-token"])
+        try:
+            url = self.url + "/organize"
+            r = requests.get(url)
+            soup = BeautifulSoup(r.content)
+            child_div = soup.find(id="zh-topic-organize-child-editor")
+            if child_div is not None:
+                child_url = child_div.find_all("a")
+                url_head = "http://www.zhihu.com/topic/"
+                if child_url is not None:
+                    for item in child_url:
+                        if item.has_attr("data-token"):
+                            yield Topic(url_head + item["data-token"])
+        except:
+            pass
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *err):
+        pass
