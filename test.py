@@ -8,6 +8,8 @@ from zhihu_api.Answer import Answer
 from zhihu_api.Topic import Topic
 from zhihu_api.Collection import Collection
 from zhihu_api.Article import Article
+from multiprocessing import Pool
+import json
 
 
 def test_user(user_url):
@@ -25,57 +27,57 @@ def test_user(user_url):
     article_num = user.get_articles_num()
     print article_num
     print followee_num
-        # follower_num = user.get_follower_num()
-        # print follower_num
-        # collection_num = user.get_collection_num()
-        # print collection_num
-        # thanks_num = user.get_thanks_num()
-        # print thanks_num
-        # vote_num = user.get_vote_num()
-        # print vote_num
-        # location = user.get_location()
-        # print location
-        # print type(location)
-        # business = user.get_business()
-        # print business
-        # print type(business)
-        # employment = user.get_employment()
-        # print employment
-        # print type(employment)
-        # position = user.get_position()
-        # print position
-        # print type(position)
-        # education = user.get_education()
-        # print education
-        # print type(education)
-        # education_extra = user.get_education_extra()
-        # print education_extra
-        # print type(education_extra)
-        # following_topic_num = user.get_following_topic_num()
-        # print following_topic_num
-        # following_column_num = user.get_following_column_num()
-        # print following_column_num
-        # Logging.info(u"followeing_topics:")
-        # for followeing_topics in user.get_followeing_topics():
-        #     print followeing_topics
+    # follower_num = user.get_follower_num()
+    # print follower_num
+    # collection_num = user.get_collection_num()
+    # print collection_num
+    # thanks_num = user.get_thanks_num()
+    # print thanks_num
+    # vote_num = user.get_vote_num()
+    # print vote_num
+    # location = user.get_location()
+    # print location
+    # print type(location)
+    # business = user.get_business()
+    # print business
+    # print type(business)
+    # employment = user.get_employment()
+    # print employment
+    # print type(employment)
+    # position = user.get_position()
+    # print position
+    # print type(position)
+    # education = user.get_education()
+    # print education
+    # print type(education)
+    # education_extra = user.get_education_extra()
+    # print education_extra
+    # print type(education_extra)
+    # following_topic_num = user.get_following_topic_num()
+    # print following_topic_num
+    # following_column_num = user.get_following_column_num()
+    # print following_column_num
+    # Logging.info(u"followeing_topics:")
+    # for followeing_topics in user.get_followeing_topics():
+    #     print followeing_topics
 
-        # Logging.info(u"Columns and Articles of User")
-        # for column in user.get_columns():
-        #     for article in column.get_articles():
-        #         print article
+    # Logging.info(u"Columns and Articles of User")
+    # for column in user.get_columns():
+    #     for article in column.get_articles():
+    #         print article
 
-        # user_id = user.get_user_id()
-        # print user_id
-        # asks = user.get_asks()
+    # user_id = user.get_user_id()
+    # print user_id
+    # asks = user.get_asks()
 
-        # Logging.info(u"Questions of User")
-        # for question in asks:
-        #    print question.get_title()
-        # answers = user.get_answers()
+    # Logging.info(u"Questions of User")
+    # for question in asks:
+    #    print question.get_title()
+    # answers = user.get_answers()
 
-        # Logging.info(u"Answers of User")
-        # for answer in answers:
-        #    print answer.get_answer_id()
+    # Logging.info(u"Answers of User")
+    # for answer in answers:
+    #    print answer.get_answer_id()
 
 
 '''
@@ -109,8 +111,8 @@ def test_answer(answer_url):
     print upvote_num
     visited_times = answer.get_visited_times()
     print visited_times
-    print "Post time"+answer.get_post_time()
-    print "Last edit time"+answer.get_last_edit_time()
+    print "Post time" + answer.get_post_time()
+    print "Last edit time" + answer.get_last_edit_time()
     # upvoters = answer.get_upvoters()
     # for upvoter in upvoters:
     # print upvoter.get_user_id()
