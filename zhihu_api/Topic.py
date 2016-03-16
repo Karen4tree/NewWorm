@@ -48,31 +48,19 @@ class Topic:
     @apply
     def get_topic_name(self):
         soup = self.soup
-<<<<<<< HEAD
-        self.name = soup.find("h1", class_ = "zm-editable-content").string
-=======
         self.name = soup.find("h1", class_="zm-editable-content").string
->>>>>>> topics
         return self.name
 
     def get_question_num(self):
         r = requests.get(self.url + "/questions")
         soup1 = BeautifulSoup(r.content)
         try:
-<<<<<<< HEAD
-            pages = soup1.find("div", class_ = "zm-invite-pager").find_all("span")
-=======
             pages = soup1.find("div", class_="zm-invite-pager").find_all("span")
->>>>>>> topics
             total_pages = pages[len(pages) - 2].find("a").string
             tmp = (int(total_pages) - 1) * 20  # 每页20个,除最后一页以外
             r = requests.get(self.url + "/questions?page=" + total_pages)
             soup2 = BeautifulSoup(r.content)
-<<<<<<< HEAD
-            question_on_last_page = soup2.find_all("div", class_ = "feed-item feed-item-hook question-item")
-=======
             question_on_last_page = soup2.find_all("div", class_="feed-item feed-item-hook question-item")
->>>>>>> topics
             question_num = tmp + len(question_on_last_page)
             return question_num
         except AttributeError:
@@ -81,11 +69,7 @@ class Topic:
     def get_follower_num(self):
         soup = self.soup
         try:
-<<<<<<< HEAD
-            followers_num = soup.find("div", class_ = "zm-topic-side-followers-info").find("a").strong.string
-=======
             followers_num = soup.find("div", class_="zm-topic-side-followers-info").find("a").strong.string
->>>>>>> topics
             return int(followers_num)
         except AttributeError:
             return 0
